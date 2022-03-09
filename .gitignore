@@ -1,0 +1,10 @@
+# All testoutput from Python testcases
+*.testoutput*
+
+# Python compilings
+*__pycache__*
+
+# KiCad project related files
+*fp-info-cache*
+*.kicad_prl*
+*-backups*

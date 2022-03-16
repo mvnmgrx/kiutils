@@ -1,7 +1,7 @@
 """Classes to manage KiCad footprints
 
 Author:
-    (C) Marvin Mager - @mrnmgrx - 2022
+    (C) Marvin Mager - @mvnmgrx - 2022
 
 Major changes:
     02.02.2022 - created
@@ -114,13 +114,13 @@ class Model():
     path: str = ""
     """The `path` attribute is the path and file name of the 3D model"""
 
-    pos: Coordinate = Coordinate()
+    pos: Coordinate = Coordinate(0.0, 0.0, 0.0)
     """The `pos` token specifies the 3D position coordinates of the model relative to the footprint"""
 
-    scale: Coordinate = Coordinate()
+    scale: Coordinate = Coordinate(1.0, 1.0, 1.0)
     """The `scale` token specifies the model scale factor for each 3D axis"""
 
-    rotate: Coordinate = Coordinate()
+    rotate: Coordinate = Coordinate(0.0, 0.0, 0.0)
     """The `rotate` token specifies the model rotation for each 3D axis relative to the footprint"""
 
     @classmethod

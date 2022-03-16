@@ -3,7 +3,7 @@
    used to define complex pad geometries.
 
 Author:
-    (C) Marvin Mager - @mrnmgrx - 2022
+    (C) Marvin Mager - @mvnmgrx - 2022
 
 Major changes:
     10.02.2022 - created

@@ -3,7 +3,7 @@ definition. This includes text, text boxes, lines, rectangles, circles, arcs, po
 and dimensions.
 
 Author:
-    (C) Marvin Mager - @mrnmgrx - 2022
+    (C) Marvin Mager - @mvnmgrx - 2022
 
 Major changes:
     08.02.2022 - created

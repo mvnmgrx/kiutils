@@ -346,7 +346,9 @@ class Image():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        expression =  f'{indents}(image (at {self.position.X} {self.position.Y}) (scale {self.scale})\n'
+        scale = f' (scale {self.scale})' if self.scale is not None else ''
+
+        expression =  f'{indents}(image (at {self.position.X} {self.position.Y}){scale}\n'
         expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}  (data\n'
         for b64part in self.data:

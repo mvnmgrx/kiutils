@@ -131,8 +131,9 @@ class FpLine():
     stroke: Stroke | None = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the line. (version 7)"""
 
-    # FIXME: This may only be a bool and not both. Furthermore it is not implemented in to_sexpr()
-    locked: bool | None = None
+    # FIXME: This is not implemented in to_sexpr() because it does not seem to be used on lines
+    #        in footprints. Further testing required ..
+    locked: bool = False
     """The optional `locked` token defines if the line cannot be edited"""
 
     tstamp: str | None = None      # Used since KiCad 6
@@ -224,8 +225,7 @@ class FpRect():
     """The optional `fill` toke defines how the rectangle is filled. Valid fill types are solid
     and none. If not defined, the rectangle is not filled."""
 
-    # FIXME: This may only be a bool and not both ..
-    locked: bool | None = None
+    locked: bool = False
     """The optional `locked` token defines if the rectangle cannot be edited"""
 
     tstamp: str | None = None      # Used since KiCad 6
@@ -348,8 +348,7 @@ class FpCircle():
     fill: str | None = None
     """The optional `fill` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the circle is not filled."""
 
-    # FIXME: This may only be a bool
-    locked: bool | None = None
+    locked: bool = False
     """The optional `locked` token defines if the circle cannot be edited"""
 
     tstamp: str | None = None      # Used since KiCad 6
@@ -445,8 +444,7 @@ class FpArc():
     stroke: Stroke | None = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the arc. (version 7)"""
 
-    # FIXME: This may only be a bool
-    locked: bool | None = None
+    locked: bool = False
     """The optional `locked` token defines if the arc cannot be edited"""
 
     tstamp: str | None = None      # Used since KiCad 6
@@ -539,8 +537,7 @@ class FpPoly():
     """The optional `fill` toke defines how the polygon is filled. Valid fill types are solid
     and none. If not defined, the rectangle is not filled."""
 
-    # FIXME: This may only be a bool
-    locked: bool | None = None
+    locked: bool = False
     """The optional `locked` token defines if the polygon cannot be edited"""
 
     tstamp: str | None = None      # Used since KiCad 6
@@ -639,8 +636,7 @@ class FpCurve():
     stroke: Stroke | None = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the curve. (version 7)"""
 
-    # FIXME: This may only be a bool
-    locked: bool | None = None
+    locked: bool = False
     """The optional `locked` token defines if the curve cannot be edited"""
 
     tstamp: str | None = None      # Used since KiCad 6

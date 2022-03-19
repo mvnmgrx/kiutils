@@ -779,6 +779,11 @@ class SchematicSymbol():
     """The `pins` token defines a dictionary with pin numbers in form of strings as keys and
        uuid's as values"""
 
+    mirror: str | None = None
+    """The `mirror` token defines if the symbol is mirrored in the schematic. Accepted values: `x` or `y`. 
+    When mirroring around the x and y axis at the same time use some additional rotation to get the correct
+    orientation of the symbol."""
+
     @classmethod
     def from_sexpr(cls, exp: str):
         """Convert the given S-Expresstion into a SchematicSymbol object
@@ -810,6 +815,7 @@ class SchematicSymbol():
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
             if item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
+            if item[0] == 'mirror': object.mirror = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -829,8 +835,9 @@ class SchematicSymbol():
         fa = f' (fields_autoplaced)' if self.fieldsAutoplaced else ''
         inBom = 'yes' if self.inBom else 'no'
         onBoard = 'yes' if self.onBoard else 'no'
+        mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
 
-        expression =  f'{indents}(symbol (lib_id "{dequote(self.libraryIdentifier)}") (at {self.position.X} {self.position.Y}{posA}) (unit {self.unit})\n'
+        expression =  f'{indents}(symbol (lib_id "{dequote(self.libraryIdentifier)}") (at {self.position.X} {self.position.Y}{posA}){mirror} (unit {self.unit})\n'
         expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'
         expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:

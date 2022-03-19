@@ -37,7 +37,7 @@ class Position():
     objects have rotational position definitions. Symbol text angles are stored in tenths
     of a degree. All other angles are stored in degrees."""
 
-    # TODO: What is this?
+    # TODO: What is this? Documentation does not tell ..
     unlocked: bool = False
     """The `unlocked` token's description has to be defined yet .."""
 
@@ -55,8 +55,7 @@ class Position():
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        # FIXME: Length check changed for debugging of fourth parameter
-        if not isinstance(exp, list) or len(exp) < 3: # or len(exp) > 5:
+        if not isinstance(exp, list) or len(exp) < 3:
             raise Exception("Expression does not have the correct type")
 
         object = cls()

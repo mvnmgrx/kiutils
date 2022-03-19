@@ -7,6 +7,9 @@ It is a "pythonic" abstraction of the documentation found at the
 intended to work with an SCM like Git or SVN without breaking the layout of the
 files when the Python script ran.
 
+Parsing of the files is based on the S-Expression parser found in this library: 
+[GitLab: KiCad Library utilities](https://gitlab.com/kicad/libraries/kicad-library-utils)
+
 ## Structure
 The module features the following classes:
 ```python

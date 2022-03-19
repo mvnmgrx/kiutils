@@ -1,12 +1,20 @@
+"""Some simple tests for the classes that read and write to files
+
+Author:
+    (C) Marvin Mager - @mvnmgrx - 2022
+
+License identifier:
+    GPL-3.0
+"""
+import time
+from os import path
+import filecmp
+
 from kiutils.footprint import Footprint
 from kiutils.symbol import SymbolLib
 from kiutils.schematic import Schematic
 from kiutils.board import Board
 from kiutils.libraries import LibTable
-import time
-from os import path
-
-import filecmp
 
 global_passed = True
 

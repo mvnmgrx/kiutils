@@ -5,6 +5,9 @@
 Author:
     (C) Marvin Mager - @mvnmgrx - 2022
 
+License identifier:
+    GPL-3.0
+
 Major changes:
     10.02.2022 - created
 

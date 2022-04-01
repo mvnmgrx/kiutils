@@ -19,4 +19,4 @@ def dequote(input: str) -> str:
     Returns:
         str: String with replaced double-quotes
     """
-    return input.replace("\"", "\\\"")
+    return str(input).replace("\"", "\\\"")

@@ -67,6 +67,7 @@ test_from_file(SymbolLib, path.join(tests_path, 'test_sym_demorgan.kicad_sym'))
 test_from_file(SymbolLib, path.join(tests_path, 'test_sym_demorgan_syitems.kicad_sym'))
 test_from_file(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))
 test_from_file(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
+test_from_file(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
 
 if global_passed:
     print("KiTools tests done")

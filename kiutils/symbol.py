@@ -21,6 +21,60 @@ from .utils import sexpr
 from .utils.strings import dequote
 
 @dataclass
+class SymbolAlternativePin():
+    pinName: str = ""
+    """The `pinName` token defines the name of the alternative pin function"""
+
+    electricalType: str = "input"
+    """The `electricalType` defines the pin electrical connection. See symbol documentation for
+    valid pin electrical connection types and descriptions."""
+
+    graphicalStyle: str = "line"
+    """The `graphicalStyle` defines the graphical style used to draw the pin. See symbol 
+    documentation for valid pin graphical styles and descriptions."""
+
+    @classmethod
+    def from_sexpr(cls, exp: list):
+        """Convert the given S-Expresstion into a SymbolAlternativePin object
+
+        Args:
+            exp (list): Part of parsed S-Expression `(alternate ...)`
+
+        Raises:
+            Exception: When given parameter's type is not a list
+            Exception: When the first item of the list is not alternate
+
+        Returns:
+            SymbolAlternativePin: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'alternate':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.pinName = exp[1]
+        object.electricalType = exp[2]
+        object.graphicalStyle = exp[3]
+        return object
+
+    def to_sexpr(self, indent: int = 8, newline: bool = True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 8.
+            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        return f'{indents}(alternate "{dequote(self.pinName)}" {self.electricalType} {self.graphicalStyle}){endline}'
+
+@dataclass
 class SymbolPin():
     """The `pin` token defines a pin in a symbol definition.
 
@@ -58,6 +112,9 @@ class SymbolPin():
     hide: bool = False      # Missing in documentation
     """The 'hide' token defines if the pin should be hidden"""
 
+    alternatePins: list[SymbolAlternativePin] = field(default_factory=list)
+    """The 'alternate' token defines one or more alternative definitions for the symbol pin"""
+
     @classmethod
     def from_sexpr(cls, exp: list):
         """Convert the given S-Expresstion into a SymbolPin object
@@ -93,6 +150,7 @@ class SymbolPin():
             if item[0] == 'number':
                 object.number = item[1]
                 object.numberEffects = Effects().from_sexpr(item[2])
+            if item[0] == 'alternate': object.alternatePins.append(SymbolAlternativePin().from_sexpr(item))
         return object
 
     def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:
@@ -114,6 +172,8 @@ class SymbolPin():
         expression =  f'{indents}(pin {self.electricalType} {self.graphicalStyle} (at {self.position.X} {self.position.Y}{posA}) (length {self.length}){hide}\n'
         expression += f'{indents}  (name "{dequote(self.name)}" {self.nameEffects.to_sexpr(newline=False)})\n'
         expression += f'{indents}  (number "{dequote(self.number)}" {self.numberEffects.to_sexpr(newline=False)})\n'
+        for alternativePin in self.alternatePins:
+            expression += alternativePin.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 

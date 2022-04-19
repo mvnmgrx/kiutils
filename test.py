@@ -6,9 +6,11 @@ Author:
 License identifier:
     GPL-3.0
 """
+from logging.handlers import RotatingFileHandler
 import time
 from os import path
 import filecmp
+import logging
 
 from kiutils.footprint import Footprint
 from kiutils.symbol import SymbolLib
@@ -147,19 +149,7 @@ if __name__ == "__main__":
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
 
-test_from_file(Board, path.join(tests_path, 'kicad-project', 'test.kicad_pcb'))
-
-test_from_file(Footprint, path.join(tests_path, 'kicad-project', 'Library.pretty', 'test.kicad_mod'))
-test_from_file(Footprint, path.join(tests_path, 'test_fp_all.kicad_mod'))
-
-test_from_file(SymbolLib, path.join(tests_path, 'kicad-project', 'test.kicad_sym'))
-test_from_file(SymbolLib, path.join(tests_path, 'test_sym_demorgan.kicad_sym'))
-test_from_file(SymbolLib, path.join(tests_path, 'test_sym_demorgan_syitems.kicad_sym'))
-test_from_file(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))
-test_from_file(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
-test_from_file(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
-
-if global_passed:
-    print("KiTools tests done")
-else:
-    print("KiTools tests done, but some tests failed!")
+    if global_passed:
+        print("KiTools tests done")
+    else:
+        print("KiTools tests done, but some tests failed!")

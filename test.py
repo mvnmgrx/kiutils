@@ -139,10 +139,11 @@ if __name__ == "__main__":
     assert_compare(Schematic,  path.join(tests_path, 'kicad-project', 'test.kicad_sch'))
     assert_compare(Board,      path.join(tests_path, 'kicad-project', 'test.kicad_pcb'))
     assert_equality(Footprint, path.join(tests_path, 'kicad-project', 'Library.pretty', 'test.kicad_mod'))
+    assert_equality(SymbolLib, path.join(tests_path, 'kicad-project', 'test.kicad_sym'))
 
     # Other test cases
     assert_compare(Footprint,  path.join(tests_path, 'test_fp_all.kicad_mod'))
-    assert_equality(SymbolLib, path.join(tests_path, 'kicad-project', 'test.kicad_sym'))
+    assert_equality(Footprint,  path.join(tests_path, 'test_fp_empty_attr.kicad_mod'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_demorgan.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_demorgan_syitems.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))

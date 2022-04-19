@@ -35,7 +35,7 @@ class Attributes():
 
     type: str | None = None
     """The optional `type` token defines the type of footprint. Valid footprint types are `smd` and
-    `through_hole`"""
+    `through_hole`. May be none when no attributes are set."""
 
     boardOnly: bool = False
     """The optional `boardOnly` token indicates that the footprint is only defined in the board
@@ -70,8 +70,11 @@ class Attributes():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
-        if exp[1] == 'through_hole' or exp[1] == 'smd':
-            object.type = exp[1]
+        if len(exp) > 1:
+            # Attributes token may be set with no other items (empty attributes)
+            # Test case for this: test_fp_empty_attr.kicad_mod
+            if exp[1] == 'through_hole' or exp[1] == 'smd':
+                object.type = exp[1]
         
         for item in exp:
             if item == 'board_only': object.boardOnly = True

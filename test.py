@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     # Other test cases
     assert_compare(Footprint,  path.join(tests_path, 'test_fp_all.kicad_mod'))
-    assert_equality(Footprint,  path.join(tests_path, 'test_fp_empty_attr.kicad_mod'))
+    assert_equality(Footprint, path.join(tests_path, 'test_fp_empty_attr.kicad_mod'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_demorgan.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_demorgan_syitems.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))

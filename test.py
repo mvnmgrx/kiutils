@@ -18,44 +18,134 @@ from kiutils.libraries import LibTable
 
 global_passed = True
 
-def test_from_file(cls, filepath: str) -> bool:
+def test_compare(cls, test_file: str, compare_file: str):
+    """Main test function to test an item`s `.to_sexpr()` method
+
+    Args:
+        test_file (str): Path or path-like object to the test case input
+        compare_file (str): Path or path-like object to the test case output, which may
+        be the same as the input file
+
+    Raises:
+        Exception: Exception text containing the cause of the test failing
+
+    The test passed if no exception was raised. Otherwise the test always failed.
+    """
     global global_passed
-    outpath = f'{filepath}.testoutput'
-    passed = True
-    rtext = ''
+    log = logging.getLogger(__name__)
+    # Construct the item to be tested
+    log.info(f'Constructing {cls} from {test_file} and comparing with {compare_file}..')
+    try:
+        item = cls.from_file(test_file)
+    except Exception as ex:
+        log.error(f'Could not construct. Exception: {ex}')
+        global_passed = False
+        raise Exception("Could not construct")
+
+    # Write parsed item to .testoutput file
+    try:
+        item.to_file(f'{test_file}.testoutput')
+    except Exception as ex:
+        log.error(f'Could not save. Exception: {ex}')
+        global_passed = False
+        raise Exception("Could not save")
+
+    # Compare with the given compare file:
+    passed = filecmp.cmp(f'{test_file}.testoutput', compare_file)
+    if not passed:
+        log.error(f'Input/output not as expected! Check differences of {test_file}.testoutput to {compare_file}!')
+        global_passed = False
+        raise Exception("Input/output not as expected")
+
+def assert_compare(cls, test_file: str):
+    """Instantiates the item `cls` with a given test file as input and test for comparison 
+    the item's output as well as a file containing the expected output for the test
+
+    Args:
+        test_file (str): Path or path-like object to the test file
+
+    The file containing the expected test output must be located in the same folder as given by 
+    `test_file`. It furthermore has to have the following name: `{test_file}.expected`. The 
+    function will then construct the item `cls` with the input given in `test_file`, generate 
+    the output by calling `cls.to_sexpr()` and comparing it with the file containting the 
+    expected test output.
+
+    The test fails if the output of `cls.to_sexpr()` differs from `{test_file}.expected`
+    """
+    rtext = "Success"
     start = time.time()
     try:
-        item = cls.from_file(filepath)
-    except:
-        rtext = 'Could not construct'
-        passed = False
-    
-    if passed:
-        try:
-            item.to_file(outpath)
-        except:
-            rtext = 'Could not save'
-            passed = False
+        test_compare(cls, test_file, f'{test_file}.expected')
+        result = '✅'
+    except Exception as ex:
+        rtext = str(ex)
+        result = '❌'
+        
     end = time.time()
+    print(f'{result} - {end-start:.3f}s - Testing {str(cls)} to equality for case {path.basename(test_file)}. result: {rtext}')
 
-    if passed:
-        passed = filecmp.cmp(filepath, outpath)
-        if not passed:
-            rtext = 'Input/output not equal'
+def assert_equality(cls, test_file: str):
+    """Instantiates the item `cls` with a given test file as input and test for comparison 
+    the item's output as well as the input file itself
 
-    result = '✅' if passed else '❌'
-    rtext = 'Success' if passed else rtext
-    if global_passed:
-        global_passed = passed
-    print(f'{result} - {end-start:.3f}s - Testing {str(cls)} for case {path.basename(filepath)}. result: {rtext}')
+    Args:
+        test_file (str): Path or path-like object to the test file
 
-# Get current working directory
-tests_path = path.join(path.dirname(path.realpath(__file__)), 'tests')
+    The function will then construct the item `cls` with the input given in `test_file`, 
+    generate the output by calling `cls.to_sexpr()` and comparing it with the original 
+    input `test_file`
 
-test_from_file(LibTable, path.join(tests_path, 'kicad-project', 'fp-lib-table'))
-test_from_file(LibTable, path.join(tests_path, 'kicad-project', 'sym-lib-table'))
+    The test fails if the output of `cls.to_sexpr()` differs from `{test_file}`
+    """
+    rtext = "Success"
+    start = time.time()
+    try:
+        test_compare(cls, test_file, test_file)
+        result = '✅'
+    except Exception as ex:
+        rtext = str(ex)
+        result = '❌'
+        
+    end = time.time()
+    print(f'{result} - {end-start:.3f}s - Testing {str(cls)} to compare for case {path.basename(test_file)}. result: {rtext}')
 
-test_from_file(Schematic, path.join(tests_path, 'kicad-project', 'test.kicad_sch'))
+if __name__ == "__main__":
+    # Initialize logger
+    format = logging.Formatter("%(asctime)s - [%(levelname)s] - %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s")
+
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.DEBUG)
+    stream_handler.setFormatter(format)
+    # stream_handler.setFormatter(format)
+    # logger.addHandler(stream_handler)
+
+    file_handler = RotatingFileHandler("test.log", maxBytes = 10e6, backupCount = 1)
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(format)
+    logger.addHandler(file_handler)
+
+    logger.info("KiUtils tests starting..")
+    # Get current working directory
+    tests_path = path.join(path.dirname(path.realpath(__file__)), 'tests')
+
+    # Test KiCad test project
+    assert_equality(LibTable,  path.join(tests_path, 'kicad-project', 'fp-lib-table'))
+    assert_equality(LibTable,  path.join(tests_path, 'kicad-project', 'sym-lib-table'))
+    assert_compare(Schematic,  path.join(tests_path, 'kicad-project', 'test.kicad_sch'))
+    assert_compare(Board,      path.join(tests_path, 'kicad-project', 'test.kicad_pcb'))
+    assert_equality(Footprint, path.join(tests_path, 'kicad-project', 'Library.pretty', 'test.kicad_mod'))
+
+    # Other test cases
+    assert_compare(Footprint,  path.join(tests_path, 'test_fp_all.kicad_mod'))
+    assert_equality(SymbolLib, path.join(tests_path, 'kicad-project', 'test.kicad_sym'))
+    assert_equality(SymbolLib, path.join(tests_path, 'test_sym_demorgan.kicad_sym'))
+    assert_equality(SymbolLib, path.join(tests_path, 'test_sym_demorgan_syitems.kicad_sym'))
+    assert_equality(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))
+    assert_equality(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
+    assert_equality(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
 
 test_from_file(Board, path.join(tests_path, 'kicad-project', 'test.kicad_pcb'))
 

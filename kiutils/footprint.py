@@ -617,7 +617,7 @@ class Footprint():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint
     """
 
-    version: str | None = None
+    libraryLink: str = ""
     """The `libraryLink` attribute defines the link to footprint library of the footprint.
     This only applies to footprints defined in the board file format."""
 

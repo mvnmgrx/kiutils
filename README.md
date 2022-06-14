@@ -1,6 +1,6 @@
 # KiUtils
-Simple and SCM-friendly KiCad board and schematic parser based on Python 
-dataclasses for KiCad 6.0 and up.
+Simple and SCM-friendly KiCad board and schematic parser based on Python dataclasses for KiCad 6.0
+and up.
 
 It is a "pythonic" abstraction of the documentation found at the
 [KiCad Developer Reference](https://dev-docs.kicad.org/en/file-formats/) and is
@@ -9,6 +9,11 @@ files when the Python script ran.
 
 Parsing of the files is based on the S-Expression parser found in this library: 
 [GitLab: KiCad Library utilities](https://gitlab.com/kicad/libraries/kicad-library-utils)
+
+## Prerequisites
+
+The following is required to use `kiutils`:
+- Python 3.10 or higher
 
 ## Structure
 The module features the following classes:

@@ -45,6 +45,11 @@ The module features the following classes:
   | | - TitleBlock()        # Contents of a page's title block
   | | - Property()          # Key-value property
   | | 
+  | + dimensions.py
+  | | - DimensionFormat()   # Text format of a dimension
+  | | - DimensionStyle()    # Graphical style of a dimension
+  | | - Dimension()         # A dimension in the board
+  | | 
   | + fpitems.py
   | | - FpText()            # Text in a footprint
   | | - FpTextBox()         # Text box in a footprint

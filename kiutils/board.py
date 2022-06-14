@@ -20,6 +20,7 @@ from .items.common import Group, Net, PageSettings, TitleBlock
 from .items.zones import Zone
 from .items.brditems import *
 from .items.gritems import *
+from .items.dimensions import Dimension
 from .utils.strings import dequote
 from .utils import sexpr
 from .footprint import Footprint
@@ -72,6 +73,9 @@ class Board():
     zones: list[Zone] = field(default_factory=list)
     """The `zones` token defines a list of zones used in the layout"""
 
+    dimensions: list[Dimension] = field(default_factory=list)
+    """The `dimensions` token defines a list of dimensions in the PCB"""
+
     groups: list[Group] = field(default_factory=list)
     """The `groups` token defines a list of groups used in the layout"""
 
@@ -121,7 +125,7 @@ class Board():
             if item[0] == 'gr_arc': object.graphicalItems.append(GrArc().from_sexpr(item))
             if item[0] == 'gr_poly': object.graphicalItems.append(GrPoly().from_sexpr(item))
             if item[0] == 'gr_curve': object.graphicalItems.append(GrCurve().from_sexpr(item))
-            if item[0] == 'dimension': raise NotImplementedError("Dimensions are not yet handled!")
+            if item[0] == 'dimension': object.dimensions.append(Dimension().from_sexpr(item))
             if item[0] == 'segment': object.traceItems.append(Segment().from_sexpr(item))
             if item[0] == 'arc': object.traceItems.append(Arc().from_sexpr(item))
             if item[0] == 'via': object.traceItems.append(Via().from_sexpr(item))
@@ -210,13 +214,20 @@ class Board():
             expression += footprint.to_sexpr(indent+2, layerInFirstLine=True) + '\n'
 
         # Lines, Texts, Arcs and other graphical items
-        if len(self.graphicalItems) > 0:
-            for item in self.graphicalItems:
-                if isinstance(item, GrPoly):
-                    expression += item.to_sexpr(indent+2, pts_newline=True)
-                else:
-                    expression += item.to_sexpr(indent+2)
-            expression += '\n'
+        for item in self.graphicalItems:
+            if isinstance(item, GrPoly):
+                expression += item.to_sexpr(indent+2, pts_newline=True)
+            else:
+                expression += item.to_sexpr(indent+2)
+
+        # Dimensions
+        for dimension in self.dimensions:
+            expression += dimension.to_sexpr(indent+2)
+
+        # Targets:
+        # TBD
+
+        expression += '\n'
 
         # Segments, vias and arcs
         if len(self.traceItems) > 0:

@@ -30,6 +30,7 @@ The module features the following classes:
   | | - Segment()           # Track segment on a board
   | | - Arc()               # Arc on a board (not implemented)
   | | - Via()               # Via on a board
+  | | - Target()            # Target markers
   | | 
   | + common.py
   | | - Position()          # Position and rotation of an object
@@ -44,6 +45,11 @@ The module features the following classes:
   | | - PageSettings()      # Page size and orientation
   | | - TitleBlock()        # Contents of a page's title block
   | | - Property()          # Key-value property
+  | | 
+  | + dimensions.py
+  | | - DimensionFormat()   # Text format of a dimension
+  | | - DimensionStyle()    # Graphical style of a dimension
+  | | - Dimension()         # A dimension in the board
   | | 
   | + fpitems.py
   | | - FpText()            # Text in a footprint

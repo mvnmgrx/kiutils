@@ -502,8 +502,8 @@ class Pad():
                     if primitive[0] == 'gr_poly': object.customPadPrimitives.append(GrPoly().from_sexpr(primitive))
                     if primitive[0] == 'gr_curve': object.customPadPrimitives.append(GrCurve().from_sexpr(primitive))
 
-                    # XXX: Are dimentions even implemented like this?
-                    if primitive[0] == 'dimension': raise NotImplementedError("Dimensions are not yet handled!")
+                    # XXX: Are dimentions even implemented here?
+                    if primitive[0] == 'dimension': raise NotImplementedError("Dimensions are not yet handled! Please report this bug along with the file being parsed.")
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:

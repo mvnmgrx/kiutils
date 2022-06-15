@@ -816,6 +816,8 @@
     (format (units 2) (units_format 1) (precision 0))
     (style (thickness 0.15) (arrow_length 1.27) (text_position_mode 0) (extension_height 0.58642) (extension_offset 0.5) keep_text_aligned)
   )
+  (target plus (at 185.8 93.35) (size 5) (width 0.1) (layer "Edge.Cuts") (tstamp 3bf82ecb-0898-4a14-bef0-d88c4f838b87))
+  (target x (at 187.95 98.8) (size 4) (width 1) (layer "Edge.Cuts") (tstamp 47941cd1-b5c0-40bd-bc68-af434db15455))
 
   (segment (start 124.6875 110.7875) (end 125.9625 109.5125) (width 0.25) (layer "F.Cu") (net 0) (tstamp 504cb9e4-5572-4208-bc9d-30a7efff8b9a))
   (segment (start 159.025 90.4) (end 165.575 90.4) (width 0.25) (layer "F.Cu") (net 0) (tstamp 50bf00c7-c69d-47e9-8d7f-002d8001f5dd))

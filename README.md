@@ -15,6 +15,23 @@ Parsing of the files is based on the S-Expression parser found in this library:
 The following is required to use `kiutils`:
 - Python 3.10 or higher
 
+## Installation and usage
+KiUtils is available on [PyPI](https://pypi.org/project/kiutils/). Use Python's `pip` 
+to install it:
+```
+pip install kiutils
+```
+
+The most relevant classes can then be imported like this:
+```python
+from kiutils.board import Board
+from kiutils.libraries import LibTable
+from kiutils.schematic import Schematic
+from kiutils.footprint import Footprint
+from kiutils.symbol import SymbolLib
+```
+Check the [Structure]() section on all importable classes or the [Examples]() section for code snippets.
+
 ## Structure
 The module features the following classes:
 ```python
@@ -108,6 +125,14 @@ The module features the following classes:
   |
   + board.py
   | - Board()               # Board files (.kicad_pcb)
+  |
+  + footprint.py
+  | - Attributes()          # List of attributes of a footprint
+  | - Model()               # 3D Model
+  | - DrillDefinition()     # Drill mark of a footprint pad
+  | - PadOptions()          # Settings for custom pads
+  | - Pad()                 # A footprint pad
+  | - Footprint()           # Footprint files (.kicad_mod)
   |
   + libraries.py
   | - Library()             # Library table entry

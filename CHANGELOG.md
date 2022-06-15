@@ -1,5 +1,9 @@
 # kiutils - CHANGELOG
 
+## v1.1.0 - 16.06.2022
+- Added: Support for Python Package Index (PyPI)
+- Changed: Source directory for development moved from `kiutils/` to `src/kiutils/`
+
 ## v1.0.1 - 15.06.2022
 - Added: Dimension, DimensionStyle, DimensionFormat classes for dimensions (measurements in PCB)
 - Added: Target class for board target markers

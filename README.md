@@ -148,6 +148,14 @@ module.
 - **Schematic:** Sometimes KiCad inserts blank lines between wires, bus entries 
   and polylines which are not picked up by the parser. Same problem as above 
   with SCMs.
+- **Backwards compatibility:** KiCad <6 file formats can be parsed, but will 
+  be converted to KiCad 6 style S-Expression upon saving. It was observed that 
+  e.g. footprints of an older version will experience conversion errors in some 
+  features that KiCad 6 now handles differently (see `fp_arc` as an example). 
+  It is in the user's hands to decide on how to deal with this, but support
+  for converting correctly to KiCad 6 formats may be added in the future. 
+  Please create an issue with a snippet of what you are trying to parse when 
+  stumbling upon such a situation.
 
 ## Examples
 These examples show how the module is intended to be used. 

@@ -74,7 +74,10 @@ class Board():
     """The `zones` token defines a list of zones used in the layout"""
 
     dimensions: list[Dimension] = field(default_factory=list)
-    """The `dimensions` token defines a list of dimensions in the PCB"""
+    """The `dimensions` token defines a list of dimensions on the PCB"""
+
+    targets: list[Target] = field(default_factory=list)
+    """The `targets` token defines a list of target markers on the PCB"""
 
     groups: list[Group] = field(default_factory=list)
     """The `groups` token defines a list of groups used in the layout"""
@@ -126,6 +129,7 @@ class Board():
             if item[0] == 'gr_poly': object.graphicalItems.append(GrPoly().from_sexpr(item))
             if item[0] == 'gr_curve': object.graphicalItems.append(GrCurve().from_sexpr(item))
             if item[0] == 'dimension': object.dimensions.append(Dimension().from_sexpr(item))
+            if item[0] == 'target': object.targets.append(Target().from_sexpr(item))
             if item[0] == 'segment': object.traceItems.append(Segment().from_sexpr(item))
             if item[0] == 'arc': object.traceItems.append(Arc().from_sexpr(item))
             if item[0] == 'via': object.traceItems.append(Via().from_sexpr(item))
@@ -224,8 +228,9 @@ class Board():
         for dimension in self.dimensions:
             expression += dimension.to_sexpr(indent+2)
 
-        # Targets:
-        # TBD
+        # Target markers:
+        for target in self.targets:
+            expression += target.to_sexpr(indent+2)
 
         expression += '\n'
 

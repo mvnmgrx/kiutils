@@ -830,3 +830,75 @@ class Arc():
 
     def to_sexpr(self, *args, **kwargs):
         raise NotImplementedError
+
+
+@dataclass
+class Target():
+    """The `target` token defines a target marker on the PCB
+
+    Documentation:
+        Not found in KiCad docu - 15.06.2022
+    """
+
+    type: str = "plus"
+    """The `type` token specifies the shape of the marker. Valid types are `plus` and `x`."""
+
+    position: Position = Position()
+    """The `position` token specifies the position of the target marker"""
+
+    size: float = 0
+    """The `size` token sets the marker's size"""
+
+    width: float = 0.1
+    """The `width` token sets the marker's line width"""
+
+    layer: str = "F.Cu"
+    """The `layer` token sets the canonical layer where the target marker resides"""
+
+    tstamp: str | None = None
+    """The `tstamp` token defines the unique identifier of the target"""
+
+    @classmethod
+    def from_sexpr(cls, exp: str):
+        """Convert the given S-Expresstion into a Target object
+
+        Args:
+            exp (list): Part of parsed S-Expression `(target ...)`
+
+        Raises:
+            Exception: When given parameter's type is not a list
+            Exception: When the first item of the list is not target
+
+        Returns:
+            Target: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'target':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.type = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'at': object.position = Position().from_sexpr(item)
+            if item[0] == 'size': object.size = item[1]
+            if item[0] == 'width': object.width = item[1]
+            if item[0] == 'layer': object.layer = item[1]
+            if item[0] == 'tstamp': object.tstamp = item[1]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
+            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        return f'{indents}(target {self.type} (at {self.position.X} {self.position.Y}) (size {self.size}) (width {self.width}) (layer "{self.layer}") (tstamp {self.tstamp})){endline}'

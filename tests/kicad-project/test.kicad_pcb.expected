@@ -148,6 +148,7 @@
     (solder_mask_min_width 1)
     (pad_to_paste_clearance -1)
     (pad_to_paste_clearance_ratio -0.01)
+    (aux_axis_origin 177.65 97.75)
     (pcbplotparams
       (layerselection 0x00010fc_ffffffff)
       (disableapertmacros false)

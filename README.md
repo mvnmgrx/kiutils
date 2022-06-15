@@ -30,6 +30,7 @@ The module features the following classes:
   | | - Segment()           # Track segment on a board
   | | - Arc()               # Arc on a board (not implemented)
   | | - Via()               # Via on a board
+  | | - Target()            # Target markers
   | | 
   | + common.py
   | | - Position()          # Position and rotation of an object

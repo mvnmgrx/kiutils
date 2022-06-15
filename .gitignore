@@ -12,5 +12,8 @@
 # Other stuff
 *.log
 
-# Releases
-output/
+# Releases and build stuff
+output/*
+dist/*
+build/*
+src/kiutils.egg-info/*

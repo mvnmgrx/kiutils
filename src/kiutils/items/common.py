@@ -49,8 +49,8 @@ class Position():
             exp (list): Part of parsed S-Expression `(xxx ...)`
 
         Raises:
-            Exception: When the first item of the list is not fill or it does not have the
-            correct length
+            Exception: When the given expression is not of type `list` or the list is less than
+            3 items long
 
         Returns:
             Position: Object of the class initialized with the given S-Expression

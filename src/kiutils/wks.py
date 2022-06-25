@@ -256,7 +256,7 @@ class Line():
 
         Returns:
             str: S-Expression of this object
-        """        
+        """
         indents = ' '*indent
         endline = '\n' if newline else ''
 
@@ -322,7 +322,7 @@ class Rect():
 
         Returns:
             Position: Object of the class initialized with the given S-Expression
-        """        
+        """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
 
@@ -683,10 +683,10 @@ class TextSize():
     """The `TextSize` define the default width and height of text"""
 
     width: float = 1.5
-    """The `width` token defines the default width of a text element"""
+    """The `width` token defines the default width of a text element. Defaults to 1,5."""
 
     height: float = 1.5
-    """The `height` token defines the default height of a text element"""
+    """The `height` token defines the default height of a text element. Defaults to 1,5."""
 
     @classmethod
     def from_sexpr(cls, exp: str):
@@ -696,13 +696,22 @@ class TextSize():
             exp (list): Part of parsed S-Expression `(textsize ...)`
 
         Raises:
-            Exception: When given parameter's type is not a list
+            Exception: When given parameter's type is not a list or when its not exactly 3 long
             Exception: When the first item of the list is not `textsize`
 
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        raise NotImplementedError()
+        if not isinstance(exp, list) or len(exp) != 3:
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'textsize':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.width = exp[1]
+        object.height = exp[2]
+        return object
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object
@@ -714,7 +723,9 @@ class TextSize():
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+        return f'{indents}(textsize {self.width} {self.height}){endline}'
 
 @dataclass
 class Setup():
@@ -758,19 +769,44 @@ class Setup():
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        raise NotImplementedError()
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
 
-    def to_sexpr(self, indent=0, newline=False):
+        if exp[0] != 'setup':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp[1:]:
+            if item[0] == 'textsize': object.textSize = TextSize().from_sexpr(item)
+            if item[0] == 'linewidth': object.lineWidth = item[1]
+            if item[0] == 'textlinewidth': object.textLineWidth = item[1]
+            if item[0] == 'left_margin': object.leftMargin = item[1]
+            if item[0] == 'right_margin': object.rightMargin = item[1]
+            if item[0] == 'top_margin': object.topMargin = item[1]
+            if item[0] == 'bottom_margin': object.bottomMargin = item[1]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True):
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
+            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        # KiCad puts no spaces between tokens here 
+        expression =  f'{indents}(setup {self.textSize.to_sexpr()}(linewidth {self.lineWidth})'
+        expression += f'(textlinewidth {self.textLineWidth})\n{indents}'
+        expression += f'(left_margin {self.leftMargin})(right_margin {self.rightMargin})'
+        expression += f'(top_margin {self.topMargin})(bottom_margin {self.bottomMargin})'
+        expression += f'){endline}'
+
+        return expression
 
 @dataclass
 class Worksheet():
@@ -804,8 +840,24 @@ class Worksheet():
 
         Returns:
             Position: Object of the class initialized with the given S-Expression
-        """
-        raise NotImplementedError()
+        """        
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'kicad_wks':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp[1:]:
+            if item[0] == 'version': object.version = item[1]
+            if item[0] == 'generator': object.generator = item[1]
+            if item[0] == 'setup': object.setup = Setup().from_sexpr(item)
+            if item[0] == 'rect': object.drawingObjects.append(Rect().from_sexpr(item))
+            if item[0] == 'line': object.drawingObjects.append(Line().from_sexpr(item))
+            if item[0] == 'polygon': object.drawingObjects.append(Polygon().from_sexpr(item))
+            if item[0] == 'tbtext': object.drawingObjects.append(TbText().from_sexpr(item))
+            if item[0] == 'bitmap': object.drawingObjects.append(Bitmap().from_sexpr(item))
+        return object
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object
@@ -817,4 +869,13 @@ class Worksheet():
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        expression =  f'{indents}(kicad_wks (version {self.version}) (generator {self.generator})\n'
+        expression += self.setup.to_sexpr(indent+2)
+        for item in self.drawingObjects:
+            expression += item.to_sexpr(indent+2)
+        expression += f'{indents}){endline}'
+
+        return expression

@@ -15,16 +15,18 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
+from .items.common import Justify
+from .utils.strings import dequote
 
 @dataclass
 class WksFontSize():
     """The `WksFontSize` token defines the size of a font in a worksheet"""
 
     width: float = 1.0
-    """The `width` token defines the width of the font"""
+    """The `width` token defines the width of the font. Defaults to 1."""
 
     height: float = 1.0
-    """The `height` token defines the height of the font"""
+    """The `height` token defines the height of the font. Defaults to 1."""
 
     @classmethod
     def from_sexpr(cls, exp: str):
@@ -34,38 +36,52 @@ class WksFontSize():
             exp (list): Part of parsed S-Expression `(size ...)`
 
         Raises:
-            Exception: When given parameter's type is not a list
+            Exception: When given parameter's type is not a list or its length is not equal to 3
             Exception: When the first item of the list is not `size`
 
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        raise NotImplementedError()
+        if not isinstance(exp, list) or len(exp) != 3:
+            raise Exception("Expression does not have the correct type")
 
-    def to_sexpr(self, indent=0, newline=False):
+        if exp[0] != 'size':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.width = exp[1]
+        object.height = exp[2]
+        return object
+
+    def to_sexpr(self, indent=2, newline=False):
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
             newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+        return f'{indents}(size {self.width} {self.height}){endline}'
 
 @dataclass
 class WksFont():
     """The `WksFont` token defines how a text is drawn"""
 
+    linewidth: float | None = None
+    """The optional `linewidth` token defines the width of the font's lines"""
+
     size: WksFontSize | None = None
     """The optional `size` token defines the size of the font"""
 
     bold: bool = False
-    """The `bold` token defines if the font is drawn bold"""
+    """The `bold` token defines if the font is drawn bold. Defaults to False."""
 
     italic: bool = False
-    """The `italic` token defines if the font is drawn italic"""
+    """The `italic` token defines if the font is drawn italic. Defaults to False."""
 
     @classmethod
     def from_sexpr(cls, exp: str):
@@ -81,7 +97,21 @@ class WksFont():
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        raise NotImplementedError()
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'size':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp:
+            if type(item) != type(list):
+                if item == 'bold': object.bold = True
+                if item == 'italic': object.italic = True
+                continue
+            if item[0] == 'linewidth': object.linewidth = item[1]
+            if item[0] == 'size': object.size = WksFontSize().from_sexpr(item)
+        return object
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object
@@ -93,7 +123,15 @@ class WksFont():
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        lw = f' (linewidth {self.linewidth}' if self.linewidth is not None else ''
+        size = f' {self.size.to_sexpr()}' if self.size is not None else ''
+        bold = f' bold' if self.bold else ''
+        italic = f' italic' if self.italic else ''
+
+        return f'{indents}(font{lw}{size}{bold}{italic}){endline}'
 
 @dataclass
 class WksPosition():
@@ -102,10 +140,10 @@ class WksPosition():
     """
 
     X: float = 0.0
-    """The `X` attribute defines the horizontal position of the object"""
+    """The `X` attribute defines the horizontal position of the object. Defaults to 0."""
 
     Y: float = 0.0
-    """The `Y` attribute defines the vertical position of the object"""
+    """The `Y` attribute defines the vertical position of the object. Defaults to 0."""
 
     corner: str | None = None
     """The optional `corner` token is used to define the initial corner for repeating"""
@@ -131,6 +169,7 @@ class WksPosition():
         object.X = exp[1]
         object.Y = exp[2]
 
+        # The last parameter refers to the corner token, if any is present
         if len(exp) >= 3:
             object.corner = exp[3]
 
@@ -144,7 +183,7 @@ class WksPosition():
 @dataclass
 class Line():
     """The `Line` token defines how a line is drawn in a work sheet
-    
+
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_graphical_line"""
 
@@ -156,6 +195,13 @@ class Line():
 
     end: WksPosition = WksPosition()
     """The `end` token defines the end position of the line"""
+
+    option: str | None = None
+    """The optional `option` token defines on which pages the line shall be shown. Possible values
+    are:
+    - None: Item will be shown on all pages
+    - `notonpage1`: On all pages except page 1
+    - `page1only`: Only visible on page 1"""
 
     repeat: int | None = None
     """The optional `repeat` token defines the count for repeated incremental lines"""
@@ -174,7 +220,7 @@ class Line():
         """Convert the given S-Expresstion into a TbText object
 
         Args:
-            exp (list): Part of parsed S-Expression `(tbtext ...)`
+            exp (list): Part of parsed S-Expression `(line ...)`
 
         Raises:
             Exception: When given parameter's type is not a list
@@ -183,24 +229,55 @@ class Line():
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        raise NotImplementedError()
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
 
-    def to_sexpr(self, indent=0, newline=False):
+        if exp[0] != 'line':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp[1:]:
+            if item[0] == 'name': object.name = item[1]
+            if item[0] == 'start': object.start = WksPosition().from_sexpr(item)
+            if item[0] == 'end': object.end = WksPosition().from_sexpr(item)
+            if item[0] == 'option': object.option = item[1]
+            if item[0] == 'repeat': object.repeat = item[1]
+            if item[0] == 'incrx': object.incrx = item[1]
+            if item[0] == 'incry': object.incry = item[1]
+            if item[0] == 'comment': object.comment = item[1]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True):
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
+            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
             str: S-Expression of this object
-        """
-        raise NotImplementedError()
+        """        
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        start_corner = f' {self.start.corner}' if self.start.corner is not None else ''
+        end_corner = f' {self.end.corner}' if self.end.corner is not None else ''
+        option = f' (option {self.option})' if self.option is not None else ''
+        repeat = f' (repeat {self.repeat})' if self.repeat is not None else ''
+        incrx = f' (incrx {self.incrx})' if self.incrx is not None else ''
+        incry = f' (incry {self.incry})' if self.incry is not None else ''
+        comment = f' (comment "{dequote(self.comment)}")\n' if self.comment is not None else ''
+
+        expression  = f'{indents}(line (name "{dequote(self.name)}") '
+        expression += f'(start {self.start.X} {self.start.Y}{start_corner}) '
+        expression += f'(end {self.end.X} {self.end.Y}{end_corner})'
+        expression += f'{option}{repeat}{incrx}{incry}{comment}){endline}'
+        return expression
 
 @dataclass
 class Rect():
     """The `Rect` token defines how a rectangle is drawn in a work sheet
-    
+
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_graphical_rectangle"""
 
@@ -212,6 +289,13 @@ class Rect():
 
     end: WksPosition = WksPosition()
     """The `end` token defines the end position of the rectangle"""
+
+    option: str | None = None
+    """The optional `option` token defines on which pages the rectangle shall be shown. Possible values
+    are:
+    - None: Item will be shown on all pages
+    - `notonpage1`: On all pages except page 1
+    - `page1only`: Only visible on page 1"""
 
     repeat: int | None = None
     """The optional `repeat` token defines the count for repeated incremental rectangles"""
@@ -230,16 +314,32 @@ class Rect():
         """Convert the given S-Expresstion into a TbText object
 
         Args:
-            exp (list): Part of parsed S-Expression `(tbtext ...)`
+            exp (list): Part of parsed S-Expression `(rect ...)`
 
         Raises:
             Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `tbtext`
+            Exception: When the first item of the list is not `rect`
 
         Returns:
             Position: Object of the class initialized with the given S-Expression
-        """
-        raise NotImplementedError()
+        """        
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'rect':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp[1:]:
+            if item[0] == 'name': object.name = item[1]
+            if item[0] == 'start': object.start = WksPosition().from_sexpr(item)
+            if item[0] == 'end': object.end = WksPosition().from_sexpr(item)
+            if item[0] == 'option': object.option = item[1]
+            if item[0] == 'repeat': object.repeat = item[1]
+            if item[0] == 'incrx': object.incrx = item[1]
+            if item[0] == 'incry': object.incry = item[1]
+            if item[0] == 'comment': object.comment = item[1]
+        return object
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object
@@ -251,12 +351,27 @@ class Rect():
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        start_corner = f' {self.start.corner}' if self.start.corner is not None else ''
+        end_corner = f' {self.end.corner}' if self.end.corner is not None else ''
+        option = f' (option {self.option})' if self.option is not None else ''
+        repeat = f' (repeat {self.repeat})' if self.repeat is not None else ''
+        incrx = f' (incrx {self.incrx})' if self.incrx is not None else ''
+        incry = f' (incry {self.incry})' if self.incry is not None else ''
+        comment = f' (comment "{dequote(self.comment)}")\n' if self.comment is not None else ''
+
+        expression  = f'{indents}(rect (name "{dequote(self.name)}") '
+        expression += f'(start {self.start.X} {self.start.Y}{start_corner}) '
+        expression += f'(end {self.end.X} {self.end.Y}{end_corner})'
+        expression += f'{option}{repeat}{incrx}{incry}{comment}){endline}'
+        return expression
 
 @dataclass
 class Polygon():
     """The `Polygon` token defines a graphical polygon in a worksheet
-    
+
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_graphical_polygon
     """
@@ -266,6 +381,13 @@ class Polygon():
 
     position: WksPosition = WksPosition()
     """The `position` token defines the coordinates of the polygon"""
+
+    option: str | None = None
+    """The optional `option` token defines on which pages the polygon shall be shown. Possible values
+    are:
+    - None: Item will be shown on all pages
+    - `notonpage1`: On all pages except page 1
+    - `page1only`: Only visible on page 1"""
 
     rotate: float | None = None
     """The optional `rotate` token defines the rotation angle of the polygon object"""
@@ -299,6 +421,7 @@ class Polygon():
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
+        # TODO: Polygons seem to not be available in the WKS editor GUI. Are those still a feature?
         raise NotImplementedError()
 
     def to_sexpr(self, indent=0, newline=False):
@@ -316,7 +439,7 @@ class Polygon():
 @dataclass
 class Bitmap():
     """The `Polygon` token defines on or more embedded images
-    
+
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_image
     """
@@ -326,6 +449,13 @@ class Bitmap():
 
     position: WksPosition = WksPosition()
     """The `position` token defines the coordinates of the bitmap"""
+
+    option: str | None = None
+    """The optional `option` token defines on which pages the image shall be shown. Possible values
+    are:
+    - None: Item will be shown on all pages
+    - `notonpage1`: On all pages except page 1
+    - `page1only`: Only visible on page 1"""
 
     scale: float = 1.0
     """The `scale` token defines the scale of the bitmap object"""
@@ -344,10 +474,10 @@ class Bitmap():
 
     # TODO: Parse this nonesense as a binary struct to make it more useful
     pngdata: list[str] = field(default_factory=list)
-    """The `pngdata` token defines a list of strings representing up to 32 bytes per entry of 
-    the image being saved. 
-    
-    Format: 
+    """The `pngdata` token defines a list of strings representing up to 32 bytes per entry of
+    the image being saved.
+
+    Format:
     - "xx xx xx xx xx (..) xx "
 
     The list must be 32byte aligned, leaving a space after the last byte as shown in the format
@@ -368,7 +498,28 @@ class Bitmap():
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        raise NotImplementedError()
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'bitmap':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp[1:]:
+            if item[0] == 'name': object.name = item[1]
+            if item[0] == 'pos': object.position = WksPosition().from_sexpr(item)
+            if item[0] == 'option': object.option = item[1]
+            if item[0] == 'scale': object.scale = item[1]
+            if item[0] == 'repeat': object.repeat = item[1]
+            if item[0] == 'incrx': object.incrx = item[1]
+            if item[0] == 'incry': object.incry = item[1]
+            if item[0] == 'comment': object.comment = item[1]
+            if item[0] == 'pngdata':
+                if len(item) < 2: continue
+                for data in item[1:]:
+                    if data[0] != 'data': continue
+                    object.pngdata.append(data[1])
+        return object
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object
@@ -380,13 +531,31 @@ class Bitmap():
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        repeat = f' (repeat {self.repeat})' if self.repeat is not None else ''
+        incrx = f' (incrx {self.incrx})' if self.incrx is not None else ''
+        incry = f' (incry {self.incry})' if self.incry is not None else ''
+        option = f' (option {self.option})' if self.option is not None else ''
+
+        expression  = f'{indents}(bitmap (name "{dequote(self.name)}") '
+        expression += f'(pos {self.position.X} {self.position.Y}){option} (scale {self.scale}'
+        expression += f'{repeat}{incrx}{incry}\n'
+        if self.comment is not None:
+            # Here KiCad decides to only use 1 space for some unknown reason ..
+            expression += f' (comment "{dequote(self.comment)}")\n'
+        expression += f'{indents}(pngdata\n'
+        for data in self.pngdata:
+            expression += f'{indents}  (data "{data}")\n'
+        expression += f'{indents}){endline}'
+        return expression
 
 
 @dataclass
 class TbText():
     """The `TbText` token define text used in the title block of a work sheet
-    
+
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_title_block_text"""
 
@@ -399,8 +568,27 @@ class TbText():
     position: WksPosition = WksPosition()
     """The `position` token defines the position of the text"""
 
+    option: str | None = None
+    """The optional `option` token defines on which pages the text shall be shown. Possible values
+    are:
+    - None: Item will be shown on all pages
+    - `notonpage1`: On all pages except page 1
+    - `page1only`: Only visible on page 1"""
+
+    rotate: float | None = None
+    """The optional `rotate` token defines the rotation of the text in degrees"""
+
     font: WksFont = WksFont()
     """The `font` token define how the text is drawn"""
+
+    justify: Justify | None = None
+    """The optional `justify` token defines the justification of the text"""
+
+    maxlen: float | None = None
+    """The optional `maxlen` token defines the maximum length of the text"""
+
+    maxheight: float | None = None
+    """The optional `maxheight` token defines the maximum height of the text"""
 
     repeat: int | None = None
     """The optional `repeat` token defines the count for repeated incremental text"""
@@ -410,6 +598,10 @@ class TbText():
 
     incry: float | None = None
     """The optional `incry` token defines the repeat distance on the Y axis"""
+
+    incrlabel: int | None = None
+    """The optional `incrlabel` token defines the amount of characters that are moved with every
+    repeated incremental text"""
 
     comment: str | None = None
     """The optional `comment` token is a comment for the text object"""
@@ -428,19 +620,62 @@ class TbText():
         Returns:
             Position: Object of the class initialized with the given S-Expression
         """
-        raise NotImplementedError()
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
 
-    def to_sexpr(self, indent=0, newline=False):
+        if exp[0] != 'tbtext':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.text = exp[2]
+        for item in exp[2:]:
+            if item[0] == 'name': object.name = item[1]
+            if item[0] == 'pos': object.position = WksPosition().from_sexpr(item)
+            if item[0] == 'option': object.option = item[1]
+            if item[0] == 'rotate': object.rotate = item[1]
+            if item[0] == 'font': object.font = WksFont().from_sexpr(item)
+            if item[0] == 'justify': object.justify = Justify().from_sexpr(item)
+            if item[0] == 'maxlen': object.maxlen = item[1]
+            if item[0] == 'maxheight': object.maxheight = item[1]
+            if item[0] == 'repeat': object.repeat = item[1]
+            if item[0] == 'incrx': object.incrx = item[1]
+            if item[0] == 'incry': object.incry = item[1]
+            if item[0] == 'incrlabel': object.incrlabel = item[1]
+            if item[0] == 'comment': object.comment = item[1]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True):
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
+            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        corner = f' {self.position.corner}' if self.position.corner is not None else ''
+        repeat = f' (repeat {self.repeat})' if self.repeat is not None else ''
+        incrx = f' (incrx {self.incrx})' if self.incrx is not None else ''
+        incry = f' (incry {self.incry})' if self.incry is not None else ''
+        option = f' (option {self.option})' if self.option is not None else ''
+        rotate = f' (rotate {self.rotate})' if self.rotate is not None else ''
+        justify = f' {self.justify.to_sexpr()}' if self.justify is not None else ''
+        maxlen = f' (maxlen {self.maxlen}' if self.maxlen is not None else ''
+        maxheight = f' (maxheight {self.maxheight}' if self.maxheight is not None else ''
+        incrlabel = f' (incrlabel {self.incrlabel}' if self.incrlabel is not None else ''
+
+        expression  = f'{indents}(tbtext "{dequote(self.text)}" (name "{dequote(self.name)}") '
+        expression += f'(pos {self.position.X} {self.position.Y}{corner}){option}{rotate} '
+        expression += f'{self.font.to_sexpr()}{justify}{maxlen}{maxheight}'
+        expression += f'{repeat}{incrx}{incry}{incrlabel}'
+        if self.comment is not None:
+            expression += f' (comment "{dequote(self.comment)}")\n'
+        expression += f'){endline}'
+        return expression
 
 
 @dataclass
@@ -484,7 +719,7 @@ class TextSize():
 @dataclass
 class Setup():
     """The `setup` token defines the configuration information for the work sheet
-    
+
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_set_up_section"""
 
@@ -540,10 +775,10 @@ class Setup():
 @dataclass
 class Worksheet():
     """The `Worksheet` token defines a KiCad worksheet (.kicad_wks file)
-    
+
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_header_section"""
-    
+
     version: str = "20210606"
     """The `version` token defines the work sheet version using the YYYYMMDD date format"""
 

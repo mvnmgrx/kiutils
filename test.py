@@ -150,9 +150,11 @@ if __name__ == "__main__":
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
-    assert_equality(Worksheet, path.join(tests_path, 'test_wks_all.kicad_sym'))
+    assert_equality(Worksheet, path.join(tests_path, 'test_wks_all.kicad_wks'))
+
+    print("\n---------------------\n")
 
     if global_passed:
-        print("KiTools tests done")
+        print("✅ KiTools tests done, all green ✅")
     else:
-        print("KiTools tests done, but some tests failed!")
+        print("❌❌ KiTools tests done, but some tests failed! Check 'test.log' for more information ❌❌")

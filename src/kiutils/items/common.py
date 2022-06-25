@@ -389,7 +389,8 @@ class Justify():
 
         object = cls()
         for item in exp:
-            if item == 'left' or item == 'right': object.horizontally = item
+            # 'center' is the standard on vertical but not on horizontal in work sheets 
+            if item == 'left' or item == 'right' or item == 'center': object.horizontally = item
             if item == 'top' or item == 'bottom': object.vertically = item
             if item == 'mirror': object.mirror = True
         return object

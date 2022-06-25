@@ -14,9 +14,11 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from os import path
 
 from .items.common import Justify
 from .utils.strings import dequote
+from .utils import sexpr
 
 @dataclass
 class WksFontSize():
@@ -827,6 +829,10 @@ class Worksheet():
     drawingObjects: list = field(default_factory=list)
     """The `drawingObjects` token can contain zero or more texts, lines, rectangles, polys or images"""
 
+    filePath: str | None = None
+    """The `filePath` token defines the path-like string to the board file. Automatically set when
+    `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
+    
     @classmethod
     def from_sexpr(cls, exp: str):
         """Convert the given S-Expresstion into a Worksheet object
@@ -858,6 +864,46 @@ class Worksheet():
             if item[0] == 'tbtext': object.drawingObjects.append(TbText().from_sexpr(item))
             if item[0] == 'bitmap': object.drawingObjects.append(Bitmap().from_sexpr(item))
         return object
+
+    @classmethod
+    def from_file(cls, filepath: str):
+        """Load a board directly from a KiCad board file (`.kicad_pcb`) and sets the
+        `self.filePath` attribute to the given file path.
+
+        Args:
+            filepath (str): Path or path-like object that points to the file
+
+        Raises:
+            Exception: If the given path is not a file
+
+        Returns:
+            Footprint: Object of the Schematic class initialized with the given KiCad schematic
+        """
+        if not path.isfile(filepath):
+            raise Exception("Given path is not a file!")
+
+        with open(filepath, 'r') as infile:
+            item = cls.from_sexpr(sexpr.parse_sexp(infile.read()))
+            item.filePath = filepath
+            return item
+
+    def to_file(self, filepath = None):
+        """Save the object to a file in S-Expression format
+
+        Args:
+            filepath (str, optional): Path-like string to the file. Defaults to None. If not set, the
+            attribute `self.filePath` will be used instead
+
+        Raises:
+            Exception: If no file path is given via the argument or via `self.filePath`
+        """
+        if filepath is None:
+            if self.filePath is None:
+                raise Exception("File path not set")
+            filepath = self.filePath
+
+        with open(filepath, 'w') as outfile:
+            outfile.write(self.to_sexpr())
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object

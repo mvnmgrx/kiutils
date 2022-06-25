@@ -828,8 +828,8 @@ class Setup():
         return expression
 
 @dataclass
-class Worksheet():
-    """The `Worksheet` token defines a KiCad worksheet (.kicad_wks file)
+class WorkSheet():
+    """The `WorkSheet` token defines a KiCad worksheet (.kicad_wks file)
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_header_section"""

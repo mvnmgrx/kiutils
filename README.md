@@ -1,8 +1,14 @@
 # KiUtils
-Simple and SCM-friendly KiCad board and schematic parser based on Python dataclasses for KiCad 6.0
-and up.
+Simple and SCM-friendly KiCad file parser based on Python dataclasses for KiCad 6.0
+and up. The following KiCad-related files are currently supported:
+- `.kicad_pcb` - Board layouts
+- `.kicad_sch` - Schematics
+- `.kicad_wks` - Worksheets
+- `.kicad_mod` - Footprints
+- `.kicad_sym` - Symbols and symbol libraries
+- `fp-lib-table` & `sym-lib-table` - Library tables
 
-It is a "pythonic" abstraction of the documentation found at the
+KiUtils is a "pythonic" abstraction of the documentation found at the
 [KiCad Developer Reference](https://dev-docs.kicad.org/en/file-formats/) and is
 intended to work with an SCM like Git or SVN without breaking the layout of the
 files when the Python script ran.
@@ -15,7 +21,7 @@ Parsing of the files is based on the S-Expression parser found in this library:
 The following is required to use `kiutils`:
 - Python 3.10 or higher
 
-## Installation and usage
+## Installation and Usage
 KiUtils is available on [PyPI](https://pypi.org/project/kiutils/). Use Python's `pip` 
 to install it:
 ```
@@ -29,6 +35,7 @@ from kiutils.libraries import LibTable
 from kiutils.schematic import Schematic
 from kiutils.footprint import Footprint
 from kiutils.symbol import SymbolLib
+from kiutils.wks import WorkSheet
 ```
 Check the [Structure]() section on all importable classes or the [Examples]() section for code snippets.
 
@@ -142,9 +149,22 @@ The module features the following classes:
   | - Schematic()           # Schematic files (.kicad_sch)
   |
   + symbol.py
-    - SymbolPin()           # Pin in a symbol
-    - Symbol()              # Symbol itself
-    - SymbolLib()           # Symbol library file (.kicad_sym)
+  | - SymbolPin()           # Pin in a symbol
+  | - Symbol()              # Symbol itself
+  | - SymbolLib()           # Symbol library file (.kicad_sym)
+  |
+  + wks.py
+    - WksFontSize()         # Font size of worksheet texts
+    - WksFont()             # Font properties of worksheet texts
+    - WksPosition()         # Item positions on worksheets
+    - Line()                # Lines on worksheets
+    - Rect()                # Rectangles on worksheets
+    - Polygon()             # Polys (Not implemented as the GUI does not support this)
+    - Bitmap()              # Image in a worksheet
+    - TbText()              # Title bock text on a worksheet
+    - TextSize()            # Standard text size on a worksheet
+    - Setup()               # Worksheet configuration infos
+    - WorkSheet()           # The worksheet file (.kicad_wks)
 ```
 
 Every class has at at least the following functions:

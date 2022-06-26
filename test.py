@@ -12,11 +12,12 @@ from os import path
 import filecmp
 import logging
 
-from kiutils.footprint import Footprint
-from kiutils.symbol import SymbolLib
-from kiutils.schematic import Schematic
-from kiutils.board import Board
-from kiutils.libraries import LibTable
+from src.kiutils.footprint import Footprint
+from src.kiutils.symbol import SymbolLib
+from src.kiutils.schematic import Schematic
+from src.kiutils.board import Board
+from src.kiutils.libraries import LibTable
+from src.kiutils.wks import WorkSheet
 
 global_passed = True
 
@@ -149,8 +150,11 @@ if __name__ == "__main__":
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
+    assert_equality(WorkSheet, path.join(tests_path, 'test_wks_all.kicad_wks'))
+
+    print("\n---------------------\n")
 
     if global_passed:
-        print("KiTools tests done")
+        print("✅ KiTools tests done, all green ✅")
     else:
-        print("KiTools tests done, but some tests failed!")
+        print("❌❌ KiTools tests done, but some tests failed! Check 'test.log' for more information ❌❌")

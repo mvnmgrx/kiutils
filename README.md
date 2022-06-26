@@ -1,13 +1,25 @@
 # KiUtils
-Simple and SCM-friendly KiCad board and schematic parser based on Python dataclasses for KiCad 6.0
-and up.
 
-It is a "pythonic" abstraction of the documentation found at the
+[![PyPI version](https://img.shields.io/pypi/v/kiutils)](https://pypi.org/project/kiutils)
+![Python version](https://img.shields.io/pypi/pyversions/kiutils)
+[![License](https://img.shields.io/github/license/mvnmgrx/kiutils)](https://github.com/mvnmgrx/kiutils/blob/master/LICENSE)
+![Last commit](https://img.shields.io/github/last-commit/mvnmgrx/kiutils)
+
+Simple and SCM-friendly KiCad file parser based on Python dataclasses for KiCad 6.0
+and up. The following KiCad-related files are currently supported:
+- `.kicad_pcb` - Board layouts
+- `.kicad_sch` - Schematics
+- `.kicad_wks` - Worksheets
+- `.kicad_mod` - Footprints
+- `.kicad_sym` - Symbols and symbol libraries
+- `fp-lib-table` & `sym-lib-table` - Library tables
+
+KiUtils implements a "pythonic" abstraction of the documentation found at the
 [KiCad Developer Reference](https://dev-docs.kicad.org/en/file-formats/) and is
 intended to work with an SCM like Git or SVN without breaking the layout of the
 files when the Python script ran.
 
-Parsing of the files is based on the S-Expression parser found in this library: 
+Parsing of the files is based on the S-Expression parser found in this library:
 [GitLab: KiCad Library utilities](https://gitlab.com/kicad/libraries/kicad-library-utils)
 
 ## Prerequisites
@@ -15,8 +27,8 @@ Parsing of the files is based on the S-Expression parser found in this library:
 The following is required to use `kiutils`:
 - Python 3.10 or higher
 
-## Installation and usage
-KiUtils is available on [PyPI](https://pypi.org/project/kiutils/). Use Python's `pip` 
+## Installation and Usage
+KiUtils is available on [PyPI](https://pypi.org/project/kiutils/). Use Python's `pip`
 to install it:
 ```
 pip install kiutils
@@ -29,6 +41,7 @@ from kiutils.libraries import LibTable
 from kiutils.schematic import Schematic
 from kiutils.footprint import Footprint
 from kiutils.symbol import SymbolLib
+from kiutils.wks import WorkSheet
 ```
 Check the [Structure]() section on all importable classes or the [Examples]() section for code snippets.
 
@@ -48,11 +61,11 @@ The module features the following classes:
   | | - Arc()               # Arc on a board (not implemented)
   | | - Via()               # Via on a board
   | | - Target()            # Target markers
-  | | 
+  | |
   | + common.py
   | | - Position()          # Position and rotation of an object
   | | - Coordinate()        # Three-dimentional position
-  | | - ColorRGBA()         # RGBA Color 
+  | | - ColorRGBA()         # RGBA Color
   | | - Stroke()            # Outline of graphical objects
   | | - Font()              # Font that defines how text is shown
   | | - Justify()           # Justification of a text object
@@ -62,12 +75,12 @@ The module features the following classes:
   | | - PageSettings()      # Page size and orientation
   | | - TitleBlock()        # Contents of a page's title block
   | | - Property()          # Key-value property
-  | | 
+  | |
   | + dimensions.py
   | | - DimensionFormat()   # Text format of a dimension
   | | - DimensionStyle()    # Graphical style of a dimension
   | | - Dimension()         # A dimension in the board
-  | | 
+  | |
   | + fpitems.py
   | | - FpText()            # Text in a footprint
   | | - FpTextBox()         # Text box in a footprint
@@ -77,7 +90,7 @@ The module features the following classes:
   | | - FpArc()             # Arc in a footprint
   | | - FpPoly()            # Polygon in a footprint
   | | - FpCurve()           # Curve in a footprint
-  | | 
+  | |
   | + gritems.py
   | | - GrText()            # Text graphical item
   | | - GrTextBox()         # Text box graphical item
@@ -100,7 +113,7 @@ The module features the following classes:
   | | - GlobalLabel()       # Global track label
   | | - HierarchicalLabel() # Hierarchical track label
   | | - SchematicSymbol()   # Symbol embedded into schematic
-  | | - HierarchicalPin()   # Hierarchical pin 
+  | | - HierarchicalPin()   # Hierarchical pin
   | | - HierarchicalSheet() # Hierarchical sheet definition
   | | - HierarchicalSheetInstance() # Hierarchical sheet instance
   | | - SymbolInstance()    # Instance of an embedded symbol
@@ -142,48 +155,61 @@ The module features the following classes:
   | - Schematic()           # Schematic files (.kicad_sch)
   |
   + symbol.py
-    - SymbolPin()           # Pin in a symbol
-    - Symbol()              # Symbol itself
-    - SymbolLib()           # Symbol library file (.kicad_sym)
+  | - SymbolPin()           # Pin in a symbol
+  | - Symbol()              # Symbol itself
+  | - SymbolLib()           # Symbol library file (.kicad_sym)
+  |
+  + wks.py
+    - WksFontSize()         # Font size of worksheet texts
+    - WksFont()             # Font properties of worksheet texts
+    - WksPosition()         # Item positions on worksheets
+    - Line()                # Lines on worksheets
+    - Rect()                # Rectangles on worksheets
+    - Polygon()             # Polys (Not implemented as the GUI does not support this)
+    - Bitmap()              # Image in a worksheet
+    - TbText()              # Title bock text on a worksheet
+    - TextSize()            # Standard text size on a worksheet
+    - Setup()               # Worksheet configuration infos
+    - WorkSheet()           # The worksheet file (.kicad_wks)
 ```
 
 Every class has at at least the following functions:
 - `to_sexpr(..)`: Generate KiCad S-Expression that describes the object
-- `from_sexpr(..)`: Initialize the object with data found in given S-Expression. 
+- `from_sexpr(..)`: Initialize the object with data found in given S-Expression.
   Wrong S-Expression supplied yields an exception.
 
 If the class is intended to access files (such as board files, schematics,
 libraries, etc.), the following functions are available:
 - `from_file(..)`: Initialize the object with data found in given file
-- `to_file(..)`: Generate KiCad S-Expression that describes the object and 
+- `to_file(..)`: Generate KiCad S-Expression that describes the object and
   write it to the given file
 
-The files in the root directory are intended to be used in a Python script 
+The files in the root directory are intended to be used in a Python script
 as they contain the main functionality of the module. Documentation can be found
-in the source files itself. Use VSCode for development as it shows docstring 
-documentation by default when hovering over functions and members of the 
+in the source files itself. Use VSCode for development as it shows docstring
+documentation by default when hovering over functions and members of the
 module.
 
 ## Known Issues
-- **Footprint:** Whitespaces in the items section do sometimes not correspond 
-  correctly to those generated by KiCad. This will be picked up by an SCM as a 
-  change even though no changes were initially made. This seems to be a bug in 
-  KiCad itself, as it sometimes sets the whitespaces before those tokens 
+- **Footprint:** Whitespaces in the items section do sometimes not correspond
+  correctly to those generated by KiCad. This will be picked up by an SCM as a
+  change even though no changes were initially made. This seems to be a bug in
+  KiCad itself, as it sometimes sets the whitespaces before those tokens
   correctly and sometimes not.
-- **Schematic:** Sometimes KiCad inserts blank lines between wires, bus entries 
-  and polylines which are not picked up by the parser. Same problem as above 
+- **Schematic:** Sometimes KiCad inserts blank lines between wires, bus entries
+  and polylines which are not picked up by the parser. Same problem as above
   with SCMs.
-- **Backwards compatibility:** KiCad <6 file formats can be parsed, but will 
-  be converted to KiCad 6 style S-Expression upon saving. It was observed that 
-  e.g. footprints of an older version will experience conversion errors in some 
-  features that KiCad 6 now handles differently (see `fp_arc` as an example). 
+- **Backwards compatibility:** KiCad <6 file formats can be parsed, but will
+  be converted to KiCad 6 style S-Expression upon saving. It was observed that
+  e.g. footprints of an older version will experience conversion errors in some
+  features that KiCad 6 now handles differently (see `fp_arc` as an example).
   It is in the user's hands to decide on how to deal with this, but support
-  for converting correctly to KiCad 6 formats may be added in the future. 
-  Please create an issue with a snippet of what you are trying to parse when 
+  for converting correctly to KiCad 6 formats may be added in the future.
+  Please create an issue with a snippet of what you are trying to parse when
   stumbling upon such a situation.
 
 ## Examples
-These examples show how the module is intended to be used. 
+These examples show how the module is intended to be used.
 
 ### Loading and saving a board
 ```python
@@ -239,7 +265,7 @@ board.to_file()
 
 ### Adding vias to board
 This example adds two vias on the normal axis at the end of each segment:
-```python 
+```python
 from cmath import sqrt
 from kiutils.board import Board
 from kiutils.items.brditems import Via, Segment
@@ -264,7 +290,7 @@ for item in board.traceItems:
         # Compute positions of new vias
         next_via_1 = Position(item.end.X + (unit_normal.X * 2), item.end.Y + (unit_normal.Y * 2))
         next_via_2 = Position(item.end.X - (unit_normal.X * 2), item.end.Y - (unit_normal.Y * 2))
-        
+
         # Append vias to trace items list of board
         board.traceItems.append(Via(position=next_via_1, layers=["F.Cu", "B.Cu"], size=1.0, drill=0.6))
         board.traceItems.append(Via(position=next_via_2, layers=["F.Cu", "B.Cu"], size=1.0, drill=0.6))
@@ -274,5 +300,5 @@ board.to_file()
 ```
 
 ## Donate
-If you found this module helpful for your project consider donating via 
+If you found this module helpful for your project consider donating via
 [PayPal](https://paypal.me/mrvnmgr). Thanks!

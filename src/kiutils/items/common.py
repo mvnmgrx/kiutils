@@ -49,8 +49,8 @@ class Position():
             exp (list): Part of parsed S-Expression `(xxx ...)`
 
         Raises:
-            Exception: When the first item of the list is not fill or it does not have the
-            correct length
+            Exception: When the given expression is not of type `list` or the list is less than
+            3 items long
 
         Returns:
             Position: Object of the class initialized with the given S-Expression
@@ -389,7 +389,8 @@ class Justify():
 
         object = cls()
         for item in exp:
-            if item == 'left' or item == 'right': object.horizontally = item
+            # 'center' is the standard on vertical but not on horizontal in work sheets 
+            if item == 'left' or item == 'right' or item == 'center': object.horizontally = item
             if item == 'top' or item == 'bottom': object.vertically = item
             if item == 'mirror': object.mirror = True
         return object

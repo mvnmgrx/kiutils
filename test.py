@@ -17,7 +17,7 @@ from src.kiutils.symbol import SymbolLib
 from src.kiutils.schematic import Schematic
 from src.kiutils.board import Board
 from src.kiutils.libraries import LibTable
-from src.kiutils.wks import Worksheet
+from src.kiutils.wks import WorkSheet
 
 global_passed = True
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_parameters.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
-    assert_equality(Worksheet, path.join(tests_path, 'test_wks_all.kicad_wks'))
+    assert_equality(WorkSheet, path.join(tests_path, 'test_wks_all.kicad_wks'))
 
     print("\n---------------------\n")
 

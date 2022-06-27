@@ -9,9 +9,10 @@ Simple and SCM-friendly KiCad file parser based on Python dataclasses for KiCad 
 and up. The following KiCad-related files are currently supported:
 - `.kicad_pcb` - Board layouts
 - `.kicad_sch` - Schematics
-- `.kicad_wks` - Worksheets
 - `.kicad_mod` - Footprints
 - `.kicad_sym` - Symbols and symbol libraries
+- `.kicad_wks` - Worksheets
+- `.kicad_dru` - Custom design rules
 - `fp-lib-table` & `sym-lib-table` - Library tables
 
 KiUtils implements a "pythonic" abstraction of the documentation found at the
@@ -42,6 +43,7 @@ from kiutils.schematic import Schematic
 from kiutils.footprint import Footprint
 from kiutils.symbol import SymbolLib
 from kiutils.wks import WorkSheet
+from kiutils.dru import DesignRules
 ```
 Check the [Structure]() section on all importable classes or the [Examples]() section for code snippets.
 
@@ -160,17 +162,22 @@ The module features the following classes:
   | - SymbolLib()           # Symbol library file (.kicad_sym)
   |
   + wks.py
-    - WksFontSize()         # Font size of worksheet texts
-    - WksFont()             # Font properties of worksheet texts
-    - WksPosition()         # Item positions on worksheets
-    - Line()                # Lines on worksheets
-    - Rect()                # Rectangles on worksheets
-    - Polygon()             # Polys (Not implemented as the GUI does not support this)
-    - Bitmap()              # Image in a worksheet
-    - TbText()              # Title bock text on a worksheet
-    - TextSize()            # Standard text size on a worksheet
-    - Setup()               # Worksheet configuration infos
-    - WorkSheet()           # The worksheet file (.kicad_wks)
+  | - WksFontSize()         # Font size of worksheet texts
+  | - WksFont()             # Font properties of worksheet texts
+  | - WksPosition()         # Item positions on worksheets
+  | - Line()                # Lines on worksheets
+  | - Rect()                # Rectangles on worksheets
+  | - Polygon()             # Polys (Not implemented as the GUI does not support this)
+  | - Bitmap()              # Image in a worksheet
+  | - TbText()              # Title bock text on a worksheet
+  | - TextSize()            # Standard text size on a worksheet
+  | - Setup()               # Worksheet configuration infos
+  | - WorkSheet()           # The worksheet file (.kicad_wks)
+  |
+  + dru.py
+    - Constraint()          # A constraint of a design rule
+    - Rule()                # A single design rule itself
+    - DesignRules()         # The custom design rules file (.kicad_dru)
 ```
 
 Every class has at at least the following functions:
@@ -207,6 +214,11 @@ module.
   for converting correctly to KiCad 6 formats may be added in the future.
   Please create an issue with a snippet of what you are trying to parse when
   stumbling upon such a situation.
+- **Design rules:** Support for custom design rules was implemented without a 
+  proper documentation. Thus it might be subject to bugs or changes. It 
+  furthermore may not exactly place the items associated with a custom design 
+  rule (constraints, layers, etc) in the same order as the user once put them 
+  when parsing and writing back `.kicad_dru` files
 
 ## Examples
 These examples show how the module is intended to be used.

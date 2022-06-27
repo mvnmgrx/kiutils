@@ -18,6 +18,7 @@ from src.kiutils.schematic import Schematic
 from src.kiutils.board import Board
 from src.kiutils.libraries import LibTable
 from src.kiutils.wks import WorkSheet
+from src.kiutils.dru import DesignRules
 
 global_passed = True
 
@@ -151,6 +152,7 @@ if __name__ == "__main__":
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_pins.kicad_sym'))
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
     assert_equality(WorkSheet, path.join(tests_path, 'test_wks_all.kicad_wks'))
+    assert_equality(DesignRules, path.join(tests_path, 'test_dru_all.kicad_dru'))
 
     print("\n---------------------\n")
 

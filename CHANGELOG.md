@@ -1,5 +1,9 @@
 # kiutils - CHANGELOG
 
+## v1.1.1 - 27.06.2022
+- Added: Support for custom design rules (`.kicad_dru`)
+- Added: Support for custom worksheets (`.kicad_wks`)
+
 ## v1.1.0 - 16.06.2022
 - Added: Support for Python Package Index (PyPI)
 - Changed: Source directory for development moved from `kiutils/` to `src/kiutils/`

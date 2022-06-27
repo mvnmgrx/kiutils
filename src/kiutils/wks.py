@@ -884,7 +884,7 @@ class WorkSheet():
 
     @classmethod
     def from_file(cls, filepath: str):
-        """Load a board directly from a KiCad board file (`.kicad_pcb`) and sets the
+        """Load a worksheet directly from a KiCad worksheet file (`.kicad_wks`) and sets the
         `self.filePath` attribute to the given file path.
 
         Args:
@@ -894,7 +894,7 @@ class WorkSheet():
             Exception: If the given path is not a file
 
         Returns:
-            Footprint: Object of the Schematic class initialized with the given KiCad schematic
+            Footprint: Object of the WorkSheet class initialized with the given KiCad worksheet
         """
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")

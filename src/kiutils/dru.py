@@ -20,11 +20,53 @@ from .utils.strings import dequote
 
 @dataclass
 class Constraint():
-    pass
+    """The `Constraint` token defines a design rule's constraint"""
+
+    type: str = "clearance"
+    """The `type` token defines the type of constraint. Defaults to `clearance`. Allowed types:
+    - `annular_width` - Width of an annular ring
+    - `clearance` - Clearance between two items
+    - `courtyard_clearance` - Clearance between two courtyards
+    - `diff_pair_gap` - Gap between differential pairs
+    - `diff_pair_uncoupled` - ???
+    - `disallow` - ??? Do not allow this rule
+    - `edge_clearance` - Clearance between the item and board edges
+    - `length` - Length of the item
+    - `hole_clearance` - Clearance between the item and holes
+    - `hole_size` - Size of the holes associated with this item
+    - `silk_clearance` - Clearance to silk screen
+    - `skew` - Difference in length between the items associated with this constraint
+    - `track_width` - Width of the tracks associated with this constraint
+    - `via_count` - Number of vias
+    - `via_diameter` - Diameter of vias associated with this constraint
+    """
+
+    min: str | None = None
+    """The `min` token defines the minimum allowed in this constraint"""
+
+    opt: str | None = None
+    """The `opt` token defines the optimum allowed in this constraint"""
+
+    max: str | None = None
+    """The `max` token defines the maximum allowed in this constraint"""
 
 @dataclass
 class Rule():
-    pass
+    """The `Rule` token defines a custom design rule"""
+
+    name: str = ""
+    """The `name` token defines the name of the custom design rule"""
+
+    constraints: list[Constraint] = field(default_factory=list)
+    """The `constraints` token defines a list of constraints for this custom design rule"""
+
+    condition: str = ""
+    """The `condition` token defines the conditions that apply for this rule. Check KiCad syntax
+    reference for more information. Example rule:
+    - `A.inDiffPair('*') && !AB.isCoupledDiffPair()`"""
+
+    layer: str | None = None
+    """The optional `layer` token defines the canonical layer the rule applys to"""
 
 @dataclass
 class DesignRules():

@@ -74,7 +74,7 @@ class Position():
     def to_sexpr():
         """This object does not have a direct S-Expression representation.
         """
-        raise NotImplementedError()
+        raise NotImplementedError("This object does not have a direct S-Expression representation")
 
 
 @dataclass

@@ -123,10 +123,12 @@ class GrTextBox():
 
     @classmethod
     def from_sexpr(cls, exp: list):
-        raise NotImplementedError()
+        """Not implemented yet"""
+        raise NotImplementedError("GrTextBoxes are not yet handled! Please report this bug along with the file being parsed.")
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
-        raise NotImplementedError()
+        """Not implemented yet"""
+        raise NotImplementedError("GrTextBoxes are not yet handled! Please report this bug along with the file being parsed.")
 
 @dataclass
 class GrLine():

@@ -184,7 +184,7 @@ class WksPosition():
     def to_sexpr():
         """This object does not have a direct S-Expression representation.
         """
-        raise NotImplementedError()
+        raise NotImplementedError("This object does not have a direct S-Expression representation")
 
 @dataclass
 class Line():
@@ -438,7 +438,7 @@ class Polygon():
             Position: Object of the class initialized with the given S-Expression
         """
         # TODO: Polygons seem to not be available in the WKS editor GUI. Are those still a feature?
-        raise NotImplementedError()
+        raise NotImplementedError("Polygons are not yet handled! Please report this bug along with the file being parsed.")
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object
@@ -450,7 +450,7 @@ class Polygon():
         Returns:
             str: S-Expression of this object
         """
-        raise NotImplementedError()
+        raise NotImplementedError("Polygons are not yet handled! Please report this bug along with the file being parsed.")
 
 @dataclass
 class Bitmap():

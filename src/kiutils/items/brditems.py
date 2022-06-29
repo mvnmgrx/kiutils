@@ -826,10 +826,12 @@ class Via():
 class Arc():
     """The `arc` token seemed to define a track arc, but is not used in KiCad v5 and v6"""
     def from_sexpr(self, *args, **kwargs):
-        raise NotImplementedError
+        """Not implemented yet"""
+        raise NotImplementedError("Arcs are not yet handled! Please report this bug along with the file being parsed.")
 
     def to_sexpr(self, *args, **kwargs):
-        raise NotImplementedError
+        """Not implemented yet"""
+        raise NotImplementedError("Arcs are not yet handled! Please report this bug along with the file being parsed.")
 
 
 @dataclass

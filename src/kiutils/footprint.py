@@ -800,7 +800,7 @@ class Footprint():
             if item[0] == 'fp_curve':
                 object.graphicItems.append(FpCurve.from_sexpr(item))
             if item[0] == 'dimension':
-                raise NotImplementedError("Dimensions are not yet handled!")
+                raise NotImplementedError("Dimensions are not yet handled! Please report this bug along with the file being parsed.")
             if item[0] == 'pad':
                 object.pads.append(Pad.from_sexpr(item))
             if item[0] == 'zone':

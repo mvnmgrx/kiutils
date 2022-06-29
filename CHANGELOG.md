@@ -1,5 +1,8 @@
 # kiutils - CHANGELOG
 
+## v1.1.2 - xx.xx.xxxx
+- Added: Support for track arcs at `kiutils.items.brditems.Arc()`
+
 ## v1.1.1 - 27.06.2022
 - Added: Support for custom design rules (`.kicad_dru`)
 - Added: Support for custom worksheets (`.kicad_wks`)

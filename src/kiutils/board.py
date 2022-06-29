@@ -191,6 +191,8 @@ class Board():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
+        addNewLine = False
+
         expression =  f'{indents}(kicad_pcb (version {self.version}) (generator {self.generator})\n\n'
         expression += self.general.to_sexpr(indent+2) + '\n'
         expression += self.paper.to_sexpr(indent+2)
@@ -218,21 +220,28 @@ class Board():
             expression += footprint.to_sexpr(indent+2, layerInFirstLine=True) + '\n'
 
         # Lines, Texts, Arcs and other graphical items
-        for item in self.graphicalItems:
-            if isinstance(item, GrPoly):
-                expression += item.to_sexpr(indent+2, pts_newline=True)
-            else:
-                expression += item.to_sexpr(indent+2)
+        if len(self.graphicalItems) > 0:
+            addNewLine = True
+            for item in self.graphicalItems:
+                if isinstance(item, GrPoly):
+                    expression += item.to_sexpr(indent+2, pts_newline=True)
+                else:
+                    expression += item.to_sexpr(indent+2)
 
         # Dimensions
-        for dimension in self.dimensions:
-            expression += dimension.to_sexpr(indent+2)
+        if len(self.dimensions) > 0:
+            addNewLine = True
+            for dimension in self.dimensions:
+                expression += dimension.to_sexpr(indent+2)
 
         # Target markers:
-        for target in self.targets:
-            expression += target.to_sexpr(indent+2)
+        if len(self.targets) > 0:
+            addNewLine = True
+            for target in self.targets:
+                expression += target.to_sexpr(indent+2)
 
-        expression += '\n'
+        if addNewLine:
+            expression += '\n'
 
         # Segments, vias and arcs
         if len(self.traceItems) > 0:

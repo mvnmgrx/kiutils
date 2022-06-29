@@ -153,6 +153,7 @@ if __name__ == "__main__":
     assert_equality(SymbolLib, path.join(tests_path, 'test_sym_alternate_pins.kicad_sym'))
     assert_equality(WorkSheet, path.join(tests_path, 'test_wks_all.kicad_wks'))
     assert_equality(DesignRules, path.join(tests_path, 'test_dru_all.kicad_dru'))
+    assert_equality(Board,     path.join(tests_path, 'test_arcs.kicad_pcb'))
 
     print("\n---------------------\n")
 

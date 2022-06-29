@@ -868,7 +868,7 @@ class Arc():
             Exception: When the first item of the list is not `arc`
 
         Returns:
-            Via: Object of the class initialized with the given S-Expression
+            Arc: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")

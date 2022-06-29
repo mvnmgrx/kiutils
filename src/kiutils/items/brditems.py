@@ -824,14 +824,93 @@ class Via():
 
 @dataclass
 class Arc():
-    """The `arc` token seemed to define a track arc, but is not used in KiCad v5 and v6"""
-    def from_sexpr(self, *args, **kwargs):
-        """Not implemented yet"""
-        raise NotImplementedError("Arcs are not yet handled! Please report this bug along with the file being parsed.")
+    """The `arc` token defines a track arc, which will be generated when using the length-matching 
+    feature on differential pairs.
+    
+    Documentation:
+        https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_track_arc 
+    """
 
-    def to_sexpr(self, *args, **kwargs):
-        """Not implemented yet"""
-        raise NotImplementedError("Arcs are not yet handled! Please report this bug along with the file being parsed.")
+    start: Position = Position()
+    """The `start` token defines the coordinates of the beginning of the arc"""
+
+    mid: Position = Position()
+    """The `mid` token defines the coordinates of the mid point of the radius of the arc"""
+
+    end: Position = Position()
+    """The `end` token defines the coordinates of the end of the arc"""
+
+    width: float = 0.2
+    """The `width` token defines the line width of the arc. Defaults to 0,2."""
+
+    layer: str = "F.Cu"
+    """The `layer` token defiens the canonical layer the track arc resides on. Defaults to `F.Cu`."""
+
+    locked: bool = False
+    """The `locked` token defines if the arc cannot be edited. Defaults to False."""
+
+    net: int = 0
+    """The `net` token defines the net ordinal number which net in the net section that arc is part
+    of. Defaults to 0."""
+
+    tstamp: str | None = None
+    """The optional `tstamp` token defines the unique identifier of the arc"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list):
+        """Convert the given S-Expresstion into a Arc object
+
+        Args:
+            exp (list): Part of parsed S-Expression `(arc ...)`
+
+        Raises:
+            Exception: When given parameter's type is not a list
+            Exception: When the first item of the list is not `arc`
+
+        Returns:
+            Via: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'arc':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp:
+            if type(item) != type([]):
+                if item == 'locked': object.locked = True
+                continue
+            if item[0] == 'start': object.start = Position().from_sexpr(item)
+            elif item[0] == 'mid': object.mid = Position().from_sexpr(item)
+            elif item[0] == 'end': object.end = Position().from_sexpr(item)
+            elif item[0] == 'width': object.width = item[1]
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'net': object.net = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
+            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        locked = f' locked' if self.locked else ''
+        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+
+        expression = f'{indents}(arc{locked} (start {self.start.X} {self.start.Y}) '
+        expression += f'(mid {self.mid.X} {self.mid.Y}) (end {self.end.X} {self.end.Y}) '
+        expression += f'(width {self.width}) (layer "{dequote(self.layer)}") '
+        expression += f'(net {self.net}){tstamp}){endline}'
+        return expression
 
 
 @dataclass

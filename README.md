@@ -60,7 +60,7 @@ The module features the following classes:
   | | - PlotSettings()      # Plotting and printing setting
   | | - SetupData()         # Current settings used by a board
   | | - Segment()           # Track segment on a board
-  | | - Arc()               # Arc on a board (not implemented)
+  | | - Arc()               # Arc on a board
   | | - Via()               # Via on a board
   | | - Target()            # Target markers
   | |

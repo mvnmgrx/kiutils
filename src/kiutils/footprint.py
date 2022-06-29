@@ -518,7 +518,7 @@ class Pad():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        champferFound, marginFound = False, False
+        champferFound, marginFound, schematicSymbolAssociated = False, False, False
         c, cr, smm, spm, spmr, cl, zc, tw, tg = '', '', '', '', '', '', '', '', ''
 
         layers = ' (layers'
@@ -539,10 +539,15 @@ class Pad():
         kel = ' (keep_end_layers)' if self.keepEndLayers else ''
         rrr = f' (roundrect_rratio {self.roundrectRatio})' if self.roundrectRatio is not None else ''
 
-        # A net in a pad forces a line-break in the board file
-        net = f'\n{indents}  {self.net.to_sexpr()}' if self.net is not None else ''
+        net = f' {self.net.to_sexpr()}' if self.net is not None else ''
         pf = f' (pinfunction "{dequote(self.pinFunction)}")' if self.pinFunction is not None else ''
         pt = f' (pintype "{dequote(self.pinType)}")' if self.pinType is not None else ''
+
+        # Check if a schematic symbol is associated with this footprint. This is usually set, if the 
+        # footprint is used in a board file.
+        if net != '' or pf != '' or pt != '': 
+            schematicSymbolAssociated = True
+
         tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
 
         if len(self.chamfer) > 0:
@@ -590,12 +595,16 @@ class Pad():
 
         expression =  f'{indents}(pad "{dequote(str(self.number))}" {self.type} {self.shape}{locked} {position} (size {self.size.X} {self.size.Y}){drill}{ppty}{layers}{rul}{kel}{rrr}'
         if champferFound:
+            # Only one whitespace here as all temporary strings have at least one leading whitespace
             expression += f'\n{indents} {cr}{c}'
-        expression += f'{net}{pf}{pt}'
+            
         if self.dieLength is not None:
             expression += f'\n{indents}  (die_length {self.dieLength})'
-        if marginFound:
-            expression += f'\n{indents} {smm}{spm}{spmr}{cl}{zc}{tw}{tg}'
+
+        if marginFound or schematicSymbolAssociated:
+            # Only one whitespace here as all temporary strings have at least one leading whitespace
+            expression += f'\n{indents} {net}{pf}{pt}{smm}{spm}{spmr}{cl}{zc}{tw}{tg}'
+
         if self.customPadOptions is not None:
             expression += f'\n{indents}  {self.customPadOptions.to_sexpr()}'
 

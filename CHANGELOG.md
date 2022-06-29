@@ -2,6 +2,9 @@
 
 ## v1.1.2 - xx.xx.xxxx
 - Added: Support for track arcs at `kiutils.items.brditems.Arc()`
+- Fixed: Redundant line break in a footprint's pad section with a schematic symbol assigned (aka 
+         net, pinfunction or pintype token set) as well as at least the solder_paste_margin_ratio 
+         token set 
 
 ## v1.1.1 - 27.06.2022
 - Added: Support for custom design rules (`.kicad_dru`)

@@ -158,6 +158,6 @@ if __name__ == "__main__":
     print("\n---------------------\n")
 
     if global_passed:
-        print("✅ KiTools tests done, all green ✅")
+        print("✅ KiUtils tests done, all green ✅")
     else:
-        print("❌❌ KiTools tests done, but some tests failed! Check 'test.log' for more information ❌❌")
+        print("❌❌ KiUtils tests done, but some tests failed! Check 'test.log' for more information ❌❌")

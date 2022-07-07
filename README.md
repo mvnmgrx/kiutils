@@ -55,6 +55,7 @@ The module features the following classes:
   | + brditems.py
   | | - GeneralSettings()   # General information about a board
   | | - LayerToken()        # Intermediate type for layers in a board
+  | | - StackupSubLayer()   # Additional sublayers in a dielectric layer
   | | - StackupLayer()      # Setting of a single layer in the stack up
   | | - Stackup()           # Board stack up settings
   | | - PlotSettings()      # Plotting and printing setting

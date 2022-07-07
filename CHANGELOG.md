@@ -1,5 +1,8 @@
 # kiutils - CHANGELOG
 
+## v1.1.3 - 07.07.2022
+- Fixed: Stacked dielectrics in PCB layer stack are now parsed correctly as `StackupSubLayer` item
+
 ## v1.1.2 - 30.06.2022
 - Added: Support for track arcs at `kiutils.items.brditems.Arc()`
 - Fixed: Redundant line break in a footprint's pad section with a schematic symbol assigned (aka 

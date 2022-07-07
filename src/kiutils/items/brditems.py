@@ -137,6 +137,54 @@ class LayerToken():
 
         return f'{indents}({self.ordinal} "{dequote(self.name)}" {self.type}{username}){endline}'
 
+
+@dataclass
+class StackupSubLayer():
+    """The `StackupSubLayer` token defines a sublayer used when stacking dielectrics in a PCB"""
+    
+    thickness: float = 0.1
+    """The `thickness` token defines the thickness of the sublayer. Defaults to 0.1"""
+
+    material: str | None = None
+    """The optional `material` token defines a string that describes the sublayer material"""
+
+    epsilonR: float | None = None
+    """The optional `epsilonR` token defines the dielectric constant of the sublayer material"""
+
+    lossTangent: float | None = None
+    """The optional layer `lossTangent` token defines the dielectric loss tangent of the sublayer"""
+
+    @classmethod
+    def from_sexpr(cls, exp: str):
+        """This class cannot be derived from an S-Expression as the format currently used in KiCad
+        board files does not match the usual convention. Assign member values manually when using
+        this object.
+        
+        Raises:
+            NotImplementedError"""
+        raise NotImplementedError("This class cannot be derived from an S-Expression!")
+
+    def to_sexpr(self, indent=0, newline=False) -> str:
+        """Generate the S-Expression representing this object. The representation differs from the 
+        normal form of an S-Expression as this uses no opening and closing parenthesis.
+
+        Args:
+            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
+            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+
+        Returns:
+            str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        mat = f' (material "{dequote(self.material)}")' if self.material is not None else ''
+        er = f' (epsilon_r {self.epsilonR})' if self.epsilonR is not None else ''
+        lt = f' (loss_tangent {self.lossTangent})' if self.lossTangent is not None else ''
+
+        return f'{indents}addsublayer (thickness {self.thickness}){mat}{er}{lt}{endline}'
+
+
 @dataclass
 class StackupLayer():
     """The `layer` token defines the stack up setting of a single layer in the board stack up
@@ -162,17 +210,21 @@ class StackupLayer():
     only used on solder mask and silkscreen layers"""
 
     thickness: float | None = None
-    """The optional `thickness` token defines the thickness of the layer where appropriate."""
+    """The optional `thickness` token defines the thickness of the layer where appropriate"""
 
     material: str | None = None
     """The optional `material` token defines a string that describes the layer material
-    where appropriate."""
+    where appropriate"""
 
     epsilonR: float | None = None
     """The optional `epsilonR` token defines the dielectric constant of the layer material"""
 
     lossTangent: float | None = None
     """The optional layer `lossTangent` token defines the dielectric loss tangent of the layer"""
+
+    subLayers: list[StackupSubLayer] = field(default_factory=list)
+    """The `sublayers` token defines a list of zero or more sublayers that are used to create 
+    stacks of dielectric layers. Does not apply to copper-type layers."""
 
     @classmethod
     def from_sexpr(cls, exp: str):
@@ -194,15 +246,44 @@ class StackupLayer():
         if exp[0] != 'layer':
             raise Exception("Expression does not have the correct type")
 
+        parsingSublayer = False
+        tempSublayer = StackupSubLayer()
         object = cls()
         object.name = exp[1]
         for item in exp[2:]:
+            if type(item) != type([]):
+                # Start parsing the layer's sublayer if the first sublayer token was found
+                if item == 'addsublayer':
+                    if parsingSublayer:
+                        # When the `addsublayer` token was found a second time, the previously 
+                        # parsed sublayer will be appended to the list of sublayers
+                        object.subLayers.append(tempSublayer)
+                        tempSublayer = StackupSubLayer()
+                    else:
+                        # Change state of the parser to look for StackupSubLayer tokens
+                        parsingSublayer = True
+                continue
+
+            # Parse the tokens of StackupSubLayer for the current sublayer
+            if parsingSublayer:
+                if item[0] == 'thickness': tempSublayer.thickness = item[1]
+                if item[0] == 'material': tempSublayer.material = item[1]
+                if item[0] == 'epsilon_r': tempSublayer.epsilonR = item[1]
+                if item[0] == 'loss_tangent': tempSublayer.lossTangent = item[1]
+                continue
+
+            # Parse the normal tokens of StackupLayer token
             if item[0] == 'type': object.type = item[1]
             if item[0] == 'thickness': object.thickness = item[1]
             if item[0] == 'material': object.material = item[1]
             if item[0] == 'epsilon_r': object.epsilonR = item[1]
             if item[0] == 'loss_tangent': object.lossTangent = item[1]
             if item[0] == 'color': object.color = item[1]
+
+        # Add the last parsed sublayer to the list, if any
+        if parsingSublayer:
+            object.subLayers.append(tempSublayer)
+
         return object
 
     def to_sexpr(self, indent=6, newline=True) -> str:
@@ -224,7 +305,12 @@ class StackupLayer():
         epsilon_r = f' (epsilon_r {self.epsilonR})' if self.epsilonR is not None else ''
         loss_tangent = f' (loss_tangent {self.lossTangent})' if self.lossTangent is not None else ''
 
-        return f'{indents}(layer "{dequote(self.name)}" (type "{self.type}"){color}{thickness}{material}{epsilon_r}{loss_tangent}){endline}'
+        expression = f'{indents}(layer "{dequote(self.name)}" (type "{self.type}"){color}{thickness}'
+        expression +=f'{material}{epsilon_r}{loss_tangent}'
+        for layer in self.subLayers:
+            expression += f'\n{layer.to_sexpr(indent+2)}'
+        expression += f'){endline}'
+        return expression
 
 @dataclass
 class Stackup():

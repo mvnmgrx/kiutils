@@ -31,17 +31,15 @@ class Tests_Schematic(unittest.TestCase):
     def test_schematicWithAllPrimitives(self):
         """Tests the parsing of a schematic with all primitives (lines, traces, busses, connections,
         images, etc)"""
-        schematic = Schematic()
-        self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_schematicWithAllPrimitives')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
 
     def test_hierarchicalSchematicWithAllPrimitives(self):
         """Tests the parsing of a hierarchical schematic with all primitives (lines, traces, busses,
         connections, images, etc)"""
-        schematic = Schematic()
-        self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_hierarchicalSchematicWithAllPrimitives')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
 
     def tearDown(self) -> None:

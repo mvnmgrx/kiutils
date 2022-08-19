@@ -26,14 +26,13 @@ class TestData():
     wasSuccessful: bool = False
 
 
-def to_file_and_compare(object, test_data: TestData, compare_to_test_file: bool = False) -> bool:
+def to_file_and_compare(object, test_data: TestData) -> bool:
     """Write the object to a file using its `to_file()` method and comparing the output with
     the given expected output supplied by a file with `.expected` suffix
 
     Args:
         object: KiUtils object with a `to_file()` method
         test_data (TestData): Test data object of the currently running test (contains path to test file)
-        compare_to_test_file (bool): True if the output of `to_file()` should be compared to `test_data.pathToTestFile` directly
 
     Returns:
         bool: True, if both the output of `to_file()` and the given expected output are the same

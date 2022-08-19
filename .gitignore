@@ -13,6 +13,7 @@ reports/*
 
 # Other stuff
 *.log
+.vscode/*
 
 # Releases and build stuff
 output/*

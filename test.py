@@ -6,11 +6,13 @@ Author:
 License identifier:
     GPL-3.0
 """
+from dataclasses import dataclass
 from logging.handlers import RotatingFileHandler
 import time
 from os import path
 import filecmp
 import logging
+import unittest
 
 from src.kiutils.footprint import Footprint
 from src.kiutils.symbol import SymbolLib
@@ -19,6 +21,9 @@ from src.kiutils.board import Board
 from src.kiutils.libraries import LibTable
 from src.kiutils.wks import WorkSheet
 from src.kiutils.dru import DesignRules
+
+from tests.testcases import *
+from tests.reporter.runner import HTMLTestRunner
 
 global_passed = True
 
@@ -156,6 +161,15 @@ if __name__ == "__main__":
     assert_equality(Footprint, path.join(tests_path, 'test_fp_pad_newlines.kicad_mod'))
     assert_equality(Board,     path.join(tests_path, 'test_pcb_trace_arcs.kicad_pcb'))
     assert_equality(Board,     path.join(tests_path, 'test_pcb_stackup_dielectrics_32layer_vias.kicad_pcb'))
+
+    # Unit testcases
+    unittest.main(testRunner=HTMLTestRunner(
+        combine_reports = True,
+        verbosity = 3,
+        report_title = 'KiUtils Unittest Reports',
+        report_name = 'KiUtils_Testreport',
+        open_in_browser = True
+    ))
 
     print("\n---------------------\n")
 

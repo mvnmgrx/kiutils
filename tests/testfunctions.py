@@ -26,3 +26,7 @@ def to_file_and_compare(object, expected_output_file: str) -> bool:
 
     # Compare with the expected result
     return filecmp.cmp(f'{expected_output_file}.testoutput', f'{expected_output_file}.expected')
+
+def load_contents(file: str) -> str:
+    with open(file, "r") as outfile:
+        return ''.join(outfile.readlines())

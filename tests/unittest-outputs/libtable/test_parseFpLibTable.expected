@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name "vn-mcu-own-footprints")(type "KiCad")(uri "${KIPRJMOD}/vn-mcu-ownlibs/vn-mcu-own-footprints.pretty")(options "")(descr ""))
+  (lib (name "vn-mcu-footprints")(type "KiCad")(uri "${KIPRJMOD}/vn-mcu-librarys/vn-mcu-footprints.pretty")(options "")(descr ""))
+)

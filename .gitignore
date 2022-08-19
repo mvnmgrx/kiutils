@@ -1,5 +1,6 @@
 # All testoutput from Python testcases
 *.testoutput*
+reports/*
 
 # Python compilings
 *__pycache__*

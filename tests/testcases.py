@@ -4,7 +4,7 @@ from src.kiutils.items.schitems import SchematicSymbol
 from src.kiutils.items.common import Property
 from src.kiutils.libraries import Library, LibTable
 
-from tests.test_functions import to_file_and_compare, load_contents
+from tests.testfunctions import to_file_and_compare, load_contents
 from os import path
 
 import unittest
@@ -15,8 +15,8 @@ LIBTABLE_BASE = path.join(TEST_BASE, 'libtable')
 
 @dataclass
 class TestData():
-    """Data container to relay testcase-specific information to the report generator. Can be added 
-    as a member to `unittest.TestCase` in each `test_XYZ()` function. The object will then be 
+    """Data container to relay testcase-specific information to the report generator. May be added 
+    as a member to `unittest.TestCase` in the `setUp()` function. The object will then be 
     available in `result._TestInfo()` classes constructor."""
     producedOutput: str | None = None
     expectedOutput: str | None = None

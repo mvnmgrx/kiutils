@@ -1,6 +1,7 @@
 # All testoutput from Python testcases
 *.testoutput*
 reports/*
+.pytest_cache
 
 # Python compilings
 *__pycache__*

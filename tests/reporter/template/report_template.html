@@ -50,8 +50,18 @@
                                 {%- if (test_case.stdout or test_case.err) %}
                                 <button class="btn btn-default btn-xs">View</button>
                                 {%- endif %}
+                                {%- if not (test_case.stdout or test_case.err or test_case.err) %}
+                                <button class="btn btn-default btn-xs">View</button>
+                                {%- endif %}
                             </td>
                         </tr>
+                        {%- if not (test_case.stdout or test_case.err or test_case.err) %}
+                        <tr style="display:none;">
+                            <td class="col-xs-9" colspan="3">
+                                <p>{{ test_case.kiutils_description }}</p>
+                            </td>
+                        </tr>
+                        {%- endif %}
                         {%- if (test_case.stdout or test_case.err or test_case.err) and test_case.outcome != test_case.SKIP %}
                         <tr style="display:none;">
                             <td class="col-xs-9" colspan="3">

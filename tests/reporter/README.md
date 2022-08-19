@@ -1,4 +1,4 @@
-# HtmlTestRunner
+# KiUtils HTML Reporter
 
 This is a custom version of [oldani/HtmlTestRunner](https://github.com/oldani/HtmlTestRunner). It was modified
 to fit `kiutils`'s testing framework. Credits go to the original author.

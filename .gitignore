@@ -1,5 +1,7 @@
 # All testoutput from Python testcases
 *.testoutput*
+reports/*
+.pytest_cache
 
 # Python compilings
 *__pycache__*
@@ -11,6 +13,7 @@
 
 # Other stuff
 *.log
+.vscode/*
 
 # Releases and build stuff
 output/*

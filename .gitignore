@@ -2,6 +2,8 @@
 *.testoutput*
 reports/*
 .pytest_cache
+htmlcov/*
+.coverage
 
 # Python compilings
 *__pycache__*

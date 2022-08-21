@@ -11,7 +11,7 @@ import unittest
 from os import path
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
-from src.kiutils.schematic import Schematic
+from kiutils.schematic import Schematic
 
 SCHEMATIC_BASE = path.join(TEST_BASE, 'schematic')
 

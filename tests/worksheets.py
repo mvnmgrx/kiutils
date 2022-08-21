@@ -11,7 +11,7 @@ import unittest
 from os import path
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
-from src.kiutils.wks import WorkSheet
+from kiutils.wks import WorkSheet
 
 WORKSHEET_BASE = path.join(TEST_BASE, 'worksheets')
 

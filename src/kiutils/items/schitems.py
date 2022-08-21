@@ -15,8 +15,8 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
-from .common import Position, ColorRGBA, Stroke, Effects, Property
-from ..utils.strings import dequote
+from kiutils.items.common import Position, ColorRGBA, Stroke, Effects, Property
+from kiutils.utils.strings import dequote
 
 @dataclass
 class Junction():

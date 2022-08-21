@@ -16,7 +16,7 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
-from ..utils.strings import dequote
+from kiutils.utils.strings import dequote
 
 @dataclass
 class Position():

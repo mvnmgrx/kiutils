@@ -16,14 +16,14 @@ Documentation taken from:
 from dataclasses import dataclass, field
 from os import path
 
-from .items.common import Group, Net, PageSettings, TitleBlock
-from .items.zones import Zone
-from .items.brditems import *
-from .items.gritems import *
-from .items.dimensions import Dimension
-from .utils.strings import dequote
-from .utils import sexpr
-from .footprint import Footprint
+from kiutils.items.common import Group, Net, PageSettings, TitleBlock
+from kiutils.items.zones import Zone
+from kiutils.items.brditems import *
+from kiutils.items.gritems import *
+from kiutils.items.dimensions import Dimension
+from kiutils.utils.strings import dequote
+from kiutils.utils import sexpr
+from kiutils.footprint import Footprint
 
 @dataclass
 class Board():

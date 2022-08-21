@@ -13,8 +13,8 @@ Major changes:
 from dataclasses import dataclass, field
 from os import path
 
-from .utils.strings import dequote
-from .utils import sexpr
+from kiutils.utils.strings import dequote
+from kiutils.utils import sexpr
 
 @dataclass
 class Library():

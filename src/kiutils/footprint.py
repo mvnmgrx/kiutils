@@ -18,12 +18,12 @@ import datetime
 from dataclasses import dataclass, field
 from os import path
 
-from .items.zones import Zone
-from .items.common import Position, Coordinate, Net, Group
-from .items.fpitems import *
-from .items.gritems import *
-from .utils import sexpr
-from .utils.strings import dequote
+from kiutils.items.zones import Zone
+from kiutils.items.common import Position, Coordinate, Net, Group
+from kiutils.items.fpitems import *
+from kiutils.items.gritems import *
+from kiutils.utils import sexpr
+from kiutils.utils.strings import dequote
 
 @dataclass
 class Attributes():

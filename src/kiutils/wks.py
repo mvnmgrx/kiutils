@@ -16,9 +16,9 @@ Documentation taken from:
 from dataclasses import dataclass, field
 from os import path
 
-from .items.common import Justify
-from .utils.strings import dequote
-from .utils import sexpr
+from kiutils.items.common import Justify
+from kiutils.utils.strings import dequote
+from kiutils.utils import sexpr
 
 @dataclass
 class WksFontSize():

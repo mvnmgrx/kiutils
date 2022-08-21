@@ -47,6 +47,22 @@ from kiutils.dru import DesignRules
 ```
 Check the [Structure]() section on all importable classes or the [Examples]() section for code snippets.
 
+## Development
+To start developing, clone the repository and install `kiutils` from source while being in the 
+repository root folder:
+```
+git clone https://github.com/mvnmgrx/kiutils.git
+cd kiutils
+pip install -e .
+```
+
+Doing it this way, changes in the source will be reflected to the current Python environment 
+automatically. No need to reinstall after making changes. To run the test framework, start the test 
+script afterwards:
+```
+python3 test.py
+```
+
 ## Structure
 The module features the following classes:
 ```python

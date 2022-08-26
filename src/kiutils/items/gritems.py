@@ -16,6 +16,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import List, Optional
 
 from .common import Effects, Position, Stroke
 from ..utils.strings import dequote

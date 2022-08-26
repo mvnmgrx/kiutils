@@ -17,14 +17,14 @@ from dataclasses import dataclass, field
 from os import path
 from typing import Optional, List, Dict
 
-from .items.common import Group, Net, PageSettings, TitleBlock  # type: ignore
-from .items.zones import Zone  # type: ignore
-from .items.brditems import GeneralSettings, LayerToken, SetupData, Target, Segment, Arc, Via  # type: ignore
-from .items.gritems import GrText, GrTextBox, GrLine, GrRect, GrCircle, GrArc, GrPoly, GrCurve, GrPoly  # type: ignore
-from .items.dimensions import Dimension  # type: ignore
-from .utils.strings import dequote  # type: ignore
-from .utils import sexpr  # type: ignore
-from .footprint import Footprint  # type: ignore
+from .items.common import Group, Net, PageSettings, TitleBlock
+from .items.zones import Zone
+from .items.brditems import GeneralSettings, LayerToken, SetupData, Target, Segment, Arc, Via
+from .items.gritems import GrText, GrTextBox, GrLine, GrRect, GrCircle, GrArc, GrPoly, GrCurve, GrPoly
+from .items.dimensions import Dimension
+from .utils.strings import dequote
+from .utils import sexpr
+from .footprint import Footprint
 
 @dataclass
 class Board():

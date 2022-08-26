@@ -10,6 +10,7 @@ License identifier:
 from dataclasses import dataclass
 import filecmp
 import os
+from typing import Optional
 
 TEST_BASE = os.path.join('tests', 'testdata')
 
@@ -50,6 +51,14 @@ def to_file_and_compare(object, test_data: TestData) -> bool:
         compare_file = f'{test_data.pathToTestFile}.expected'
 
     test_data.wasSuccessful = filecmp.cmp(f'{test_data.pathToTestFile}.testoutput', compare_file)
+
+    if (
+        not test_data.wasSuccessful
+        and os.path.exists(f'{test_data.pathToTestFile}2.expected')
+    ):
+        compare_file = f'{test_data.pathToTestFile}2.expected'
+        test_data.wasSuccessful = filecmp.cmp(f'{test_data.pathToTestFile}.testoutput', compare_file)
+
     return test_data.wasSuccessful
 
 def load_contents(file: str) -> str:

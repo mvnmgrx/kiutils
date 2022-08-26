@@ -17,8 +17,8 @@ from dataclasses import dataclass, field
 from os import path
 from typing import Optional, List
 
-from .utils import sexpr  # type: ignore
-from .utils.strings import dequote  # type: ignore
+from .utils import sexpr
+from .utils.strings import dequote
 
 @dataclass
 class Constraint():

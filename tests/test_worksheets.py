@@ -9,6 +9,10 @@ License identifier:
 
 import unittest
 from os import path
+import sys
+
+curr_path = path.dirname(path.realpath(__file__))
+sys.path.append(curr_path + "/..")
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
 from src.kiutils.wks import WorkSheet

@@ -6,7 +6,7 @@ import time
 import copy
 import traceback
 from unittest import TestResult, TextTestResult
-from unittest.result import failfast
+from unittest.result import failfast  # type: ignore
 
 from jinja2 import Template
 

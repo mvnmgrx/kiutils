@@ -1,0 +1,24 @@
+(kicad_sch (version 20211123) (generator kicad-python-tools)
+
+  (uuid )
+
+  (paper "A4")
+
+  (lib_symbols
+  )
+
+
+
+
+
+
+
+
+
+
+  (sheet_instances
+  )
+
+  (symbol_instances
+  )
+)

@@ -17,9 +17,9 @@ from dataclasses import dataclass, field
 from os import path
 from typing import List, Optional
 
-from .items.common import Justify  # type: ignore
-from .utils.strings import dequote  # type: ignore
-from .utils import sexpr  # type: ignore
+from .items.common import Justify
+from .utils.strings import dequote
+from .utils import sexpr
 
 @dataclass
 class WksFontSize():

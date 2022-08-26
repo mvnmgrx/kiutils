@@ -39,11 +39,11 @@ class Tests_LibTable(unittest.TestCase):
         self.testData.pathToTestFile = path.join(LIBTABLE_BASE, 'test_addLibraryObjectToLibTable')
         libtable = LibTable(type='fp_lib_table')
         libtable.libs.append(Library(
-            name = 'object1',
-            type = "KiCad",
-            uri = '${KIPRJMOD}/my/library.pretty',
-            options = 'Some options with "quoted strings"',
-            description = 'Some description with "quoted strings"'
+            name='object1',
+            type="KiCad",
+            uri='${KIPRJMOD}/my/library.pretty',
+            options='Some options with "quoted strings"',
+            description='Some description with "quoted strings"'
         ))
         self.assertTrue(to_file_and_compare(libtable, self.testData))
 

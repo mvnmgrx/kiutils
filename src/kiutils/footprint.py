@@ -19,14 +19,12 @@ from dataclasses import dataclass, field
 from os import path
 from typing import Optional, List
 
-from .items.zones import Zone  # type: ignore
-from .items.common import Position, Coordinate, Net, Group  # type: ignore
-from .items.fpitems import FpArc, FpCircle, FpCurve, FpLine, FpPoly, FpRect, FpText, FpTextBox  # type: ignore
-
-from .items.gritems import GrArc, GrCircle, GrCurve, GrLine, GrPoly, GrRect, GrText, GrTextBox  # type: ignore
-
-from .utils import sexpr  # type: ignore
-from .utils.strings import dequote  # type: ignore
+from .items.zones import Zone
+from .items.common import Position, Coordinate, Net, Group
+from .items.fpitems import FpArc, FpCircle, FpCurve, FpLine, FpPoly, FpRect, FpText, FpTextBox
+from .items.gritems import GrArc, GrCircle, GrCurve, GrLine, GrPoly, GrRect, GrText, GrTextBox
+from .utils import sexpr
+from .utils.strings import dequote
 
 @dataclass
 class Attributes():

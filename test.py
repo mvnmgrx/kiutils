@@ -7,21 +7,28 @@ License identifier:
     GPL-3.0
 """
 import unittest
+import os
+import sys
 
-from tests.board import *
-from tests.designrules import *
-from tests.footprint import *
-from tests.libtable import *
-from tests.schematic import *
-from tests.symbol import *
-from tests.worksheets import *
+sys.path.append(
+    os.path.dirname(os.path.realpath(__file__)) + "/.."
+)
+# pylint: disable=wrong-import-position
+
+from tests.test_board import *
+from tests.test_designrules import *
+from tests.test_footprint import *
+from tests.test_libtable import *
+from tests.test_schematic import *
+from tests.test_symbol import *
+from tests.test_worksheets import *
 from tests.reporter.runner import HTMLTestRunner
 
 if __name__ == "__main__":
     unittest.main(testRunner=HTMLTestRunner(
-        combine_reports = True,
-        verbosity = 3,
-        report_title = 'KiUtils Unittest Report',
-        report_name = 'KiUtils_Testreport',
-        open_in_browser = True
+        combine_reports=True,
+        verbosity=3,
+        report_title='KiUtils Unittest Report',
+        report_name='KiUtils_Testreport',
+        open_in_browser=True
     ))

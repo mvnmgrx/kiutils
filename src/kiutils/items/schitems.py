@@ -14,6 +14,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import List, Optional, Dict
 
 from .common import Position, ColorRGBA, Stroke, Effects, Property
 from ..utils.strings import dequote
@@ -778,7 +779,7 @@ class SchematicSymbol():
     properties: List[Property] = field(default_factory=list)
     """The `properties` section defines a list of symbol properties of the schematic symbol"""
 
-    pins: dict[str, str] = field(default_factory=dict)
+    pins: Dict[str, str] = field(default_factory=dict)
     """The `pins` token defines a dictionary with pin numbers in form of strings as keys and
        uuid's as values"""
 

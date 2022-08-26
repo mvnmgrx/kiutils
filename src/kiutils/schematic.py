@@ -17,11 +17,10 @@ from dataclasses import dataclass, field
 from os import path
 from typing import List, Optional
 
-from .items.common import PageSettings, TitleBlock  # type: ignore
-from .items.schitems import BusEntry, Connection, GlobalLabel, HierarchicalLabel, HierarchicalSheet, HierarchicalSheetInstance, Image, Junction, LocalLabel, NoConnect, PolyLine, SchematicSymbol, SymbolInstance, Text  # type: ignore
-
-from .symbol import Symbol  # type: ignore
-from .utils import sexpr  # type: ignore
+from .items.common import PageSettings, TitleBlock
+from .items.schitems import BusEntry, Connection, GlobalLabel, HierarchicalLabel, HierarchicalSheet, HierarchicalSheetInstance, Image, Junction, LocalLabel, NoConnect, PolyLine, SchematicSymbol, SymbolInstance, Text
+from .symbol import Symbol
+from .utils import sexpr
 
 @dataclass
 class Schematic():

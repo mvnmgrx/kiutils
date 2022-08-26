@@ -16,10 +16,10 @@ from dataclasses import dataclass, field
 from os import path
 from typing import List, Optional
 
-from .items.common import Effects, Position, Property  # type: ignore
-from .items.syitems import SyArc, SyCircle, SyCurve, SyPolyLine, SyRect, SyText  # type: ignore
-from .utils import sexpr  # type: ignore
-from .utils.strings import dequote  # type: ignore
+from .items.common import Effects, Position, Property
+from .items.syitems import SyArc, SyCircle, SyCurve, SyPolyLine, SyRect, SyText
+from .utils import sexpr
+from .utils.strings import dequote
 
 @dataclass
 class SymbolAlternativePin():

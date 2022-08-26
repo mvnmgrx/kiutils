@@ -15,9 +15,10 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 from os import path
+from typing import Optional, List
 
-from .utils import sexpr
-from .utils.strings import dequote
+from .utils import sexpr  # type: ignore
+from .utils.strings import dequote  # type: ignore
 
 @dataclass
 class Constraint():
@@ -42,16 +43,16 @@ class Constraint():
     - `via_diameter` - Diameter of vias associated with this constraint
     """
 
-    min: str | None = None
+    min: Optional[str] = None
     """The `min` token defines the minimum allowed in this constraint"""
 
-    opt: str | None = None
+    opt: Optional[str] = None
     """The `opt` token defines the optimum allowed in this constraint"""
 
-    max: str | None = None
+    max: Optional[str] = None
     """The `max` token defines the maximum allowed in this constraint"""
 
-    elements: list[str] = field(default_factory=list)
+    elements: List[str] = field(default_factory=list)
     """The `items` token defines a list of zero or more element types to include in this constraint.
     The following element types are available:
     - `buried_via`
@@ -123,7 +124,7 @@ class Rule():
     name: str = ""
     """The `name` token defines the name of the custom design rule"""
 
-    constraints: list[Constraint] = field(default_factory=list)
+    constraints: List[Constraint] = field(default_factory=list)
     """The `constraints` token defines a list of constraints for this custom design rule"""
 
     condition: str = ""
@@ -131,7 +132,7 @@ class Rule():
     reference for more information. Example rule:
     - `A.inDiffPair('*') && !AB.isCoupledDiffPair()`"""
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The optional `layer` token defines the canonical layer the rule applys to"""
 
     @classmethod
@@ -188,7 +189,7 @@ class DesignRules():
     version: int = 1
     """The `version` token defines the version of the file for the KiCad parser. Defaults to 1."""
 
-    rules: list[Rule] = field(default_factory=list)
+    rules: List[Rule] = field(default_factory=list)
     """The `rules` token defines a list of custom design rules"""
 
     @classmethod

@@ -15,10 +15,11 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import List, Optional
 
-from .common import Position
-from .gritems import GrText
-from ..utils.strings import dequote
+from .common import Position  # type: ignore
+from .gritems import GrText  # type: ignore
+from ..utils.strings import dequote  # type: ignore
 
 @dataclass
 class DimensionFormat():
@@ -28,10 +29,10 @@ class DimensionFormat():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_dimension_format
     """
 
-    prefix: str | None = None
+    prefix: Optional[str] = None
     """The optional `prefix` token defines the string to add to the beginning of the dimension text"""
 
-    suffix: str | None = None
+    suffix: Optional[str] = None
     """The optional `suffix` token defines the string to add to the end of the dimension text"""
 
     units: int = 3
@@ -52,7 +53,7 @@ class DimensionFormat():
     precision: int = 4
     """The `precision` token defines the number of significant digits to display"""
 
-    overrideValue: str | None = None
+    overrideValue: Optional[str] = None
     """The optional `overrideValue` token defines the text to substitute for the actual physical 
     dimension"""
 
@@ -135,11 +136,11 @@ class DimensionStyle():
     - 1: Text is in line with the dimension line
     - 2: Text has been manually placed by the user"""
 
-    extensionHeight: float | None = None
+    extensionHeight: Optional[float] = None
     """The optional `extensionHeight` token defines the length of the extension lines past the 
     dimension crossbar"""
 
-    textFrame: int | None = None
+    textFrame: Optional[int] = None
     """The optional `textFrame` token defines the style of the frame around the dimension text. This 
     only applies to leader dimensions. Valid text frames are as follows:
     - 0: No text frame
@@ -147,7 +148,7 @@ class DimensionStyle():
     - 2: Circle
     - 3:Rounded rectangle"""
 
-    extensionOffset: float | None = None
+    extensionOffset: Optional[float] = None
     """The optional `extensionOffset` token defines the distance from feature points to extension 
     line start"""
 
@@ -228,28 +229,28 @@ class Dimension():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the polygon resides on"""
 
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     """The `tstamp` token defines the unique identifier for the footprint. This only applies
     to footprints defined in the board file format."""
 
-    pts: list[Position] = field(default_factory=list)
+    pts: List[Position] = field(default_factory=list)
     """The `pts` token define the list of xy coordinates of the dimension"""
 
-    height: float | None = None
+    height: Optional[float] = None
     """The optional `height` token defines the height of aligned dimensions"""
 
-    orientation: float | None = None
+    orientation: Optional[float] = None
     """The optional `orientation` token defines the rotation angle for orthogonal dimensions"""
 
-    leaderLength: float | None = None
+    leaderLength: Optional[float] = None
     """The optional `leaderLength` token attribute defines the distance from the marked radius to 
     the knee for radial dimensions."""
 
-    grText: GrText | None = None
+    grText: Optional[GrText] = None
     """The optional `grText` token define the dimension text formatting for all dimension types 
     except center dimensions"""
 
-    format: DimensionFormat | None = None
+    format: Optional[DimensionFormat] = None
     """The optional `format` token define the dimension formatting for all dimension types except 
     center dimensions"""
 

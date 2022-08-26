@@ -18,10 +18,10 @@ class TestData():
     """Data container to relay testcase-specific information to the report generator. May be added
     as a member to `unittest.TestCase` in the `setUp()` function. The object will then be
     available in `result._TestInfo()` classes constructor."""
-    producedOutput: str | None = None
-    expectedOutput: str | None = None
-    ownDescription: str | None = None
-    pathToTestFile: str | None = None
+    producedOutput: Optional[str] = None
+    expectedOutput: Optional[str] = None
+    ownDescription: Optional[str] = None
+    pathToTestFile: Optional[str] = None
     compareToTestFile: bool = False
     wasSuccessful: bool = False
 

@@ -220,7 +220,7 @@ class Connection():
     type: str = "wire"
     """The `type` token defines wether the connection is a `bus` or a `wire`"""
 
-    points: list[Position] = field(default_factory=list)
+    points: List[Position] = field(default_factory=list)
     """The `points` token defines the list of X and Y coordinates of start and end points
        of the wire or bus"""
 
@@ -295,10 +295,10 @@ class Image():
     position: Position = Position()
     """The `position` defines the X and Y coordinates of the image"""
 
-    scale: float | None = None
+    scale: Optional[float] = None
     """The optional `scale` token attribute defines the scale factor (size) of the image"""
 
-    data: list[str] = field(default_factory=list)
+    data: List[str] = field(default_factory=list)
     """The `data` token attribute defines the image data in the portable network graphics
        format (PNG) encoded with MIME type base64 as a list of strings"""
 
@@ -368,7 +368,7 @@ class PolyLine():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_graphical_line_section
     """
 
-    points: list[Position] = field(default_factory=list)
+    points: List[Position] = field(default_factory=list)
     """The `points` token defines the list of X/Y coordinates of to draw line(s)
        between. A minimum of two points is required."""
 
@@ -606,7 +606,7 @@ class GlobalLabel():
     uuid: str = ""
     """The `uuid` defines the universally unique identifier"""
 
-    properties: list[Property] = field(default_factory=list)
+    properties: List[Property] = field(default_factory=list)
     """	The `properties` token defines a list of properties of the global label. Currently, the
     only supported property is the inter-sheet reference"""
 
@@ -775,14 +775,14 @@ class SchematicSymbol():
     uuid: str = ""
     """The `uuid` defines the universally unique identifier"""
 
-    properties: list[Property] = field(default_factory=list)
+    properties: List[Property] = field(default_factory=list)
     """The `properties` section defines a list of symbol properties of the schematic symbol"""
 
     pins: dict[str, str] = field(default_factory=dict)
     """The `pins` token defines a dictionary with pin numbers in form of strings as keys and
        uuid's as values"""
 
-    mirror: str | None = None
+    mirror: Optional[str] = None
     """The `mirror` token defines if the symbol is mirrored in the schematic. Accepted values: `x` or `y`. 
     When mirroring around the x and y axis at the same time use some additional rotation to get the correct
     orientation of the symbol."""
@@ -964,7 +964,7 @@ class HierarchicalSheet():
     """The `fileName` is a property that defines the file name of the sheet. The property's
        key should therefore be set to `Sheet file`"""
 
-    pins: list[HierarchicalPin] = field(default_factory=list)
+    pins: List[HierarchicalPin] = field(default_factory=list)
     """The `pins` section is a list of hierarchical pins that map a hierarchical label defined in
        the associated schematic file"""
 

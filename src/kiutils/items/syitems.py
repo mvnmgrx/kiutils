@@ -226,7 +226,7 @@ class SyCurve():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_curve
     """
 
-    points: list[Position] = field(default_factory=list)
+    points: List[Position] = field(default_factory=list)
     """The `points` token defines the four X/Y coordinates of each point of the curve"""
 
     stroke: Stroke = Stroke()
@@ -295,7 +295,7 @@ class SyPolyLine():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_line
     """
 
-    points: list[Position] = field(default_factory=list)
+    points: List[Position] = field(default_factory=list)
     """The `points` token defines the four X/Y coordinates of each point of the polyline"""
 
     stroke: Stroke = Stroke()

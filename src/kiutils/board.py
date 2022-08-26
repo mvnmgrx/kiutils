@@ -15,15 +15,16 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 from os import path
+from typing import Optional, List, Dict
 
-from .items.common import Group, Net, PageSettings, TitleBlock
-from .items.zones import Zone
-from .items.brditems import *
-from .items.gritems import *
-from .items.dimensions import Dimension
-from .utils.strings import dequote
-from .utils import sexpr
-from .footprint import Footprint
+from .items.common import Group, Net, PageSettings, TitleBlock  # type: ignore
+from .items.zones import Zone  # type: ignore
+from .items.brditems import GeneralSettings, LayerToken, SetupData, Target, Segment, Arc, Via  # type: ignore
+from .items.gritems import GrText, GrTextBox, GrLine, GrRect, GrCircle, GrArc, GrPoly, GrCurve, GrPoly  # type: ignore
+from .items.dimensions import Dimension  # type: ignore
+from .utils.strings import dequote  # type: ignore
+from .utils import sexpr  # type: ignore
+from .footprint import Footprint  # type: ignore
 
 @dataclass
 class Board():
@@ -45,22 +46,22 @@ class Board():
     paper: PageSettings = PageSettings()
     """The `paper` token defines informations about the page itself"""
 
-    titleBlock: TitleBlock | None = None
+    titleBlock: Optional[TitleBlock] = None
     """The `titleBlock` token defines author, date, revision, company and comments of the board"""
 
-    layers: list[LayerToken] = field(default_factory=list)
+    layers: List[LayerToken] = field(default_factory=list)
     """The `layers` token defines all of the layers used by the board"""
 
     setup: SetupData = SetupData()
     """The `setup` token is used to store the current settings used by the board"""
 
-    properties: dict[str, str] = field(default_factory=dict)
+    properties: Dict[str, str] = field(default_factory=dict)
     """The `properties` token holds a list of key-value properties of the board as a dictionary"""
 
-    nets: list[Net] = field(default_factory=list)
+    nets: List[Net] = field(default_factory=list)
     """The `nets` token defines a list of nets used in the layout"""
 
-    footprints: list[Footprint] = field(default_factory=list)
+    footprints: List[Footprint] = field(default_factory=list)
     """The `footprints` token defines a list of footprints used in the layout"""
 
     graphicalItems: list = field(default_factory=list) # as in gritems.py
@@ -70,19 +71,19 @@ class Board():
     traceItems: list = field(default_factory=list)
     """The `traceItems` token defines a list of segments, arcs and vias used in the layout"""
 
-    zones: list[Zone] = field(default_factory=list)
+    zones: List[Zone] = field(default_factory=list)
     """The `zones` token defines a list of zones used in the layout"""
 
-    dimensions: list[Dimension] = field(default_factory=list)
+    dimensions: List[Dimension] = field(default_factory=list)
     """The `dimensions` token defines a list of dimensions on the PCB"""
 
-    targets: list[Target] = field(default_factory=list)
+    targets: List[Target] = field(default_factory=list)
     """The `targets` token defines a list of target markers on the PCB"""
 
-    groups: list[Group] = field(default_factory=list)
+    groups: List[Group] = field(default_factory=list)
     """The `groups` token defines a list of groups used in the layout"""
 
-    filePath: str | None = None
+    filePath: Optional[str] = None
     """The `filePath` token defines the path-like string to the board file. Automatically set when
     `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
 

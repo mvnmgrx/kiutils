@@ -15,8 +15,9 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import List, Optional, Dict
 
-from ..utils.strings import dequote
+from ..utils.strings import dequote  # type: ignore
 
 @dataclass
 class Position():
@@ -32,7 +33,7 @@ class Position():
     Y: float = 0.0
     """The `Y` attribute defines the vertical position of the object"""
 
-    angle: float | None = None
+    angle: Optional[float] = None
     """The optional `angle` attribute defines the rotational angle of the object. Not all
     objects have rotational position definitions. Symbol text angles are stored in tenths
     of a degree. All other angles are stored in degrees."""
@@ -147,12 +148,12 @@ class ColorRGBA():
     A: int = 0
     """The `A` token defines the alpha channel of the color"""
 
-    precision: int | None = None
+    precision: Optional[int] = None
     """Wether the output of `to_sexpr()` should have a set number of precision after the decimal
     point of the `self.A` attribute"""
 
     @classmethod
-    def from_sexpr(cls, exp: list, precision: int | None = None):
+    def from_sexpr(cls, exp: list, precision: Optional[int] = None):
         """Convert the given S-Expresstion into a ColorRGBA object
 
         Args:
@@ -270,7 +271,7 @@ class Font():
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_text_effects
     """
-    face: str | None = None
+    face: Optional[str] = None
     """The optional 'face' token indicates the font family. It should be a TrueType font family
     name or "KiCad Font" for the KiCad stroke font. (Kicad version 7)"""
 
@@ -280,7 +281,7 @@ class Font():
     width: float = 1.0
     """The 'width' token attributes define the font's width"""
 
-    thickness: float | None = None
+    thickness: Optional[float] = None
     """The 'thickness' token attribute defines the line thickness of the font"""
 
     bold: bool = False
@@ -289,7 +290,7 @@ class Font():
     italic: bool = False
     """The 'italic' token specifies if the font should be italicized"""
 
-    lineSpacing: float | None = None
+    lineSpacing: Optional[float] = None
     """The 'line_spacing' token specifies the spacing between lines as a ratio of standard
     line-spacing. (Not yet supported)"""
 
@@ -358,10 +359,10 @@ class Justify():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_text_effects
     """
 
-    horizontally: str | None = None
+    horizontally: Optional[str] = None
     """The `horizontally` token sets the horizontal justification. Valid values are `right` or `left`"""
 
-    vertically: str | None = None
+    vertically: Optional[str] = None
     """The `vertically` token sets the vertical justification. Valid values are `top` or `bottom`"""
 
     mirror: bool = False
@@ -554,7 +555,7 @@ class Group():
     id: str = ""
     """The `id` token attribute defines the unique identifier of the group"""
 
-    members: list[str] = field(default_factory=list)
+    members: List[str] = field(default_factory=list)
     """The `members` token attributes define a list of unique identifiers of the objects belonging to the group"""
 
     @classmethod
@@ -624,10 +625,10 @@ class PageSettings():
     `A3`, `A4`, `A5`, `A`, `B`, `C`, `D` and `E`. When using user-defines page sizes, set this
     to `User`"""
 
-    width: float | None = None
+    width: Optional[float] = None
     """The `width` token sets the width of a user-defines page size"""
 
-    height: float | None = None
+    height: Optional[float] = None
     """The `height` token sets the height of a user-defines page size"""
 
     portrait: bool = False
@@ -701,19 +702,19 @@ class TitleBlock():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_title_block
     """
 
-    title: str | None = None
+    title: Optional[str] = None
     """The optional `title` token attribute is a quoted string that defines the document title"""
 
-    date: str | None = None
+    date: Optional[str] = None
     """The optional `date` token attribute is a quoted string that defines the document date using the YYYY-MM-DD format"""
 
-    revision: str | None = None
+    revision: Optional[str] = None
     """The optional `revision` token attribute is a quoted string that defines the document revision"""
 
-    company: str | None = None
+    company: Optional[str] = None
     """The optional `company` token attribute is a quoted string that defines the document company name"""
 
-    comments: dict[int, str] = field(default_factory=dict)
+    comments: Dict[int, str] = field(default_factory=dict)
     """The `comments` token attributes define a dictionary of document comments where the key is
     a number from 1 to 9 and the value is a comment string"""
 
@@ -797,7 +798,7 @@ class Property():
     position: Position = Position()
     """The `position` defines the X and Y coordinates and rotation angle of the property"""
 
-    effects: Effects | None = None
+    effects: Optional[Effects] = None
     """The `effects` section defines how the text is displayed"""
 
     @classmethod

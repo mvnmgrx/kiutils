@@ -15,9 +15,10 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import List, Optional
 
-from .common import Position
-from ..utils.strings import dequote
+from .common import Position  # type: ignore
+from ..utils.strings import dequote  # type: ignore
 
 @dataclass
 class KeepoutSettings():
@@ -110,26 +111,26 @@ class FillSettings():
     """The `yes` token specifies if the zone should be filled. If not specified, the zone is
     not filled and no additional attributes are required."""
 
-    mode: str | None = None
+    mode: Optional[str] = None
     """The optional `mode` token attribute defines how the zone is filled. The only valid fill
     mode is `hatched`. When not defined, the fill mode is solid."""
 
-    thermalGap: float | None = None
+    thermalGap: Optional[float] = None
     """The optional `thermalGap` token attribute defines the distance from the zone to all
     pad thermal relief connections to the zone."""
 
-    thermalBridgeWidth: float | None = None
+    thermalBridgeWidth: Optional[float] = None
     """The optional `thermalBridgeWidth` token attribute defines the spoke width for all
     pad thermal relief connection to the zone."""
 
-    smoothingStyle: str | None = None
+    smoothingStyle: Optional[str] = None
     """The optional `smoothingStyle` token attributes define the style of corner smoothing. Valid
     smoothing styles are `chamfer` and `fillet`"""
 
-    smoothingRadius: float | None = None
+    smoothingRadius: Optional[float] = None
     """The optional `smoothingRadius` token attributes define the radius of corner smoothing"""
 
-    islandRemovalMode: int | None = None
+    islandRemovalMode: Optional[int] = None
     """The optional `islandRemovalMode` token attribute defines the island removal mode.
     Valid island removal modes are:
     - 0: Always remove islands.
@@ -137,21 +138,21 @@ class FillSettings():
     - 2: Minimum area island to allow.
     """
 
-    islandAreaMin: float | None = None
+    islandAreaMin: Optional[float] = None
     """The optional `islandAreaMin` token attribute defines the minimum allowable zone
       island. This only valid when the remove islands mode is set to 2."""
 
-    hatchThickness: float | None = None
+    hatchThickness: Optional[float] = None
     """The optional `hatchThickness` token attribute defines the thickness for hatched fills"""
 
-    hatchGap: float | None = None
+    hatchGap: Optional[float] = None
     """The optional `hatchGap` token attribute defines the distance between lines for hatched
     fills"""
 
-    hatchOrientation: float | None = None
+    hatchOrientation: Optional[float] = None
     """The optional `hatchOrientation` token attribute defines the line angle for hatched fills"""
 
-    hatchSmoothingLevel: int | None = None
+    hatchSmoothingLevel: Optional[int] = None
     """The optional `hatchSmoothingLevel` token attribute defines how hatch outlines are
     smoothed. Valid hatch smoothing levels are:
     - 0: No smoothing
@@ -160,11 +161,11 @@ class FillSettings():
     - 3: Arc maximum
     """
 
-    hatchSmoothingValue: float | None = None
+    hatchSmoothingValue: Optional[float] = None
     """The optional `hatchSmoothingValue` token attribute defines the ratio between the hole
     and the chamfer/fillet size"""
 
-    hatchBorderAlgorithm: int | None = None
+    hatchBorderAlgorithm: Optional[int] = None
     """The optional `hatchBorderAlgorithm` token attribute defines the if the zone line
     thickness is used when performing a hatch fill. Valid values for the hatch border
     algorithm are:
@@ -172,7 +173,7 @@ class FillSettings():
     - 1: Use hatch thickness.
     """
 
-    hatchMinHoleArea: float | None = None
+    hatchMinHoleArea: Optional[float] = None
     """The optional `hatchMinHoleArea` token attribute defines the minimum area a hatch file hole can be"""
 
     @classmethod
@@ -252,7 +253,7 @@ class FillSettings():
 class ZonePolygon():
     """The `polygon` token defines a list of coordinates that define part of a zone"""
 
-    coordinates: list[Position] = field(default_factory=list)
+    coordinates: List[Position] = field(default_factory=list)
     """The `coordinates` defines the list of polygon X/Y coordinates used to define the zone polygon"""
 
     @classmethod
@@ -325,7 +326,7 @@ class FilledPolygon():
     island: bool = False
     """The `island` token's definition has to be defined .."""
 
-    coordinates: list[Position] = field(default_factory=list)
+    coordinates: List[Position] = field(default_factory=list)
     """The `coordinates` defines the list of polygon X/Y coordinates used to fill the zone"""
 
     @classmethod
@@ -402,7 +403,7 @@ class FillSegments():
     layer: str = "F.Cu"
     """The `layer` token attribute defines the canonical layer the zone fill resides on"""
 
-    coordinates: list[Position] = field(default_factory=list)
+    coordinates: List[Position] = field(default_factory=list)
     """The `coordinates` defines the list of polygon X/Y coordinates used to fill the zone."""
 
     @classmethod
@@ -495,24 +496,24 @@ class Zone():
     """The `net_name` token attribute defines the name of the net if the zone is not a keep
     out area. The net name attribute will be an empty string if the zone is a keep out area."""
 
-    layers: list[str] = field(default_factory=list)
+    layers: List[str] = field(default_factory=list)
     """The `layers` token define the canonical layer set the zone connects as a list of
     strings. When the zone only resides on one layer, the output of `self.to_sexpr()` will
     change into `(layer "xyz")` instead of `(layers ..)` automatically."""
 
-    tstamp: str | None = None       # Used since KiCad 6
+    tstamp: Optional[str] = None       # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the zone object"""
 
-    name: str | None = None
+    name: Optional[str] = None
     """The optional `name` token attribute defines the name of the zone if one has been assigned"""
 
     hatch: Hatch = Hatch()
     """The `hatch` token attributes define the zone outline display hatch style and pitch"""
 
-    priority: int | None = None
+    priority: Optional[int] = None
     """The optional `priority` attribute defines the zone priority if it is not zero"""
 
-    connectPads: str | None = None  # This refers to CONNECTION_TYPE in the docu
+    connectPads: Optional[str] = None  # This refers to CONNECTION_TYPE in the docu
     """The `connectPads` token attributes define the pad connection type and clearance. Valid
     pad connection types are `thru_hole_only`, `full` and `no`. If the pad connection type is not
     defined, thermal relief pad connections are used"""
@@ -524,26 +525,26 @@ class Zone():
     minThickness: float = 0.254
     """The `minThickness` token attributed defines the minimum fill width allowed in the zone"""
 
-    filledAreasThickness: str | None = None
+    filledAreasThickness: Optional[str] = None
     """The optional `filledAreasThickness` attribute no specifies if the zone like width is
     not used when determining the zone fill area. This is to maintain compatibility with older
     board files that included the line thickness when performing zone fills when it is not defined."""
 
-    keepoutSettings: KeepoutSettings | None = None
+    keepoutSettings: Optional[KeepoutSettings] = None
     """The optional `keepoutSettings` section defines the keep out items if the zone
     defines as a keep out area"""
 
-    fillSettings: FillSettings | None = None
+    fillSettings: Optional[FillSettings] = None
     """The optional `fillSettings` section defines how the zone is to be filled"""
 
-    polygons: list[ZonePolygon] = field(default_factory=list)
+    polygons: List[ZonePolygon] = field(default_factory=list)
     """The `polygon` token defines a list of zone polygons that define the shape of the zone"""
 
-    filledPolygons: list[FilledPolygon] = field(default_factory=list)
+    filledPolygons: List[FilledPolygon] = field(default_factory=list)
     """The `filledPolygons` token defines a list of filled polygons in the zone"""
 
     # TODO: This is KiCad 4 only stuff, needs to be tested yet ..
-    fillSegments: FillSegments | None = None
+    fillSegments: Optional[FillSegments] = None
     """The optional `fillSegments` section defines a list of track segments used to fill
     the zone"""
 

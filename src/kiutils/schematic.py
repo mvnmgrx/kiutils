@@ -15,11 +15,13 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 from os import path
+from typing import List, Optional
 
-from .items.common import PageSettings, TitleBlock
-from .items.schitems import *
-from .symbol import Symbol
-from .utils import sexpr
+from .items.common import PageSettings, TitleBlock  # type: ignore
+from .items.schitems import BusEntry, Connection, GlobalLabel, HierarchicalLabel, HierarchicalSheet, HierarchicalSheetInstance, Image, Junction, LocalLabel, NoConnect, PolyLine, SchematicSymbol, SymbolInstance, Text  # type: ignore
+
+from .symbol import Symbol  # type: ignore
+from .utils import sexpr  # type: ignore
 
 @dataclass
 class Schematic():
@@ -41,55 +43,55 @@ class Schematic():
     paper: PageSettings = PageSettings()
     """The `paper` token defines the drawing page size and orientation"""
 
-    titleBlock: TitleBlock | None = None
+    titleBlock: Optional[TitleBlock] = None
     """The `titleBlock` token defines author, date, revision, company and comments of the schematic"""
 
-    libSymbols: list[Symbol] = field(default_factory=list)
+    libSymbols: List[Symbol] = field(default_factory=list)
     """The `libSymbols` token defines a list of symbols that are used in the schematic"""
 
-    schematicSymbols: list[SchematicSymbol] = field(default_factory=list)
+    schematicSymbols: List[SchematicSymbol] = field(default_factory=list)
     """The `schematicSymbols` token defines a list of instances of symbols used in the schematic"""
 
-    junctions: list[Junction] = field(default_factory=list)
+    junctions: List[Junction] = field(default_factory=list)
     """The `junctions` token defines a list of junctions used in the schematic"""
 
-    noConnects: list[NoConnect] = field(default_factory=list)
+    noConnects: List[NoConnect] = field(default_factory=list)
     """The `noConnect` token defines a list of no_connect markers used in the schematic"""
 
-    busEntries: list[BusEntry] = field(default_factory=list)
+    busEntries: List[BusEntry] = field(default_factory=list)
     """The `busEntries` token defines a list of bus_entry used in the schematic"""
 
     graphicalItems: list = field(default_factory=list)
     """The `graphicalItems` token defines a list of `bus`, `wire` or `polyline` elements used in
     the schematic"""
 
-    images: list[Image] = field(default_factory=list)
+    images: List[Image] = field(default_factory=list)
     """The `images` token defines a list of images used in the schematic"""
 
-    texts: list[Text] = field(default_factory=list)
+    texts: List[Text] = field(default_factory=list)
     """The `text` token defines a list of texts used in the schematic"""
 
-    labels: list[LocalLabel] = field(default_factory=list)
+    labels: List[LocalLabel] = field(default_factory=list)
     """The `labels` token defines a list of local labels used in the schematic"""
 
-    globalLabels: list[GlobalLabel] = field(default_factory=list)
+    globalLabels: List[GlobalLabel] = field(default_factory=list)
     """The `globalLabels` token defines a list of global labels used in the schematic"""
 
-    hierarchicalLabels: list[HierarchicalLabel] = field(default_factory=list)
+    hierarchicalLabels: List[HierarchicalLabel] = field(default_factory=list)
     """The `herarchicalLabels` token defines a list of hierarchical labels used in the schematic"""
 
-    sheets: list[HierarchicalSheet] = field(default_factory=list)
+    sheets: List[HierarchicalSheet] = field(default_factory=list)
     """The `sheets` token defines a list of hierarchical sheets used in the schematic"""
 
-    sheetInstances: list[HierarchicalSheetInstance] = field(default_factory=list)
+    sheetInstances: List[HierarchicalSheetInstance] = field(default_factory=list)
     """The `sheetInstances` token defines a list of instances of hierarchical sheets used in
     the schematic"""
 
-    symbolInstances: list[SymbolInstance] = field(default_factory=list)
+    symbolInstances: List[SymbolInstance] = field(default_factory=list)
     """The `symbolInstances` token defines a list of instances of symbols from `libSymbols` token
     used in the schematic"""
 
-    filePath: str | None = None
+    filePath: Optional[str] = None
     """The `filePath` token defines the path-like string to the schematic file. Automatically set when
     `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
 

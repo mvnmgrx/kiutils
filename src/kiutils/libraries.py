@@ -12,9 +12,10 @@ Major changes:
 
 from dataclasses import dataclass, field
 from os import path
+from typing import List, Optional
 
-from .utils.strings import dequote
-from .utils import sexpr
+from .utils.strings import dequote  # type: ignore
+from .utils import sexpr  # type: ignore
 
 @dataclass
 class Library():
@@ -88,10 +89,10 @@ class LibTable():
     """The `type` token defines the type of the library table. Valid values are `fp_lib_table` or 
     `sym_lib_table`."""
 
-    libs: list[Library] = field(default_factory=list)
+    libs: List[Library] = field(default_factory=list)
     """The `libs` token holds a list of librarys that this library table object holds"""
 
-    filePath: str | None = None
+    filePath: Optional[str] = None
     """The `filePath` token defines the path-like string to the library file. Automatically set when 
     `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
 

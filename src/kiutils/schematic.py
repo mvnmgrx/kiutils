@@ -200,53 +200,86 @@ class Schematic():
         expression =  f'{indents}(kicad_sch (version {self.version}) (generator {self.generator})\n'
         if self.uuid is not None:
             expression += f'\n{indents}  (uuid {self.uuid})\n\n'
-        expression += f'{self.paper.to_sexpr(indent+2)}\n'
+        expression += f'{self.paper.to_sexpr(indent+2)}'
         if self.titleBlock is not None:
-            expression += f'{self.titleBlock.to_sexpr(indent+2)}\n'
-        expression += f'{indents}  (lib_symbols\n'
-        for item in self.libSymbols:
-            expression += item.to_sexpr(indent+4)
-        expression += f'{indents}  )\n\n'
-        for item in self.junctions:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.noConnects:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.busEntries:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.graphicalItems:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.images:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.texts:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.labels:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.globalLabels:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.hierarchicalLabels:
-            expression += item.to_sexpr(indent+2)
-        expression += '\n'
-        for item in self.schematicSymbols:
-            expression += item.to_sexpr(indent+2)
+            expression += f'\n{self.titleBlock.to_sexpr(indent+2)}'
+
+        if self.libSymbols:
+            expression += f'\n{indents}  (lib_symbols'
+            for item in self.libSymbols:
+                expression += '\n'
+                expression += item.to_sexpr(indent+4)
+            expression += f'{indents}  )\n\n'
+        else:
+            expression += f'{indents}  (lib_symbols)\n'
+
+        if self.junctions:
+            for item in self.junctions:
+                expression += item.to_sexpr(indent+2)
             expression += '\n'
-        for item in self.sheets:
-            expression += item.to_sexpr(indent+2)
+
+        if self.noConnects:
+            for item in self.noConnects:
+                expression += item.to_sexpr(indent+2)
             expression += '\n'
-        expression += '  (sheet_instances\n'
-        for item in self.sheetInstances:
-            expression += item.to_sexpr(indent+4)
-        expression += '  )\n\n'
-        expression += '  (symbol_instances\n'
-        for item in self.symbolInstances:
-            expression += item.to_sexpr(indent+4)
-        expression += '  )\n'
+
+        if self.busEntries:
+            for item in self.busEntries:
+                expression += item.to_sexpr(indent+2)
+            expression += '\n'
+
+        if self.graphicalItems:
+            for item in self.graphicalItems:
+                expression += item.to_sexpr(indent+2)
+            expression += '\n'
+
+        if self.images:
+            for item in self.images:
+                expression += item.to_sexpr(indent+2)
+            expression += '\n'
+
+        if self.texts:
+            for item in self.texts:
+                expression += item.to_sexpr(indent+2)
+            expression += '\n'
+
+        if self.labels:
+            for item in self.labels:
+                expression += item.to_sexpr(indent+2)
+            expression += '\n'
+
+        if self.globalLabels:
+            for item in self.globalLabels:
+                expression += item.to_sexpr(indent+2)
+            expression += '\n'
+
+        if self.hierarchicalLabels:
+            for item in self.hierarchicalLabels:
+                expression += item.to_sexpr(indent+2)
+
+        if self.schematicSymbols:
+            for item in self.schematicSymbols:
+                expression += '\n'
+                expression += item.to_sexpr(indent+2)
+
+        if self.sheets:
+            for item in self.sheets:
+                expression += '\n'
+                expression += item.to_sexpr(indent+2)
+
+        if self.sheetInstances:
+            expression += '\n'
+            expression += '  (sheet_instances\n'
+            for item in self.sheetInstances:
+                expression += item.to_sexpr(indent+4)
+            expression += '  )\n'
+
+        if self.symbolInstances:
+            expression += '\n'
+            expression += '  (symbol_instances\n'
+            for item in self.symbolInstances:
+                expression += item.to_sexpr(indent+4)
+            expression += '  )\n'
+
         expression += f'{indents}){endline}'
         return expression

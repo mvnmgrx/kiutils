@@ -12,6 +12,7 @@ from os import path
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
 from kiutils.schematic import Schematic
+from kiutils.items.common import Property
 
 SCHEMATIC_BASE = path.join(TEST_BASE, 'schematic')
 
@@ -21,6 +22,16 @@ class Tests_Schematic(unittest.TestCase):
     def setUp(self) -> None:
         prepare_test(self)
         return super().setUp()
+
+    def test_addPropertyToSchematicSymbol(self):
+        """Adds a new property to an already existing symbol in the schematic and verifies the 
+        correct initial values for the Property() class."""
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_addPropertyToSchematicSymbol')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        schematic.schematicSymbols[0].properties.append(
+            Property(key='Property3', value='I was added from "outside" of KiCad', id=6)
+        )
+        self.assertTrue(to_file_and_compare(schematic, self.testData))
 
     def test_createEmptySchematic(self):
         """Tests that an empty schematic generates S-Expression as expected from KiCad

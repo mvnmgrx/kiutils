@@ -35,7 +35,7 @@ class Schematic():
     generator: str = "kicad-python-tools"
     """The `generator` token attribute defines the program used to write the file"""
 
-    uuid: str = ""
+    uuid: str | None = None
     """The `uuid` defines the universally unique identifier"""
 
     paper: PageSettings = PageSettings()
@@ -197,8 +197,9 @@ class Schematic():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        expression =  f'{indents}(kicad_sch (version {self.version}) (generator {self.generator})\n\n'
-        expression += f'{indents}  (uuid {self.uuid})\n\n'
+        expression =  f'{indents}(kicad_sch (version {self.version}) (generator {self.generator})\n'
+        if self.uuid is not None:
+            expression += f'\n{indents}  (uuid {self.uuid})\n\n'
         expression += f'{self.paper.to_sexpr(indent+2)}\n'
         if self.titleBlock is not None:
             expression += f'{self.titleBlock.to_sexpr(indent+2)}\n'

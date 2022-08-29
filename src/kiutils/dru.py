@@ -16,8 +16,8 @@ Documentation taken from:
 from dataclasses import dataclass, field
 from os import path
 
-from .utils import sexpr
-from .utils.strings import dequote
+from kiutils.utils import sexpr
+from kiutils.utils.strings import dequote
 
 @dataclass
 class Constraint():

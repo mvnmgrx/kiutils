@@ -17,8 +17,8 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
-from .common import Position, Stroke, Effects
-from ..utils.strings import dequote
+from kiutils.items.common import Position, Stroke, Effects
+from kiutils.utils.strings import dequote
 
 @dataclass
 class SyFill():

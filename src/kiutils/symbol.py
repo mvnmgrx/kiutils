@@ -15,10 +15,10 @@ Documentation taken from:
 from dataclasses import dataclass, field
 from os import path
 
-from .items.common import Effects, Position, Property
-from .items.syitems import *
-from .utils import sexpr
-from .utils.strings import dequote
+from kiutils.items.common import Effects, Position, Property
+from kiutils.items.syitems import *
+from kiutils.utils import sexpr
+from kiutils.utils.strings import dequote
 
 @dataclass
 class SymbolAlternativePin():

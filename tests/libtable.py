@@ -11,7 +11,7 @@ import unittest
 from os import path
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
-from src.kiutils.libraries import LibTable, Library
+from kiutils.libraries import LibTable, Library
 
 LIBTABLE_BASE = path.join(TEST_BASE, 'libtable')
 

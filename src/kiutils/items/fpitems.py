@@ -17,8 +17,8 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
-from .common import Stroke, Position, Effects
-from ..utils.strings import dequote
+from kiutils.items.common import Stroke, Position, Effects
+from kiutils.utils.strings import dequote
 
 @dataclass
 class FpText():

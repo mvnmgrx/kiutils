@@ -16,10 +16,10 @@ Documentation taken from:
 from dataclasses import dataclass, field
 from os import path
 
-from .items.common import PageSettings, TitleBlock
-from .items.schitems import *
-from .symbol import Symbol
-from .utils import sexpr
+from kiutils.items.common import PageSettings, TitleBlock
+from kiutils.items.schitems import *
+from kiutils.symbol import Symbol
+from kiutils.utils import sexpr
 
 @dataclass
 class Schematic():

@@ -17,8 +17,8 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
-from .common import Effects, Position, Stroke
-from ..utils.strings import dequote
+from kiutils.items.common import Effects, Position, Stroke
+from kiutils.utils.strings import dequote
 
 @dataclass
 class GrText():

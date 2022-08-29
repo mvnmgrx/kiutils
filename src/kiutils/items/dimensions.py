@@ -16,9 +16,9 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
-from .common import Position
-from .gritems import GrText
-from ..utils.strings import dequote
+from kiutils.items.common import Position
+from kiutils.items.gritems import GrText
+from kiutils.utils.strings import dequote
 
 @dataclass
 class DimensionFormat():

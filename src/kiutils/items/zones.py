@@ -16,8 +16,8 @@ Documentation taken from:
 
 from dataclasses import dataclass, field
 
-from .common import Position
-from ..utils.strings import dequote
+from kiutils.items.common import Position
+from kiutils.utils.strings import dequote
 
 @dataclass
 class KeepoutSettings():

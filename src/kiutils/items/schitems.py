@@ -756,8 +756,8 @@ class SchematicSymbol():
     position: Position = Position()
     """The `position` defines the X and Y coordinates and angle of rotation of the symbol"""
 
-    unit: int = 0
-    """The `unit` token attribute defines which unit in the symbol library definition that the
+    unit: int | None = None
+    """The optional `unit` token attribute defines which unit in the symbol library definition that the
        schematic symbol represents"""
 
     inBom: bool = False
@@ -839,8 +839,9 @@ class SchematicSymbol():
         inBom = 'yes' if self.inBom else 'no'
         onBoard = 'yes' if self.onBoard else 'no'
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
+        unit = f' (unit {self.unit})' if self.unit is not None else ''
 
-        expression =  f'{indents}(symbol (lib_id "{dequote(self.libraryIdentifier)}") (at {self.position.X} {self.position.Y}{posA}){mirror} (unit {self.unit})\n'
+        expression =  f'{indents}(symbol (lib_id "{dequote(self.libraryIdentifier)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
         expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'
         expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:

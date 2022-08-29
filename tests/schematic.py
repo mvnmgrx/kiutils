@@ -23,7 +23,19 @@ class Tests_Schematic(unittest.TestCase):
         return super().setUp()
 
     def test_createEmptySchematic(self):
-        """Tests that an empty schematic generates S-Expression as expected from KiCad"""
+        """Tests that an empty schematic generates S-Expression as expected from KiCad
+
+        Note: This test currently disregards an empty `(symbol_instances)` token as it seems that this
+        only exists when empty KiCad schematics are created. This is what should be expected for
+        empty schematics:
+
+        <pre><code>
+        (kicad_sch (version 20211123) (generator kicad-python-tools)
+            (paper "A4")
+            (lib_symbols)
+            (symbol_instances)
+        )
+        </code</pre>"""
         schematic = Schematic()
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_createEmptySchematic')
         self.assertTrue(to_file_and_compare(schematic, self.testData))

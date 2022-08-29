@@ -65,7 +65,7 @@ class Position():
             # More than four components means X, Y, and either angle or unlocked are present
             if exp[3] != 'unlocked':
                 object.angle = exp[3]
-        
+
         for item in exp:
             if item == 'unlocked': object.unlocked = True
 
@@ -389,7 +389,7 @@ class Justify():
 
         object = cls()
         for item in exp:
-            # 'center' is the standard on vertical but not on horizontal in work sheets 
+            # 'center' is the standard on vertical but not on horizontal in work sheets
             if item == 'left' or item == 'right' or item == 'center': object.horizontally = item
             if item == 'top' or item == 'bottom': object.vertically = item
             if item == 'mirror': object.mirror = True
@@ -768,10 +768,10 @@ class TitleBlock():
 
         if self.revision is not None:
             expression += f'{indents}  (rev "{dequote(self.revision)}")\n'
-        
+
         if self.company is not None:
             expression += f'{indents}  (company "{dequote(self.company)}")\n'
-        
+
         for number, comment in self.comments.items():
             expression += f'{indents}  (comment {number} "{dequote(comment)}")\n'
         expression += f'{indents}){endline}'
@@ -794,8 +794,9 @@ class Property():
     id: int = 0
     """The id token defines an integer ID for the property and must be unique"""
 
-    position: Position = Position()
-    """The `position` defines the X and Y coordinates and rotation angle of the property"""
+    position: Position = Position(angle=0)
+    """The `position` defines the X and Y coordinates as well as the rotation angle of the property.
+    All three items will initially be set to zero."""
 
     effects: Effects | None = None
     """The `effects` section defines how the text is displayed"""

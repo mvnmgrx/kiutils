@@ -1,9 +1,12 @@
 # All testoutput from Python testcases
 *.testoutput*
 reports/*
+
+# Temporary files of linters, cov-checks, etc.
 .pytest_cache
-htmlcov/*
 .coverage
+.mypy_cache
+htmlcov/*
 
 # Python compilings
 *__pycache__*

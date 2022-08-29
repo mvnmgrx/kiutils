@@ -34,9 +34,11 @@ jobs:
         python -m pip install -e .
     - name: Test with unittest
       run: |
+        mkdir reports
         python3 test.py
+        python3 -m unittest
     - name: 'Upload test report'
       uses: actions/upload-artifact@v3
       with:
         name: test-report
-        path: reports/KiUtils_Testreport*.html
+        path: reports

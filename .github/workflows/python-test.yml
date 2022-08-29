@@ -11,8 +11,9 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  python-unittest:
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:

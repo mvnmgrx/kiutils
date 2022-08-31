@@ -75,7 +75,7 @@ class Attributes():
             # Test case for this: test_fp_empty_attr.kicad_mod
             if exp[1] == 'through_hole' or exp[1] == 'smd':
                 object.type = exp[1]
-        
+
         for item in exp:
             if item == 'board_only': object.boardOnly = True
             if item == 'exclude_from_pos_files': object.excludeFromPosFiles = True
@@ -83,7 +83,14 @@ class Attributes():
         return object
 
     def to_sexpr(self, indent=0, newline=False) -> str:
-        """Generate the S-Expression representing this object
+        """Generate the S-Expression representing this object. Will return an empty string, if the
+        following attributes are selected:
+        - `type`: None
+        - `boardOnly`: False
+        - `excludeFromBom`: False
+        - `excludeFromPosFiles`: False
+
+        KiCad won't add the `(attr ..)` token to a footprint when this combination is selected.
 
         Args:
             indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
@@ -92,6 +99,12 @@ class Attributes():
         Returns:
             str: S-Expression of this object
         """
+        if (self.type == None
+            and self.boardOnly == False
+            and self.excludeFromBom == False
+            and self.excludeFromPosFiles == False):
+            return ''
+
         indents = ' '*indent
         endline = '\n' if newline else ''
         type = f' {self.type}' if self.type is not None else ''
@@ -543,9 +556,9 @@ class Pad():
         pf = f' (pinfunction "{dequote(self.pinFunction)}")' if self.pinFunction is not None else ''
         pt = f' (pintype "{dequote(self.pinType)}")' if self.pinType is not None else ''
 
-        # Check if a schematic symbol is associated with this footprint. This is usually set, if the 
+        # Check if a schematic symbol is associated with this footprint. This is usually set, if the
         # footprint is used in a board file.
-        if net != '' or pf != '' or pt != '': 
+        if net != '' or pf != '' or pt != '':
             schematicSymbolAssociated = True
 
         tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
@@ -597,7 +610,7 @@ class Pad():
         if champferFound:
             # Only one whitespace here as all temporary strings have at least one leading whitespace
             expression += f'\n{indents} {cr}{c}'
-            
+
         if self.dieLength is not None:
             expression += f'\n{indents}  (die_length {self.dieLength})'
 
@@ -635,7 +648,7 @@ class Footprint():
 
     generator: str | None = None
     """The `generator` token attribute defines the program used to write the file"""
-    
+
     locked: bool = False
     """The optional `locked` token defines a flag to indicate the footprint cannot be edited"""
 
@@ -717,7 +730,7 @@ class Footprint():
     for all pads in the footprint. If not set, the zone thermal_gap setting is used. If not set, the
     zone thermal_gap setting is used."""
 
-    attributes: Attributes | None = None
+    attributes: Attributes = Attributes()
     """The optional `attributes` section defines the attributes of the footprint"""
 
     graphicItems: list = field(default_factory=list)
@@ -922,7 +935,10 @@ class Footprint():
             expression += f'{indents}  (thermal_gap {self.thermalGap})\n'
 
         if self.attributes is not None:
-            expression += f'{indents}  {self.attributes.to_sexpr()}\n'
+            # Note: If the attribute object has only standard values in it, it will return an
+            #       empty string. Therefore, it should create its own newline and indentations only
+            #       when needed.
+            expression += self.attributes.to_sexpr(indent=indent+2, newline=True)
 
         for item in self.graphicItems:
             expression += item.to_sexpr(indent=indent+2)

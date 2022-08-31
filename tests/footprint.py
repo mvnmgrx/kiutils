@@ -37,8 +37,12 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_footprintEmptyAttributes(self):
-        """Tests the correct parsing of a footprint with empty `Attributes` field"""
-        self.testData.compareToTestFile = True
+        """Tests the correct parsing of a footprint with empty `Attributes` field
+
+        </p><b>Note:</b> Some earlier versions of KiCad seemed to include the `(attr ..)` token in footprints even
+        when no attributes are set (or when using standard attributes). This test includes an empty 
+        attribute token in the footprint and expects it to be gone after parsing. </p>
+        """
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_footprintEmptyAttributes')
         footprint = Footprint().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(footprint, self.testData))

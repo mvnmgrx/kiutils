@@ -9,6 +9,7 @@ License identifier:
 
 import unittest
 from os import path
+from kiutils.footprint import Attributes
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
 from kiutils.board import Board
@@ -43,6 +44,31 @@ class Tests_Board(unittest.TestCase):
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_boardWithAllPrimitives')
         board = Board().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(board, self.testData))
+
+    def test_allFpManufacturingAttributes(self):
+        """Tests the parsing of a board with footprints that feature all combinations of 
+        manufacturing attributes. Tests all possible combinations of the following:
+        <ul>
+            <li>Board Only: True / False</li>
+            <li>Exclude from BOM: True / False</li>
+            <li>excludeFromPosFiles: True / False</li>
+            <li>Type: SMD, THT, Other</li>
+        </ul>
+        
+        Furthermore tests if the Attributes() object of a footprint is correctly created even 
+        when the parsed footprint has no (attr ...) token in its S-Expression."""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_allFpManufacturingAttributes')
+        board = Board().from_file(self.testData.pathToTestFile)
+
+        # Test parsing
+        self.assertTrue(to_file_and_compare(board, self.testData))
+
+        # Test that attributes object is created, even when an empty attribute list is present in 
+        # parsed footprint
+        attr = Attributes(boardOnly=False, excludeFromBom=False, excludeFromPosFiles=False, type=None)
+        self.assertEqual(attr, board.footprints[11].attributes, 
+            msg="Parsing of footprint without `attr` field does not yield expected Attributes() object")
 
     def tearDown(self) -> None:
         cleanup_after_test(self.testData)

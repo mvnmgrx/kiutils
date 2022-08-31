@@ -66,7 +66,7 @@ class Tests_Board(unittest.TestCase):
 
         # Test that attributes object is created, even when an empty attribute list is present in 
         # parsed footprint
-        attr = Attributes(boardOnly=False, excludeFromBom=False, excludeFromPosFiles=False, type='smd')
+        attr = Attributes(boardOnly=False, excludeFromBom=False, excludeFromPosFiles=False, type=None)
         self.assertEqual(attr, board.footprints[11].attributes, 
             msg="Parsing of footprint without `attr` field does not yield expected Attributes() object")
 

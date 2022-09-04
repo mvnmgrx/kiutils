@@ -7,14 +7,6 @@ The ``kiutils`` module is available on `PyPI <https://pypi.org/project/kiutils/>
 
    pip install kiutils
 
-The most relevant classes can then be imported like this:
+The following is required to run ``kiutils``:
 
-.. code-block:: python
-
-   from kiutils.board import Board
-   from kiutils.libraries import LibTable
-   from kiutils.schematic import Schematic
-   from kiutils.footprint import Footprint
-   from kiutils.symbol import SymbolLib
-   from kiutils.wks import WorkSheet
-   from kiutils.dru import DesignRules
+- Python 3.10 or higher

@@ -44,3 +44,5 @@ running:
 
    cd docs
    make html
+
+The HTML output can then be accessed via ``docs/_build/html/index.html``. 

@@ -10,6 +10,13 @@ This is the documentation to the ``kiutils`` python module for parsing files of 
 
 - View on Github: `mvnmgrx/kiutils <https://github.com/mvnmgrx/kiutils>`_
 
+``kiutils`` is simple and SCM-friendly KiCad file parser based on Python dataclasses for KiCad 6.0
+and up. 
+
+It implements a "pythonic" abstraction of the documentation found at the
+`KiCad Developer Reference <https://dev-docs.kicad.org/en/file-formats/>`_ and is intended to work 
+with an SCM like Git or SVN without breaking the layout of the files when the Python script ran.
+
 .. toctree::
    :maxdepth: 2
    :caption: Usage

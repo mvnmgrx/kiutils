@@ -16,7 +16,14 @@ This is the documentation to the ``kiutils`` python module for parsing files of 
 
    installation
    basics
+   examples
    development
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Misc
+
+   known-issues
 
 .. toctree::
    :maxdepth: 2

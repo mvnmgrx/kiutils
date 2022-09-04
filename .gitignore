@@ -25,3 +25,8 @@ output/*
 dist/*
 build/*
 src/kiutils.egg-info/*
+
+# Documentation related stuff
+*_build*
+*_static*
+*_templates*

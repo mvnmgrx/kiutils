@@ -1,0 +1,4 @@
+jinja2
+setuptools
+sphinx
+sphinx-rtd-theme

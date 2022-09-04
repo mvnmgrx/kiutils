@@ -15,6 +15,7 @@ This is the documentation to the ``kiutils`` python module for parsing files of 
    :caption: Usage
 
    installation
+   basics
    development
 
 .. toctree::

@@ -12,7 +12,14 @@ This is the documentation to the ``kiutils`` python module for parsing files of 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Module documentation:
+   :caption: Usage
+
+   installation
+   development
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Module documentation
 
    kiutils
    kiutils.items

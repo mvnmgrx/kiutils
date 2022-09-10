@@ -1,5 +1,19 @@
 # kiutils - CHANGELOG
 
+## v1.1.4 - 10.09.2022
+- Added: Support for older Python versions (v3.7 to v3.10 are now supported) - (PR #30)
+- Added: Automatic test report generation in test framework - (PR #21)
+- Added: Sphinx-compatible documentation in `docs/` folder and on 
+         [https://kiutils.readthedocs.io](https://kiutils.readthedocs.io) - (PR #29)
+- Changed: Replaced relative imports with absolute imports in the module structure - (PR #24)
+- Changed: Migrated test framework to Python's `unittest` - (PR #21)
+- Changed: `unit` token in class `kiutils.items.schitems.SchematicSymbol()` is now optional - (PR #26)
+- Changed: `uuid` token in class `kiutils.schematic.Schematic()` is now optional - (PR #26)
+- Changed: Order of how newlines are generated in `kiutils.schematic.Schematic().to_sexpr()` - (PR #26)
+- Fixed: `angle` set to 0.0 (was `None`) when creating a new `kiutils.items.common.Property()` object (PR #27, fixes #19)
+- Fixed: Footprint attributes object (`kiutils.footprint.Attributes()`) missing when certain 
+         "Manufacturing Attributes" are set - (PR #28)
+
 ## v1.1.3 - 07.07.2022
 - Fixed: Stacked dielectrics in PCB layer stack are now parsed correctly as `StackupSubLayer` item
 

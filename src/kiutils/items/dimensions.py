@@ -1,4 +1,4 @@
-"""The dimensions are used to mark spots in the board file for their dimensions (units, metric, 
+"""The dimensions are used to mark spots in the board file for their dimensions (units, metric,
 imperial, etc)
 
 Author:
@@ -15,6 +15,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import Optional, List
 
 from kiutils.items.common import Position
 from kiutils.items.gritems import GrText
@@ -28,22 +29,22 @@ class DimensionFormat():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_dimension_format
     """
 
-    prefix: str | None = None
+    prefix: Optional[str] = None
     """The optional `prefix` token defines the string to add to the beginning of the dimension text"""
 
-    suffix: str | None = None
+    suffix: Optional[str] = None
     """The optional `suffix` token defines the string to add to the end of the dimension text"""
 
     units: int = 3
-    """The `units` token defines the dimension units used to display the dimension text. Valid units 
+    """The `units` token defines the dimension units used to display the dimension text. Valid units
     are as follows:
     - 0: Inches
     - 1: Mils
     - 2: Millimeters
     - 3: Automatic"""
-    
+
     unitsFormat: int = 1
-    """The `unitsFormat` token defines how the unit's suffix is formatted. Valid units formats are 
+    """The `unitsFormat` token defines how the unit's suffix is formatted. Valid units formats are
     as follows:
     - 0: No suffix
     - 1: Bare suffix
@@ -52,8 +53,8 @@ class DimensionFormat():
     precision: int = 4
     """The `precision` token defines the number of significant digits to display"""
 
-    overrideValue: str | None = None
-    """The optional `overrideValue` token defines the text to substitute for the actual physical 
+    overrideValue: Optional[str] = None
+    """The optional `overrideValue` token defines the text to substitute for the actual physical
     dimension"""
 
     suppressZeroes: bool = False
@@ -129,31 +130,31 @@ class DimensionStyle():
     """The `arrowLength` token defines the length of the dimension arrows"""
 
     textPositionMode: int = 0
-    """The `textPositionMode` token defines the position mode of the dimension text. Valid position 
+    """The `textPositionMode` token defines the position mode of the dimension text. Valid position
     modes are as follows:
     - 0: Text is outside the dimension line
     - 1: Text is in line with the dimension line
     - 2: Text has been manually placed by the user"""
 
-    extensionHeight: float | None = None
-    """The optional `extensionHeight` token defines the length of the extension lines past the 
+    extensionHeight: Optional[float] = None
+    """The optional `extensionHeight` token defines the length of the extension lines past the
     dimension crossbar"""
 
-    textFrame: int | None = None
-    """The optional `textFrame` token defines the style of the frame around the dimension text. This 
+    textFrame: Optional[int] = None
+    """The optional `textFrame` token defines the style of the frame around the dimension text. This
     only applies to leader dimensions. Valid text frames are as follows:
     - 0: No text frame
     - 1: Rectangle
     - 2: Circle
     - 3:Rounded rectangle"""
 
-    extensionOffset: float | None = None
-    """The optional `extensionOffset` token defines the distance from feature points to extension 
+    extensionOffset: Optional[float] = None
+    """The optional `extensionOffset` token defines the distance from feature points to extension
     line start"""
 
     keepTextAligned: bool = False
-    """The `keepTextAligned` token indicates that the dimension text should be kept in line with the 
-    dimension crossbar. When false, the dimension text is shown horizontally regardless of the 
+    """The `keepTextAligned` token indicates that the dimension text should be kept in line with the
+    dimension crossbar. When false, the dimension text is shown horizontally regardless of the
     orientation of the dimension."""
 
     @classmethod
@@ -220,37 +221,37 @@ class Dimension():
 
     locked: bool = False
     """The optional `locked` token specifies if the dimension can be moved"""
-    
+
     type: str = "aligned"
-    """The `type` token defines the type of dimension. Valid dimension types are `aligned`, 
+    """The `type` token defines the type of dimension. Valid dimension types are `aligned`,
     `leader`, `center`, `orthogonal` (and `radial` in KiCad version 7)"""
-    
+
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the polygon resides on"""
 
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     """The `tstamp` token defines the unique identifier for the footprint. This only applies
     to footprints defined in the board file format."""
 
-    pts: list[Position] = field(default_factory=list)
+    pts: List[Position] = field(default_factory=list)
     """The `pts` token define the list of xy coordinates of the dimension"""
 
-    height: float | None = None
+    height: Optional[float] = None
     """The optional `height` token defines the height of aligned dimensions"""
 
-    orientation: float | None = None
+    orientation: Optional[float] = None
     """The optional `orientation` token defines the rotation angle for orthogonal dimensions"""
 
-    leaderLength: float | None = None
-    """The optional `leaderLength` token attribute defines the distance from the marked radius to 
+    leaderLength: Optional[float] = None
+    """The optional `leaderLength` token attribute defines the distance from the marked radius to
     the knee for radial dimensions."""
 
-    grText: GrText | None = None
-    """The optional `grText` token define the dimension text formatting for all dimension types 
+    grText: Optional[GrText] = None
+    """The optional `grText` token define the dimension text formatting for all dimension types
     except center dimensions"""
 
-    format: DimensionFormat | None = None
-    """The optional `format` token define the dimension formatting for all dimension types except 
+    format: Optional[DimensionFormat] = None
+    """The optional `format` token define the dimension formatting for all dimension types except
     center dimensions"""
 
     style: DimensionStyle = DimensionStyle()
@@ -290,10 +291,10 @@ class Dimension():
             if item[0] == 'gr_text': object.grText = GrText().from_sexpr(item)
             if item[0] == 'format': object.format = DimensionFormat().from_sexpr(item)
             if item[0] == 'style': object.style = DimensionStyle().from_sexpr(item)
-            if item[0] == 'pts': 
+            if item[0] == 'pts':
                 for point in item[1:]:
                     object.pts.append(Position().from_sexpr(point))
-            
+
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:

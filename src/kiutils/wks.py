@@ -14,6 +14,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import Optional, List
 from os import path
 
 from kiutils.items.common import Justify
@@ -73,10 +74,10 @@ class WksFontSize():
 class WksFont():
     """The `WksFont` token defines how a text is drawn"""
 
-    linewidth: float | None = None
+    linewidth: Optional[float] = None
     """The optional `linewidth` token defines the width of the font's lines"""
 
-    size: WksFontSize | None = None
+    size: Optional[WksFontSize] = None
     """The optional `size` token defines the size of the font"""
 
     bold: bool = False
@@ -123,7 +124,7 @@ class WksFont():
             newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object. Will return an empty string, if all members of this 
+            str: S-Expression of this object. Will return an empty string, if all members of this
             class are set to None.
         """
         indents = ' '*indent
@@ -151,7 +152,7 @@ class WksPosition():
     Y: float = 0.0
     """The `Y` attribute defines the vertical position of the object. Defaults to 0."""
 
-    corner: str | None = None
+    corner: Optional[str] = None
     """The optional `corner` token is used to define the initial corner for repeating"""
 
     @classmethod
@@ -202,26 +203,26 @@ class Line():
     end: WksPosition = WksPosition()
     """The `end` token defines the end position of the line"""
 
-    option: str | None = None
+    option: Optional[str] = None
     """The optional `option` token defines on which pages the line shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
-    lineWidth: float | None = None
+    lineWidth: Optional[float] = None
     """The optional `lineWidth` token attribute defines the width of the rectangle lines"""
 
-    repeat: int | None = None
+    repeat: Optional[int] = None
     """The optional `repeat` token defines the count for repeated incremental lines"""
 
-    incrx: float | None = None
+    incrx: Optional[float] = None
     """The optional `incrx` token defines the repeat distance on the X axis"""
 
-    incry: float | None = None
+    incry: Optional[float] = None
     """The optional `incry` token defines the repeat distance on the Y axis"""
 
-    comment: str | None = None
+    comment: Optional[str] = None
     """The optional `comment` token is a comment for the line object"""
 
     @classmethod
@@ -301,26 +302,26 @@ class Rect():
     end: WksPosition = WksPosition()
     """The `end` token defines the end position of the rectangle"""
 
-    option: str | None = None
+    option: Optional[str] = None
     """The optional `option` token defines on which pages the rectangle shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
-    lineWidth: float | None = None
+    lineWidth: Optional[float] = None
     """The optional `lineWidth` token attribute defines the width of the rectangle lines"""
 
-    repeat: int | None = None
+    repeat: Optional[int] = None
     """The optional `repeat` token defines the count for repeated incremental rectangles"""
 
-    incrx: float | None = None
+    incrx: Optional[float] = None
     """The optional `incrx` token defines the repeat distance on the X axis"""
 
-    incry: float | None = None
+    incry: Optional[float] = None
     """The optional `incry` token defines the repeat distance on the Y axis"""
 
-    comment: str | None = None
+    comment: Optional[str] = None
     """The optional `comment` token is a comment for the rectangle object"""
 
     @classmethod
@@ -398,29 +399,29 @@ class Polygon():
     position: WksPosition = WksPosition()
     """The `position` token defines the coordinates of the polygon"""
 
-    option: str | None = None
+    option: Optional[str] = None
     """The optional `option` token defines on which pages the polygon shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
-    rotate: float | None = None
+    rotate: Optional[float] = None
     """The optional `rotate` token defines the rotation angle of the polygon object"""
 
-    coordinates: list[WksPosition] = field(default_factory=list)
+    coordinates: List[WksPosition] = field(default_factory=list)
     """The `coordinates` token defines a list of X/Y coordinates that forms the polygon"""
 
-    repeat: int | None = None
+    repeat: Optional[int] = None
     """The optional `repeat` token defines the count for repeated incremental polygons"""
 
-    incrx: float | None = None
+    incrx: Optional[float] = None
     """The optional `incrx` token defines the repeat distance on the X axis"""
 
-    incry: float | None = None
+    incry: Optional[float] = None
     """The optional `incry` token defines the repeat distance on the Y axis"""
 
-    comment: str | None = None
+    comment: Optional[str] = None
     """The optional `comment` token is a comment for the polygon object"""
 
     @classmethod
@@ -466,7 +467,7 @@ class Bitmap():
     position: WksPosition = WksPosition()
     """The `position` token defines the coordinates of the bitmap"""
 
-    option: str | None = None
+    option: Optional[str] = None
     """The optional `option` token defines on which pages the image shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
@@ -476,21 +477,21 @@ class Bitmap():
     scale: float = 1.0
     """The `scale` token defines the scale of the bitmap object"""
 
-    repeat: int | None = None
+    repeat: Optional[int] = None
     """The optional `repeat` token defines the count for repeated incremental bitmaps"""
 
-    incrx: float | None = None
+    incrx: Optional[float] = None
     """The optional `incrx` token defines the repeat distance on the X axis"""
 
-    incry: float | None = None
+    incry: Optional[float] = None
     """The optional `incry` token defines the repeat distance on the Y axis"""
 
     # Comments seem to be buggy as of 25.06.2022 ..
-    comment: str | None = None
+    comment: Optional[str] = None
     """The optional `comment` token is a comment for the bitmap object"""
 
     # TODO: Parse this nonesense as a binary struct to make it more useful
-    pngdata: list[str] = field(default_factory=list)
+    pngdata: List[str] = field(default_factory=list)
     """The `pngdata` token defines a list of strings representing up to 32 bytes per entry of
     the image being saved.
 
@@ -587,42 +588,42 @@ class TbText():
     position: WksPosition = WksPosition()
     """The `position` token defines the position of the text"""
 
-    option: str | None = None
+    option: Optional[str] = None
     """The optional `option` token defines on which pages the text shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
-    rotate: float | None = None
+    rotate: Optional[float] = None
     """The optional `rotate` token defines the rotation of the text in degrees"""
 
     font: WksFont = WksFont()
     """The `font` token define how the text is drawn"""
 
-    justify: Justify | None = None
+    justify: Optional[Justify] = None
     """The optional `justify` token defines the justification of the text"""
 
-    maxlen: float | None = None
+    maxlen: Optional[float] = None
     """The optional `maxlen` token defines the maximum length of the text"""
 
-    maxheight: float | None = None
+    maxheight: Optional[float] = None
     """The optional `maxheight` token defines the maximum height of the text"""
 
-    repeat: int | None = None
+    repeat: Optional[int] = None
     """The optional `repeat` token defines the count for repeated incremental text"""
 
-    incrx: float | None = None
+    incrx: Optional[float] = None
     """The optional `incrx` token defines the repeat distance on the X axis"""
 
-    incry: float | None = None
+    incry: Optional[float] = None
     """The optional `incry` token defines the repeat distance on the Y axis"""
 
-    incrlabel: int | None = None
+    incrlabel: Optional[int] = None
     """The optional `incrlabel` token defines the amount of characters that are moved with every
     repeated incremental text"""
 
-    comment: str | None = None
+    comment: Optional[str] = None
     """The optional `comment` token is a comment for the text object"""
 
     @classmethod
@@ -818,7 +819,7 @@ class Setup():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        # KiCad puts no spaces between tokens here 
+        # KiCad puts no spaces between tokens here
         expression =  f'{indents}(setup {self.textSize.to_sexpr()}(linewidth {self.lineWidth})'
         expression += f'(textlinewidth {self.textLineWidth})\n{indents}'
         expression += f'(left_margin {self.leftMargin})(right_margin {self.rightMargin})'
@@ -843,10 +844,10 @@ class WorkSheet():
     setup: Setup = Setup()
     """The `setup` token defines the configuration information for the work sheet"""
 
-    drawingObjects: list = field(default_factory=list)
+    drawingObjects: List = field(default_factory=list)
     """The `drawingObjects` token can contain zero or more texts, lines, rectangles, polys or images"""
 
-    filePath: str | None = None
+    filePath: Optional[str] = None
     """The `filePath` token defines the path-like string to the board file. Automatically set when
     `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
 
@@ -863,7 +864,7 @@ class WorkSheet():
 
         Returns:
             Position: Object of the class initialized with the given S-Expression
-        """        
+        """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
 

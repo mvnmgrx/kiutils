@@ -9,4 +9,4 @@ The ``kiutils`` module is available on `PyPI <https://pypi.org/project/kiutils/>
 
 The following is required to run ``kiutils``:
 
-- Python 3.10 or higher
+- Python 3.7 or higher

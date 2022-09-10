@@ -13,6 +13,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import Optional, List
 from os import path
 
 from kiutils.items.common import Effects, Position, Property
@@ -30,7 +31,7 @@ class SymbolAlternativePin():
     valid pin electrical connection types and descriptions."""
 
     graphicalStyle: str = "line"
-    """The `graphicalStyle` defines the graphical style used to draw the pin. See symbol 
+    """The `graphicalStyle` defines the graphical style used to draw the pin. See symbol
     documentation for valid pin graphical styles and descriptions."""
 
     @classmethod
@@ -112,7 +113,7 @@ class SymbolPin():
     hide: bool = False      # Missing in documentation
     """The 'hide' token defines if the pin should be hidden"""
 
-    alternatePins: list[SymbolAlternativePin] = field(default_factory=list)
+    alternatePins: List[SymbolAlternativePin] = field(default_factory=list)
     """The 'alternate' token defines one or more alternative definitions for the symbol pin"""
 
     @classmethod
@@ -191,7 +192,7 @@ class Symbol():
     "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers are only valid it top
     level symbols and unit identifiers are on valid as unit symbols inside a parent symbol."""
 
-    extends: str | None = None
+    extends: Optional[str] = None
     """The optional `extends` token attribute defines the "LIBRARY_ID" of another symbol inside the
     current library from which to derive a new symbol. Extended symbols currently can only have
     different symbol properties than their parent symbol."""
@@ -207,15 +208,15 @@ class Symbol():
     pinNamesHide: bool = False
     """The optional `pinNamesOffset` token defines the pin name of all pins should be hidden"""
 
-    pinNamesOffset: float | None = None
-    """The optional `pinNamesOffset` token defines the pin name offset for all pin names of the 
+    pinNamesOffset: Optional[float] = None
+    """The optional `pinNamesOffset` token defines the pin name offset for all pin names of the
     symbol. If not defined, the pin name offset is 0.508mm (0.020")"""
 
-    inBom: bool | None = None
-    """The optional `inBom` token, defines if a symbol is to be include in the bill of material 
+    inBom: Optional[bool] = None
+    """The optional `inBom` token, defines if a symbol is to be include in the bill of material
     output. If undefined, the token will not be generated in `self.to_sexpr()`."""
 
-    onBoard: bool | None = None
+    onBoard: Optional[bool] = None
     """The `onBoard` token, defines if a symbol is to be exported from the schematic to the printed
     circuit board. If undefined, the token will not be generated in `self.to_sexpr()`."""
 
@@ -223,21 +224,21 @@ class Symbol():
     isPower: bool = False           # Missing in documentation, added when "Als Spannungssymbol" is checked
     """The `isPower` token's documentation was not done yet .."""
 
-    properties: list[Property] = field(default_factory=list)
+    properties: List[Property] = field(default_factory=list)
     """The `properties` is a list of properties that define the symbol. The following properties are
     mandatory when defining a parent symbol: "Reference", "Value", "Footprint", and "Datasheet".
     All other properties are optional. Unit symbols cannot have any properties."""
 
-    graphicItems: list = field(default_factory=list)
+    graphicItems: List = field(default_factory=list)
     """The `graphicItems` section is list of graphical arcs, circles, curves, lines, polygons, rectangles
     and text that define the symbol drawing. This section can be empty if the symbol has no graphical
     items."""
 
-    pins: list[SymbolPin] = field(default_factory=list)
+    pins: List[SymbolPin] = field(default_factory=list)
     """The `pins` section is a list of pins that are used by the symbol. This section can be empty if
     the symbol does not have any pins."""
 
-    units: list = field(default_factory=list)
+    units: List = field(default_factory=list)
     """The `units` can be one or more child symbol tokens embedded in a parent symbol"""
 
     @classmethod
@@ -338,16 +339,16 @@ class SymbolLib():
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-symbol-lib/
     """
-    version: str | None = None
+    version: Optional[str] = None
     """The `version` token attribute defines the symbol library version using the YYYYMMDD date format"""
 
-    generator: str | None = None
+    generator: Optional[str] = None
     """The `generator` token attribute defines the program used to write the file"""
 
-    symbols: list[Symbol] = field(default_factory=list)
+    symbols: List[Symbol] = field(default_factory=list)
     """The `symbols` token defines a list of zero or more symbols that are part of the symbol library"""
 
-    filePath: str | None = None
+    filePath: Optional[str] = None
     """The `filePath` token defines the path-like string to the library file. Automatically set when
     `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
 

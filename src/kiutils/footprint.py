@@ -16,6 +16,7 @@ Documentation taken from:
 import calendar
 import datetime
 from dataclasses import dataclass, field
+from typing import Optional, List, Dict
 from os import path
 
 from kiutils.items.zones import Zone
@@ -23,7 +24,7 @@ from kiutils.items.common import Position, Coordinate, Net, Group
 from kiutils.items.fpitems import *
 from kiutils.items.gritems import *
 from kiutils.utils import sexpr
-from kiutils.utils.strings import dequote
+from kiutils.utils.strings import dequote, remove_prefix
 
 @dataclass
 class Attributes():
@@ -33,7 +34,7 @@ class Attributes():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_attributes
     """
 
-    type: str | None = None
+    type: Optional[str] = None
     """The optional `type` token defines the type of footprint. Valid footprint types are `smd` and
     `through_hole`. May be none when no attributes are set."""
 
@@ -202,10 +203,10 @@ class DrillDefinition():
     diameter: float = 0.0
     """The `diameter` attribute defines the drill diameter"""
 
-    width: float | None = None
+    width: Optional[float] = None
     """The optional `width` attribute defines the width of the slot for oval drills"""
 
-    offset: Position | None = None
+    offset: Optional[Position] = None
     """The optional `offset` token defines the drill offset coordinates from the center of the pad"""
 
     @classmethod
@@ -348,14 +349,14 @@ class Pad():
     size: Position = Position()         # Size uses Position class for simplicity for now
     """The `size` token defines the width and height of the pad"""
 
-    drill: DrillDefinition | None = None
+    drill: Optional[DrillDefinition] = None
     """The optional pad `drill` token defines the pad drill requirements"""
 
     # TODO: Test case for one-layer pad??
-    layers: list[str] = field(default_factory=list)
+    layers: List[str] = field(default_factory=list)
     """The `layers` token defines the layer or layers the pad reside on"""
 
-    property: str | None = None
+    property: Optional[str] = None
     """The optional `property` token defines any special properties for the pad. Valid properties
     are `pad_prop_bga`, `pad_prop_fiducial_glob`, `pad_prop_fiducial_loc`, `pad_prop_testpoint`,
     `pad_prop_heatsink`, `pad_prop_heatsink`, and `pad_prop_castellated`"""
@@ -368,54 +369,54 @@ class Pad():
     """The optional `keepEndLayers` token specifies that the top and bottom layers should be
     retained when removing the copper from unused layers"""
 
-    roundrectRatio: float | None = None
+    roundrectRatio: Optional[float] = None
     """The optional `roundrectRatio` token defines the scaling factor of the pad to corner radius
     for rounded rectangular and chamfered corner rectangular pads. The scaling factor is a
     number between 0 and 1."""
 
-    chamferRatio: float | None = None   # Adds a newline before
+    chamferRatio: Optional[float] = None   # Adds a newline before
     """The optional `chamferRatio` token defines the scaling factor of the pad to chamfer size.
     The scaling factor is a number between 0 and 1."""
 
-    chamfer: list[str] = field(default_factory=list)
+    chamfer: List[str] = field(default_factory=list)
     """The optional `chamfer` token defines a list of one or more rectangular pad corners that
     get chamfered. Valid chamfer corner attributes are `top_left`, `top_right`, `bottom_left`,
     and `bottom_right`."""
 
-    net: Net | None = None
+    net: Optional[Net] = None
     """The optional `net` token defines the integer number and name string of the net connection
     for the pad."""
 
-    tstamp: str | None = None           # Used since KiCad 6
+    tstamp: Optional[str] = None           # Used since KiCad 6
     """The optional `tstamp` token defines the unique identifier of the pad object"""
 
-    pinFunction: str | None = None
+    pinFunction: Optional[str] = None
     """The optional `pinFunction` token attribute defines the associated schematic symbol pin name"""
 
-    pinType: str | None = None
+    pinType: Optional[str] = None
     """The optional `pinType` token attribute defines the associated schematic pin electrical type"""
 
-    dieLength: float | None = None      # Adds a newline before
+    dieLength: Optional[float] = None      # Adds a newline before
     """The optional `dieLength` token attribute defines the die length between the component pad
     and physical chip inside the component package"""
 
-    solderMaskMargin: float | None = None
+    solderMaskMargin: Optional[float] = None
     """The optional `solderMaskMargin` token attribute defines the distance between the pad and
     the solder mask for the pad. If not set, the footprint solder_mask_margin is used."""
 
-    solderPasteMargin: float | None = None
+    solderPasteMargin: Optional[float] = None
     """The optional `solderPasteMargin` token attribute defines the distance the solder paste
     should be changed for the pad"""
 
-    solderPasteMarginRatio: float | None = None
+    solderPasteMarginRatio: Optional[float] = None
     """The optional `solderPasteMarginRatio` token attribute defines the percentage to reduce the
     pad outline by to generate the solder paste size"""
 
-    clearance: float | None = None
+    clearance: Optional[float] = None
     """The optional `clearance` token attribute defines the clearance from all copper to the pad.
     If not set, the footprint clearance is used."""
 
-    zoneConnect: int | None = None
+    zoneConnect: Optional[int] = None
     """The optional `zoneConnect` token attribute defines type of zone connect for the pad. If
     not defined, the footprint zone_connection setting is used. Valid connection types are
     integers values from 0 to 3 which defines:
@@ -425,17 +426,17 @@ class Pad():
        - 3: Only through hold pad is connected to zone using thermal relief
     """
 
-    thermalWidth: float | None = None
+    thermalWidth: Optional[float] = None
     """The optional `thermalWidth` token attribute defines the thermal relief spoke width used for
     zone connection for the pad. This only affects a pad connected to a zone with a thermal
     relief. If not set, the footprint thermal_width setting is used."""
 
-    thermalGap: float | None = None
+    thermalGap: Optional[float] = None
     """The optional `thermalGap` token attribute defines the distance from the pad to the zone of
     the thermal relief connection for the pad. This only affects a pad connected to a zone
     with a thermal relief. If not set, the footprint thermal_gap setting is used."""
 
-    customPadOptions: PadOptions | None = None
+    customPadOptions: Optional[PadOptions] = None
     """The optional `customPadOptions` token defines the options when a custom pad is defined"""
 
     # Documentation seems wrong about primitives here. It seems like its just a list
@@ -444,7 +445,7 @@ class Pad():
     # These two however are note generated under the primitive token from the KiCad
     # generator. These two params may be found in gr_poly or gr_XX only.
     # So for now, the custom pad primitives are only a list of graphical objects
-    customPadPrimitives: list = field(default_factory=list)
+    customPadPrimitives: List = field(default_factory=list)
     """The optional `customPadPrimitives` defines the drawing objects and options used to define
     a custom pad"""
 
@@ -643,10 +644,10 @@ class Footprint():
     """The `libraryLink` attribute defines the link to footprint library of the footprint.
     This only applies to footprints defined in the board file format."""
 
-    version: str | None = None
+    version: Optional[str] = None
     """The `version` token attribute defines the symbol library version using the YYYYMMDD date format"""
 
-    generator: str | None = None
+    generator: Optional[str] = None
     """The `generator` token attribute defines the program used to write the file"""
 
     locked: bool = False
@@ -658,59 +659,59 @@ class Footprint():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the footprint is placed"""
 
-    tedit: str = hex(calendar.timegm(datetime.datetime.now().utctimetuple())).removeprefix('0x')
+    tedit: str = remove_prefix(hex(calendar.timegm(datetime.datetime.now().utctimetuple())), '0x')
     """The `tedit` token defines a the last time the footprint was edited"""
 
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     """The `tstamp` token defines the unique identifier for the footprint. This only applies
     to footprints defined in the board file format."""
 
-    position: Position | None = None
+    position: Optional[Position] = None
     """The `position` token defines the X and Y coordinates and rotational angle of the
     footprint. This only applies to footprints defined in the board file format."""
 
-    description: str | None = None
+    description: Optional[str] = None
     """The optional `description` token defines a string containing the description of the footprint"""
 
-    tags: str | None = None
+    tags: Optional[str] = None
     """The optional `tags` token defines a string of search tags for the footprint"""
 
-    properties: dict = field(default_factory=dict)
+    properties: Dict = field(default_factory=dict)
     """The `properties` token defines dictionary of properties as key / value pairs where key being
     the name of the property and value being the description of the property"""
 
-    path: str | None = None
+    path: Optional[str] = None
     """The `path` token defines the hierarchical path of the schematic symbol linked to the footprint.
     This only applies to footprints defined in the board file format."""
 
-    autoplaceCost90: int | None = None
+    autoplaceCost90: Optional[int] = None
     """The optional `autoplaceCost90` token defines the vertical cost of when using the automatic
     footprint placement tool. Valid values are integers 1 through 10. This only applies to footprints
     defined in the board file format."""
 
-    autoplaceCost180: int | None = None
+    autoplaceCost180: Optional[int] = None
     """The optional `autoplaceCost180` token defines the horizontal cost of when using the automatic
     footprint placement tool. Valid values are integers 1 through 10. This only applies to footprints
     defined in the board file format."""
 
-    solderMaskMargin: float | None = None
+    solderMaskMargin: Optional[float] = None
     """The optional `solderMaskMargin` token defines the solder mask distance from all pads in the
     footprint. If not set, the board solder_mask_margin setting is used."""
 
-    solderPasteMargin: float | None = None
+    solderPasteMargin: Optional[float] = None
     """The optional `solderPasteMargin` token defines the solder paste distance from all pads in
     the footprint. If not set, the board solder_paste_margin setting is used."""
 
-    solderPasteRatio: float | None = None
+    solderPasteRatio: Optional[float] = None
     """The optional `solderPasteRatio` token defines the percentage of the pad size used to define
     the solder paste for all pads in the footprint. If not set, the board solder_paste_ratio setting
     is used."""
 
-    clearance: float | None = None
+    clearance: Optional[float] = None
     """The optional `clearance` token defines the clearance to all board copper objects for all pads
     in the footprint. If not set, the board clearance setting is used."""
 
-    zoneConnect: int | None = None
+    zoneConnect: Optional[int] = None
     """The optional `zoneConnect` token defines how all pads are connected to filled zone. If not
     defined, then the zone connect_pads setting is used. Valid connection types are integers values
     from 0 to 3 which defines:
@@ -720,12 +721,12 @@ class Footprint():
       - 3: Only through hold pads are connected to zone using thermal reliefs
     """
 
-    thermalWidth: float | None = None
+    thermalWidth: Optional[float] = None
     """The optional `thermalWidth` token defined the thermal relief spoke width used for zone connections
     for all pads in the footprint. This only affects pads connected to zones with thermal reliefs. If
     not set, the zone thermal_width setting is used."""
 
-    thermalGap: float | None = None
+    thermalGap: Optional[float] = None
     """The optional `thermalGap` is the distance from the pad to the zone of thermal relief connections
     for all pads in the footprint. If not set, the zone thermal_gap setting is used. If not set, the
     zone thermal_gap setting is used."""
@@ -733,24 +734,24 @@ class Footprint():
     attributes: Attributes = Attributes()
     """The optional `attributes` section defines the attributes of the footprint"""
 
-    graphicItems: list = field(default_factory=list)
+    graphicItems: List = field(default_factory=list)
     """The `graphic` objects section is a list of one or more graphical objects in the footprint. At a
     minimum, the reference designator and value text objects are defined. All other graphical objects
     are optional."""
 
-    pads: list[Pad] = field(default_factory=list)
+    pads: List[Pad] = field(default_factory=list)
     """The optional `pads` section is a list of pads in the footprint"""
 
-    zones: list[Zone] = field(default_factory=list)
+    zones: List[Zone] = field(default_factory=list)
     """The optional `zones` section is a list of keep out zones in the footprint"""
 
-    groups: list[Group] = field(default_factory=list)
+    groups: List[Group] = field(default_factory=list)
     """The optional `groups` section is a list of grouped objects in the footprint"""
 
-    models: list[Model] = field(default_factory=list)
+    models: List[Model] = field(default_factory=list)
     """The `3D model` section defines the 3D model object associated with the footprint"""
 
-    filePath: str | None = None
+    filePath: Optional[str] = None
     """The `filePath` token defines the path-like string to the library file. Automatically set when
     `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
 

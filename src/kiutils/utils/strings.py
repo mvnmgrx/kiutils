@@ -20,3 +20,17 @@ def dequote(input: str) -> str:
         str: String with replaced double-quotes
     """
     return str(input).replace("\"", "\\\"")
+
+
+def remove_prefix(input: str, prefix: str) -> str:
+    """Removes the given prefix from a string (to remove incompatibility of `str.removeprefix()`
+    for Python versions < 3.9)
+
+    Args:
+        input (str): String to remove the prefix from
+        prefix (str): The prefix
+
+    Returns:
+        str: String with removed prefix, or the `input` string as is, if the prefix was not found
+    """
+    return input[len(prefix):] if input.startswith(prefix) else input

@@ -24,7 +24,7 @@ from kiutils.items.common import Position, Coordinate, Net, Group
 from kiutils.items.fpitems import *
 from kiutils.items.gritems import *
 from kiutils.utils import sexpr
-from kiutils.utils.strings import dequote
+from kiutils.utils.strings import dequote, remove_prefix
 
 @dataclass
 class Attributes():
@@ -659,7 +659,7 @@ class Footprint():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the footprint is placed"""
 
-    tedit: str = hex(calendar.timegm(datetime.datetime.now().utctimetuple())).removeprefix('0x')
+    tedit: str = remove_prefix(hex(calendar.timegm(datetime.datetime.now().utctimetuple())), '0x')
     """The `tedit` token defines a the last time the footprint was edited"""
 
     tstamp: Optional[str] = None

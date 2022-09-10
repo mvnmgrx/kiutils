@@ -16,6 +16,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import Optional, List
 
 from kiutils.items.common import Stroke, Position, Effects
 from kiutils.utils.strings import dequote
@@ -48,7 +49,7 @@ class FpText():
     effects: Effects = Effects()
     """The `effects` token defines how the text is displayed"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the text object"""
 
     @classmethod
@@ -125,10 +126,10 @@ class FpLine():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the line resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the line. (prior to version 7)"""
 
-    stroke: Stroke | None = None   # Used for KiCad >= 7
+    stroke: Optional[Stroke] = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the line. (version 7)"""
 
     # FIXME: This is not implemented in to_sexpr() because it does not seem to be used on lines
@@ -136,7 +137,7 @@ class FpLine():
     locked: bool = False
     """The optional `locked` token defines if the line cannot be edited"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the line object"""
 
     @classmethod
@@ -215,20 +216,20 @@ class FpRect():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the rectangle resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the rectangle. (prior to version 7)"""
 
-    stroke: Stroke | None = None   # Used for KiCad >= 7
+    stroke: Optional[Stroke] = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the rectangle. (version 7)"""
 
-    fill: str | None = None
+    fill: Optional[str] = None
     """The optional `fill` toke defines how the rectangle is filled. Valid fill types are solid
     and none. If not defined, the rectangle is not filled."""
 
     locked: bool = False
     """The optional `locked` token defines if the rectangle cannot be edited"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the rectangle object"""
 
     @classmethod
@@ -305,15 +306,15 @@ class FpTextBox():
 
     locked: bool = False
     text: str = "text"
-    start: Position | None = None
-    end: Position | None = None
-    pts: list[Position] = field(default_factory=list)
-    angle: float | None = None
+    start: Optional[Position] = None
+    end: Optional[Position] = None
+    pts: List[Position] = field(default_factory=list)
+    angle: Optional[float] = None
     layer: str = "F.Cu"
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     effects: Effects = Effects()
     stroke: Stroke = Stroke()
-    renderCache: str | None = None
+    renderCache: Optional[str] = None
 
     @classmethod
     def from_sexpr(cls, exp: list):
@@ -341,19 +342,19 @@ class FpCircle():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the circle resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the circle. (prior to version 7)"""
 
-    stroke: Stroke | None = None   # Used for KiCad >= 7
+    stroke: Optional[Stroke] = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the circle. (version 7)"""
 
-    fill: str | None = None
+    fill: Optional[str] = None
     """The optional `fill` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the circle is not filled."""
 
     locked: bool = False
     """The optional `locked` token defines if the circle cannot be edited"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the circle object"""
 
     @classmethod
@@ -440,16 +441,16 @@ class FpArc():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the arc resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the arc. (prior to version 7)"""
 
-    stroke: Stroke | None = None   # Used for KiCad >= 7
+    stroke: Optional[Stroke] = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the arc. (version 7)"""
 
     locked: bool = False
     """The optional `locked` token defines if the arc cannot be edited"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the arc object"""
 
     @classmethod
@@ -526,23 +527,23 @@ class FpPoly():
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the polygon resides on"""
 
-    coordinates: list[Position] = field(default_factory=list)
+    coordinates: List[Position] = field(default_factory=list)
     """The `coordinates` define the list of X/Y coordinates of the polygon outline"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the polygon. (prior to version 7)"""
 
-    stroke: Stroke | None = None   # Used for KiCad >= 7
+    stroke: Optional[Stroke] = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the polygon. (version 7)"""
 
-    fill: str | None = None
+    fill: Optional[str] = None
     """The optional `fill` toke defines how the polygon is filled. Valid fill types are solid
     and none. If not defined, the rectangle is not filled."""
 
     locked: bool = False
     """The optional `locked` token defines if the polygon cannot be edited"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the polygon object"""
 
     @classmethod
@@ -626,22 +627,22 @@ class FpCurve():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_curve
     """
 
-    coordinates: list[Position] = field(default_factory=list)
+    coordinates: List[Position] = field(default_factory=list)
     """The `coordinates` define the list of X/Y coordinates of the curve outline"""
 
     layer: str = "F.Cu"
     """The `layer` token defines the canonical layer the curve resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the curve. (prior to version 7)"""
 
-    stroke: Stroke | None = None   # Used for KiCad >= 7
+    stroke: Optional[Stroke] = None   # Used for KiCad >= 7
     """The `stroke` describes the line width and style of the curve. (version 7)"""
 
     locked: bool = False
     """The optional `locked` token defines if the curve cannot be edited"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the curve object"""
 
     @classmethod
@@ -702,7 +703,7 @@ class FpCurve():
 
         tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
         locked = ' locked' if self.locked else ''
-        
+
         if self.width is not None:
             width = f' (width {self.width})'
         else:

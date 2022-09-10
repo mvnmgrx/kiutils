@@ -14,6 +14,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import Optional, List
 
 from kiutils.items.common import Position
 from kiutils.utils.strings import dequote
@@ -92,7 +93,7 @@ class LayerToken():
     """The layer `type` defines the type of layer and can be defined as `jumper`, `mixed`, `power`,
     `signal`, or `user`."""
 
-    userName: str | None = None
+    userName: Optional[str] = None
     """The optional `userName` attribute defines the custom user name"""
 
     @classmethod
@@ -141,17 +142,17 @@ class LayerToken():
 @dataclass
 class StackupSubLayer():
     """The `StackupSubLayer` token defines a sublayer used when stacking dielectrics in a PCB"""
-    
+
     thickness: float = 0.1
     """The `thickness` token defines the thickness of the sublayer. Defaults to 0.1"""
 
-    material: str | None = None
+    material: Optional[str] = None
     """The optional `material` token defines a string that describes the sublayer material"""
 
-    epsilonR: float | None = None
+    epsilonR: Optional[float] = None
     """The optional `epsilonR` token defines the dielectric constant of the sublayer material"""
 
-    lossTangent: float | None = None
+    lossTangent: Optional[float] = None
     """The optional layer `lossTangent` token defines the dielectric loss tangent of the sublayer"""
 
     @classmethod
@@ -159,13 +160,13 @@ class StackupSubLayer():
         """This class cannot be derived from an S-Expression as the format currently used in KiCad
         board files does not match the usual convention. Assign member values manually when using
         this object.
-        
+
         Raises:
             NotImplementedError"""
         raise NotImplementedError("This class cannot be derived from an S-Expression!")
 
     def to_sexpr(self, indent=0, newline=False) -> str:
-        """Generate the S-Expression representing this object. The representation differs from the 
+        """Generate the S-Expression representing this object. The representation differs from the
         normal form of an S-Expression as this uses no opening and closing parenthesis.
 
         Args:
@@ -205,25 +206,25 @@ class StackupLayer():
     type: str = ""
     """The `type` token defines a string that describes the layer"""
 
-    color: str | None = None
+    color: Optional[str] = None
     """The optional `color` token defines a string that describes the layer color. This is
     only used on solder mask and silkscreen layers"""
 
-    thickness: float | None = None
+    thickness: Optional[float] = None
     """The optional `thickness` token defines the thickness of the layer where appropriate"""
 
-    material: str | None = None
+    material: Optional[str] = None
     """The optional `material` token defines a string that describes the layer material
     where appropriate"""
 
-    epsilonR: float | None = None
+    epsilonR: Optional[float] = None
     """The optional `epsilonR` token defines the dielectric constant of the layer material"""
 
-    lossTangent: float | None = None
+    lossTangent: Optional[float] = None
     """The optional layer `lossTangent` token defines the dielectric loss tangent of the layer"""
 
-    subLayers: list[StackupSubLayer] = field(default_factory=list)
-    """The `sublayers` token defines a list of zero or more sublayers that are used to create 
+    subLayers: List[StackupSubLayer] = field(default_factory=list)
+    """The `sublayers` token defines a list of zero or more sublayers that are used to create
     stacks of dielectric layers. Does not apply to copper-type layers."""
 
     @classmethod
@@ -255,7 +256,7 @@ class StackupLayer():
                 # Start parsing the layer's sublayer if the first sublayer token was found
                 if item == 'addsublayer':
                     if parsingSublayer:
-                        # When the `addsublayer` token was found a second time, the previously 
+                        # When the `addsublayer` token was found a second time, the previously
                         # parsed sublayer will be appended to the list of sublayers
                         object.subLayers.append(tempSublayer)
                         tempSublayer = StackupSubLayer()
@@ -321,20 +322,20 @@ class Stackup():
         https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_stack_up_settings
     """
 
-    layers: list[StackupLayer] = field(default_factory=list)
+    layers: List[StackupLayer] = field(default_factory=list)
     """The `layers`token is a list of layer settings for each layer required to manufacture
     a board including the dielectric material between the actual layers defined in the board
     editor."""
 
-    copperFinish: str | None = None
+    copperFinish: Optional[str] = None
     """The optional `copperFinish` token is a string that defines the copper finish used to
     manufacture the board"""
 
-    dielectricContraints: str | None = None
+    dielectricContraints: Optional[str] = None
     """The optional `dielectricContraints` token define if the board should meet all
     dielectric requirements. Valid values are `yes` and `no`."""
 
-    edgeConnector: str | None = None
+    edgeConnector: Optional[str] = None
     """The optional `edgeConnector` token defines if the board has an edge connector
     (value: `yes`) and if the edge connector is bevelled (value: `bevelled`)"""
 
@@ -627,35 +628,35 @@ class SetupData():
         https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_setup_section
     """
 
-    stackup: Stackup | None = None
+    stackup: Optional[Stackup] = None
     """The optional `stackup` define the parameters required to manufacture the board"""
 
     packToMaskClearance: float = 0.0
     """The `packToMaskClearance` token defines the clearance between footprint pads and
     the solder mask"""
 
-    solderMaskMinWidth: float | None = None
+    solderMaskMinWidth: Optional[float] = None
     """The optional `solderMaskMinWidth` defines the minimum solder mask width. If not
     defined, the minimum width is zero."""
 
-    padToPasteClearance: float | None = None
+    padToPasteClearance: Optional[float] = None
     """The optional `padToPasteClearance` defines the clearance between footprint pads
     and the solder paste layer. If not defined, the clearance is zero"""
 
-    padToPasteClearanceRatio: float | None = None
+    padToPasteClearanceRatio: Optional[float] = None
     """The optional `padToPasteClearanceRatio` is the percentage (from 0 to 100) of the
     footprint pad to make the solder paste. If not defined, the ratio is 100% (the same
     size as the pad)."""
 
-    auxAxisOrigin: Position | None = None
+    auxAxisOrigin: Optional[Position] = None
     """The optional `auxAxisOrigin` defines the auxiliary origin if it is set to anything
     other than (0,0)."""
 
-    gridOrigin: Position | None = None
+    gridOrigin: Optional[Position] = None
     """The optional `gridOrigin` defines the grid original if it is set to anything other
     than (0,0)."""
 
-    plotSettings: PlotSettings | None = None
+    plotSettings: Optional[PlotSettings] = None
     """The optional `plotSettings` define how the board was last plotted."""
 
     @classmethod
@@ -807,7 +808,7 @@ class Via():
         https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_track_via
     """
 
-    type: str | None = None
+    type: Optional[str] = None
     """The optional `type` attribute specifies the via type. Valid via types are `blind` and
     `micro`. If no type is defined, the via is a through hole type"""
 
@@ -823,7 +824,7 @@ class Via():
     drill: float = 0.0
     """The `drill` token define the drill diameter of the via"""
 
-    layers: list[str] = field(default_factory=list)
+    layers: List[str] = field(default_factory=list)
     """The `layers` token define the canonical layer set the via connects as a list
     of strings"""
 
@@ -840,7 +841,7 @@ class Via():
     """The `net` token defines by net ordinal number which net in the net section that
     the via is part of"""
 
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     """The `tstamp` token defines the unique identifier of the via"""
 
     @classmethod
@@ -910,11 +911,11 @@ class Via():
 
 @dataclass
 class Arc():
-    """The `arc` token defines a track arc, which will be generated when using the length-matching 
+    """The `arc` token defines a track arc, which will be generated when using the length-matching
     feature on differential pairs.
-    
+
     Documentation:
-        https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_track_arc 
+        https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_track_arc
     """
 
     start: Position = Position()
@@ -939,7 +940,7 @@ class Arc():
     """The `net` token defines the net ordinal number which net in the net section that arc is part
     of. Defaults to 0."""
 
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     """The optional `tstamp` token defines the unique identifier of the arc"""
 
     @classmethod
@@ -1022,7 +1023,7 @@ class Target():
     layer: str = "F.Cu"
     """The `layer` token sets the canonical layer where the target marker resides"""
 
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     """The `tstamp` token defines the unique identifier of the target"""
 
     @classmethod

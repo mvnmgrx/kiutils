@@ -16,6 +16,7 @@ Documentation taken from:
 """
 
 from dataclasses import dataclass, field
+from typing import Optional, List
 
 from kiutils.items.common import Effects, Position, Stroke
 from kiutils.utils.strings import dequote
@@ -34,13 +35,13 @@ class GrText():
     position: Position = Position()
     """The `position` defines the X and Y position coordinates and optional orientation angle of the text"""
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The `layer` token defines the canonical layer the text resides on"""
 
     effects: Effects = Effects()
     """The `effects` token defines how the text is displayed"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the text object"""
 
     locked: bool = False
@@ -111,15 +112,15 @@ class GrTextBox():
 
     locked: bool = False
     text: str = "text"
-    start: Position | None = None
-    end: Position | None = None
-    pts: list[Position] = field(default_factory=list)
-    angle: float | None = None
+    start: Optional[Position] = None
+    end: Optional[Position] = None
+    pts: List[Position] = field(default_factory=list)
+    angle: Optional[float] = None
     layer: str = "F.Cu"
-    tstamp: str | None = None
+    tstamp: Optional[str] = None
     effects: Effects = Effects()
     stroke: Stroke = Stroke()
-    renderCache: str | None = None
+    renderCache: Optional[str] = None
 
     @classmethod
     def from_sexpr(cls, exp: list):
@@ -144,16 +145,16 @@ class GrLine():
     end: Position = Position()
     """The `end` token defines the coordinates of the end of the line"""
 
-    angle: float | None = None
+    angle: Optional[float] = None
     """The optional `angle` token defines the rotational angle of the line"""
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The `layer` token defines the canonical layer the rectangle resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the rectangle. (prior to version 7)"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the rectangle object"""
 
     locked: bool = False
@@ -225,16 +226,16 @@ class GrRect():
     end: Position = Position()
     """The `end` token defines the coordinates of the low right corner of the rectangle"""
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The `layer` token defines the canonical layer the rectangle resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the rectangle. (prior to version 7)"""
 
-    fill: str | None = None
+    fill: Optional[str] = None
     """The optional `fill` toke defines how the rectangle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the rectangle object"""
 
     locked: bool = False
@@ -307,16 +308,16 @@ class GrCircle():
     end: Position = Position()
     """The `end` token defines the coordinates of the low right corner of the circle"""
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The `layer` token defines the canonical layer the circle resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the circle. (prior to version 7)"""
 
-    fill: str | None = None
+    fill: Optional[str] = None
     """The optional `fill` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the circle object"""
 
     locked: bool = False
@@ -393,13 +394,13 @@ class GrArc():
     end: Position = Position()
     """The `end` token defines the coordinates of the end position of the arc radius"""
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The `layer` token defines the canonical layer the arc resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the arc. (prior to version 7)"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the arc object."""
 
     locked: bool = False
@@ -466,19 +467,19 @@ class GrPoly():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_polygon
     """
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The `coordinates` define the list of X/Y coordinates of the polygon outline"""
 
-    coordinates: list[Position] = field(default_factory=list)
+    coordinates: List[Position] = field(default_factory=list)
     """The `layer` token defines the canonical layer the polygon resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the polygon. (prior to version 7)"""
 
-    fill: str | None = None
+    fill: Optional[str] = None
     """The optional `fill` toke defines how the polygon is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the polygon object"""
 
     locked: bool = False
@@ -528,7 +529,7 @@ class GrPoly():
             indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
             newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
             pts_newline (bool, optional): Adds a newline for the `(pts ..)` token as KiCad treats
-            this different in Board files than Footprint files. Defaults to False. 
+            this different in Board files than Footprint files. Defaults to False.
 
         Returns:
             str: S-Expression of this object
@@ -561,16 +562,16 @@ class GrCurve():
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_curve
     """
-    coordinates: list[Position] = field(default_factory=list)
+    coordinates: List[Position] = field(default_factory=list)
     """The `coordinates` define the list of X/Y coordinates of the curve outline"""
 
-    layer: str | None = None
+    layer: Optional[str] = None
     """The `layer` token defines the canonical layer the curve resides on"""
 
-    width: float | None = 0.12     # Used for KiCad < 7
+    width: Optional[float] = 0.12     # Used for KiCad < 7
     """The `width` token defines the line width of the curve. (prior to version 7)"""
 
-    tstamp: str | None = None      # Used since KiCad 6
+    tstamp: Optional[str] = None      # Used since KiCad 6
     """The `tstamp` token defines the unique identifier of the curve object"""
 
     locked: bool = False

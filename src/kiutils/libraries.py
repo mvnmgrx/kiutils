@@ -6,11 +6,12 @@ Author:
 License identifier:
     GPL-3.0
 
-Major changes: 
+Major changes:
     19.02.2022 - created
 """
 
 from dataclasses import dataclass, field
+from typing import Optional, List
 from os import path
 
 from kiutils.utils.strings import dequote
@@ -85,14 +86,14 @@ class LibTable():
     """The `libtable` token defines the `fp_lib_table` or `sym_lib_table` file of KiCad"""
 
     type: str = 'sym_lib_table'
-    """The `type` token defines the type of the library table. Valid values are `fp_lib_table` or 
+    """The `type` token defines the type of the library table. Valid values are `fp_lib_table` or
     `sym_lib_table`."""
 
-    libs: list[Library] = field(default_factory=list)
+    libs: List[Library] = field(default_factory=list)
     """The `libs` token holds a list of librarys that this library table object holds"""
 
-    filePath: str | None = None
-    """The `filePath` token defines the path-like string to the library file. Automatically set when 
+    filePath: Optional[str] = None
+    """The `filePath` token defines the path-like string to the library file. Automatically set when
     `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
 
     @classmethod
@@ -123,7 +124,7 @@ class LibTable():
 
     @classmethod
     def from_file(cls, filepath: str):
-        """Load a library table directly from a KiCad library table file and sets the 
+        """Load a library table directly from a KiCad library table file and sets the
         `self.filePath` attribute to the given file path.
 
         Args:
@@ -157,7 +158,7 @@ class LibTable():
             if self.filePath is None:
                 raise Exception("File path not set")
             filepath = self.filePath
-            
+
         with open(filepath, 'w') as outfile:
             outfile.write(self.to_sexpr())
 

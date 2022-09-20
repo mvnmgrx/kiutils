@@ -12,11 +12,13 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbols
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 from os import path
 
-from kiutils.items.common import Effects, Position, Property
+from kiutils.items.common import Effects, Position, Property, Font
 from kiutils.items.syitems import *
 from kiutils.utils import sexpr
 from kiutils.utils.strings import dequote
@@ -291,6 +293,39 @@ class Symbol():
             if item[0] == 'text': object.graphicItems.append(SyText().from_sexpr(item))
 
         return object
+
+    @classmethod
+    def create_new(cls, id: str, reference: str, value: str, 
+                        footprint: str = "", datasheet: str = "") -> Symbol:
+        """Creates a new empty symbol as KiCad would create it
+
+        Args:
+            - id (str): ID token of the symbol
+            - reference (str): Reference designator
+            - value (str): Value of the `value` property
+            - footprint (str, optional): Value of the `footprint` property. Defaults to "".
+            - datasheet (str, optional): Value of the `datasheet` property. Defaults to "".
+
+        Returns:
+            Symbol: New symbol initialized with default values
+        """
+        symbol = cls()
+        symbol.inBom = True
+        symbol.onBoard = True
+        symbol.id = id
+        symbol.properties.extend(
+            [
+                Property(key = "Reference", value = reference, id = 0,
+                         effects = Effects(font=Font(width=1.27, height=1.27))),
+                Property(key = "Value", value = value, id = 1,
+                         effects = Effects(font=Font(width=1.27, height=1.27))),
+                Property(key = "Footprint", value = footprint, id = 2,
+                         effects = Effects(font=Font(width=1.27, height=1.27), hide=True)),
+                Property(key = "Datasheet", value = datasheet, id = 3,
+                         effects = Effects(font=Font(width=1.27, height=1.27), hide=True))
+            ]
+        )
+        return symbol
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
         """Generate the S-Expression representing this object

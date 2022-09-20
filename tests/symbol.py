@@ -80,7 +80,7 @@ class Tests_Symbol(unittest.TestCase):
 
         # Add a symbol to it via create_new()
         symbol = Symbol().create_new(
-            name = 'testsymbol',
+            id = 'testsymbol',
             reference = 'U',
             value = 'testvalue'
         )

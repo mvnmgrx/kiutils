@@ -14,7 +14,6 @@ Documentation taken from:
 """
 
 from __future__ import annotations
-from bdb import effective      # Return the type of a function's base class
 
 import calendar
 import datetime

@@ -868,10 +868,10 @@ class Footprint():
         """Creates a new empty footprint with its attributes set as KiCad would create it
 
         Args:
-            library_link (str): Denotes the name of the library as well as the footprint. Like `Connector:Conn01x02`)
-            value (str): The value text item (printed on the fabrication layer as `value` attribute)
-            type (str, optional): Type of footprint (`smd`, `through_hole` or `other`). Defaults to 'other'.
-            reference (str, optional): Reference of the footprint. Defaults to `REF**`.
+            - library_link (str): Denotes the name of the library as well as the footprint. Like `Connector:Conn01x02`)
+            - value (str): The value text item (printed on the fabrication layer as `value` attribute)
+            - type (str, optional): Type of footprint (`smd`, `through_hole` or `other`). Defaults to 'other'.
+            - reference (str, optional): Reference of the footprint. Defaults to `REF**`.
         Raises:
             Exception: When the given type is something other than listed above
 

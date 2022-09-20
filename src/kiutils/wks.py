@@ -760,8 +760,9 @@ class Setup():
     lineWidth: float = 0.15
     """The `lineWidth` token attribute defines the default width of lines. Defaults to 0,15."""
 
-    textLineWidth: float = 10.0
-    """The `textLineWidth` token attribute define the default width of the lines used to draw text"""
+    textLineWidth: float = 0.15
+    """The `textLineWidth` token attribute define the default width of the lines used to draw 
+    text. Defaults to 0,15."""
 
     leftMargin: float = 10.0
     """The `leftMargin` token defines the distance from the left edge of the page"""

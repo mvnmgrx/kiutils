@@ -13,6 +13,9 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-footprint/
 """
 
+from __future__ import annotations
+from bdb import effective      # Return the type of a function's base class
+
 import calendar
 import datetime
 from dataclasses import dataclass, field
@@ -20,11 +23,12 @@ from typing import Optional, List, Dict
 from os import path
 
 from kiutils.items.zones import Zone
-from kiutils.items.common import Position, Coordinate, Net, Group
+from kiutils.items.common import Position, Coordinate, Net, Group, Font
 from kiutils.items.fpitems import *
 from kiutils.items.gritems import *
 from kiutils.utils import sexpr
 from kiutils.utils.strings import dequote, remove_prefix
+from kiutils.misc.config import KIUTILS_CREATE_NEW_VERSION_STR
 
 @dataclass
 class Attributes():
@@ -857,6 +861,58 @@ class Footprint():
 
             fpData = sexpr.parse_sexp(rawFootprint)
             return cls.from_sexpr(fpData)
+
+    @classmethod
+    def create_new(cls, library_link: str, value: str,
+                        type: str = 'other', reference: str = 'REF**') -> Footprint:
+        """Creates a new empty footprint with its attributes set as KiCad would create it
+
+        Args:
+            library_link (str): Denotes the name of the library as well as the footprint. Like `Connector:Conn01x02`)
+            value (str): The value text item (printed on the fabrication layer as `value` attribute)
+            type (str, optional): Type of footprint (`smd`, `through_hole` or `other`). Defaults to 'other'.
+            reference (str, optional): Reference of the footprint. Defaults to `REF**`.
+        Raises:
+            Exception: When the given type is something other than listed above
+
+        Returns:
+            Footprint: Empty footprint
+        """
+        if type not in ['smd', 'through_hole', 'other']:
+            raise Exception("Unsupported type was given")
+
+        fp = cls(
+            libraryLink = library_link,
+            version = KIUTILS_CREATE_NEW_VERSION_STR,
+            generator = 'kiutils'
+        )
+
+        # Create text items that are created when adding a new footprint to a library
+        fp.graphicItems.extend(
+            [
+                FpText(
+                    type = 'reference', text = 'REF**', layer = 'F.SilkS',
+                    effects = Effects(font=Font(thickness=0.15)),
+                    position = Position(X=0, Y=-0.5, unlocked=True)
+                ),
+                FpText(
+                    type = 'value', text = value, layer ='F.Fab',
+                    effects  = Effects(font=Font(thickness=0.15)),
+                    position = Position(X=0, Y=1, unlocked=True)
+                ),
+                FpText(
+                    type = 'user', text = '${REFERENCE}', layer = 'F.Fab',
+                    effects = Effects(font=Font(thickness=0.15)),
+                    position = Position(X=0, Y=2.5, unlocked=True)
+                )
+            ]
+        )
+
+        # The type `other` does not set the attributes type token
+        if type != 'other':
+            fp.attributes.type = type
+
+        return fp
 
     def to_file(self, filepath = None):
         """Save the object to a file in S-Expression format

@@ -48,10 +48,16 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_createNewFootprintTypeSMD(self):
-        """Tests the `create_new()` function to create a new footprint with the type `SMD`"""
+        """Tests the `create_new()` function to create a new footprint with the type `smd`"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeSMD')
-        footprint = Footprint().create_new(type='smd')
+
+        # Create footprint with correct type
+        footprint = Footprint().create_new(
+            type = 'smd',
+            library_link = 'empty-footprint-smd',
+            value = 'empty-footprint-smd'
+        )
 
         # Set timestamps to be the same as in the expected test output
         footprint.tedit = '6328915F'
@@ -59,10 +65,16 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_createNewFootprintTypeTHT(self):
-        """Tests the `create_new()` function to create a new footprint with the type `THT`"""
+        """Tests the `create_new()` function to create a new footprint with the type `through_hole`"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeTHT')
-        footprint = Footprint().create_new(type='tht')
+
+        # Create footprint with correct type
+        footprint = Footprint().create_new(
+            type = 'through_hole',
+            library_link = 'empty-footprint-through_hole',
+            value = 'empty-footprint-through_hole'
+        )
 
         # Set timestamps to be the same as in the expected test output
         footprint.tedit = '63289145'
@@ -70,11 +82,16 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_createNewFootprintTypeOther(self):
-        """Tests the `create_new()` function to create a new footprint with the type `Other`"""
+        """Tests the `create_new()` function to create a new footprint with the type `other`"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeOther')
-        footprint = Footprint().create_new(type='other')
 
+        # Create footprint with correct type
+        footprint = Footprint().create_new(
+            type = 'other',
+            library_link = 'empty-footprint-other',
+            value = 'empty-footprint-other'
+        )
         # Set timestamps to be the same as in the expected test output
         footprint.tedit = '6328916A'
 

@@ -11,7 +11,8 @@ import unittest
 from os import path
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
-from kiutils.symbol import SymbolLib
+from kiutils.symbol import SymbolLib, Symbol
+from kiutils.misc.config import KIUTILS_CREATE_NEW_VERSION_STR
 
 SYMBOL_BASE = path.join(TEST_BASE, 'symbol')
 
@@ -63,6 +64,28 @@ class Tests_Symbol(unittest.TestCase):
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_bigSymbolLibrary')
         symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))
+
+    def test_createNewSymbolInEmptyLibrary(self):
+        """Tests the `create_new()` function to create an empty symbol that is added to a 
+        symbol library"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_createNewSymbolInEmptyLibrary')
+        
+        # Create an empty symbol libraray
+        symbolLib = SymbolLib(
+            version = KIUTILS_CREATE_NEW_VERSION_STR,
+            generator = 'kiutils'
+        )
+
+        # Add a symbol to it via create_new()
+        symbol = Symbol().create_new(
+            name = 'testsymbol',
+            reference = 'U',
+            value = 'testvalue'
+        )
+        symbolLib.symbols.append(symbol)
+
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
     def tearDown(self) -> None:

@@ -137,13 +137,13 @@ class Model():
     path: str = ""
     """The `path` attribute is the path and file name of the 3D model"""
 
-    pos: Coordinate = Coordinate(0.0, 0.0, 0.0)
+    pos: Coordinate = field(default_factory=lambda: Coordinate(0.0, 0.0, 0.0))
     """The `pos` token specifies the 3D position coordinates of the model relative to the footprint"""
 
-    scale: Coordinate = Coordinate(1.0, 1.0, 1.0)
+    scale: Coordinate = field(default_factory=lambda: Coordinate(1.0, 1.0, 1.0))
     """The `scale` token specifies the model scale factor for each 3D axis"""
 
-    rotate: Coordinate = Coordinate(0.0, 0.0, 0.0)
+    rotate: Coordinate = field(default_factory=lambda: Coordinate(0.0, 0.0, 0.0))
     """The `rotate` token specifies the model rotation for each 3D axis relative to the footprint"""
 
     @classmethod
@@ -343,13 +343,13 @@ class Pad():
     """The pad `shape` can be defined as `circle`, `rect`, `oval`, `trapezoid`, `roundrect`, or
     `custom`"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates and optional orientation angle of the pad"""
 
     locked: bool = False
     """The optional `locked` token defines if the footprint pad can be edited"""
 
-    size: Position = Position()         # Size uses Position class for simplicity for now
+    size: Position = field(default_factory=lambda: Position())         # Size uses Position class for simplicity for now
     """The `size` token defines the width and height of the pad"""
 
     drill: Optional[DrillDefinition] = None
@@ -734,7 +734,7 @@ class Footprint():
     for all pads in the footprint. If not set, the zone thermal_gap setting is used. If not set, the
     zone thermal_gap setting is used."""
 
-    attributes: Attributes = Attributes()
+    attributes: Attributes = field(default_factory=lambda: Attributes())
     """The optional `attributes` section defines the attributes of the footprint"""
 
     graphicItems: List = field(default_factory=list)

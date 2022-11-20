@@ -200,10 +200,10 @@ class Line():
     name: str = ""
     """The `name` token defines the name of the line object"""
 
-    start: WksPosition = WksPosition()
+    start: WksPosition = field(default_factory=lambda: WksPosition())
     """The `start` token defines the start position of the line"""
 
-    end: WksPosition = WksPosition()
+    end: WksPosition = field(default_factory=lambda: WksPosition())
     """The `end` token defines the end position of the line"""
 
     option: Optional[str] = None
@@ -299,10 +299,10 @@ class Rect():
     name: str = ""
     """The `name` token defines the name of the rectangle object"""
 
-    start: WksPosition = WksPosition()
+    start: WksPosition = field(default_factory=lambda: WksPosition())
     """The `start` token defines the start position of the rectangle"""
 
-    end: WksPosition = WksPosition()
+    end: WksPosition = field(default_factory=lambda: WksPosition())
     """The `end` token defines the end position of the rectangle"""
 
     option: Optional[str] = None
@@ -399,7 +399,7 @@ class Polygon():
     name: str = ""
     """The `name` token defines the name of the polygon"""
 
-    position: WksPosition = WksPosition()
+    position: WksPosition = field(default_factory=lambda: WksPosition())
     """The `position` token defines the coordinates of the polygon"""
 
     option: Optional[str] = None
@@ -467,7 +467,7 @@ class Bitmap():
     name: str = ""
     """The `name` token defines the name of the bitmap"""
 
-    position: WksPosition = WksPosition()
+    position: WksPosition = field(default_factory=lambda: WksPosition())
     """The `position` token defines the coordinates of the bitmap"""
 
     option: Optional[str] = None
@@ -588,7 +588,7 @@ class TbText():
     name: str = ""
     """The `name` token defines the name of the text object"""
 
-    position: WksPosition = WksPosition()
+    position: WksPosition = field(default_factory=lambda: WksPosition())
     """The `position` token defines the position of the text"""
 
     option: Optional[str] = None
@@ -601,7 +601,7 @@ class TbText():
     rotate: Optional[float] = None
     """The optional `rotate` token defines the rotation of the text in degrees"""
 
-    font: WksFont = WksFont()
+    font: WksFont = field(default_factory=lambda: WksFont())
     """The `font` token define how the text is drawn"""
 
     justify: Optional[Justify] = None
@@ -757,7 +757,7 @@ class Setup():
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_set_up_section"""
 
-    textSize: TextSize = TextSize()
+    textSize: TextSize = field(default_factory=lambda: TextSize())
     """The `textSize` token defines the default width and height of text"""
 
     lineWidth: float = 0.15
@@ -845,7 +845,7 @@ class WorkSheet():
     generator: str = KIUTILS_CREATE_NEW_GENERATOR_STR
     """The `generator` token defines the program used to write the file"""
 
-    setup: Setup = Setup()
+    setup: Setup = field(default_factory=lambda: Setup())
     """The `setup` token defines the configuration information for the work sheet"""
 
     drawingObjects: List = field(default_factory=list)

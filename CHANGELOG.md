@@ -1,5 +1,14 @@
 # kiutils - CHANGELOG
 
+## v1.2.0 - 20.11.2022
+- Added: Support for Python 3.11 on all platforms
+- Added: `create_new()` API for all classes that serve files (schematic, board, etc) - (PR #33)
+- Added: Checked `self.stroke` to be None in all `FpItems` classes when generating its S-Expression - (PR #36)
+- Fixed: Default values of mutable class members are now set correctly using a dataclass field with 
+         a default_factory to ensure unique references for each new class object - (PR #35)
+- Fixed: Made VSCode automatic test discovery work - (PR #34)
+- Changed: Documentation on `Jusitfy.to_sexpr()`s return value - (PR #37)
+
 ## v1.1.4 - 10.09.2022
 - Added: Support for older Python versions (v3.7 to v3.10 are now supported) - (PR #30)
 - Added: Automatic test report generation in test framework - (PR #21)

@@ -36,7 +36,7 @@ class FpText():
     text: str = "%REF"
     """The `text` attribute is a string that defines the text"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y position coordinates and optional orientation angle of
     the text"""
 
@@ -46,7 +46,7 @@ class FpText():
     hide: bool = False
     """The optional `hide` token, defines if the text is hidden"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` token defines how the text is displayed"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
@@ -117,10 +117,10 @@ class FpLine():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_line
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the upper left corner of the line"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the low right corner of the line"""
 
     layer: str = "F.Cu"
@@ -207,10 +207,10 @@ class FpRect():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_rectangle
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the upper left corner of the rectangle"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the low right corner of the rectangle"""
 
     layer: str = "F.Cu"
@@ -312,8 +312,8 @@ class FpTextBox():
     angle: Optional[float] = None
     layer: str = "F.Cu"
     tstamp: Optional[str] = None
-    effects: Effects = Effects()
-    stroke: Stroke = Stroke()
+    effects: Effects = field(default_factory=lambda: Effects())
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     renderCache: Optional[str] = None
 
     @classmethod
@@ -333,10 +333,10 @@ class FpCircle():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_circle
     """
 
-    center: Position = Position()
+    center: Position = field(default_factory=lambda: Position())
     """The `center` token defines the coordinates of the center of the circle"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the low right corner of the circle"""
 
     layer: str = "F.Cu"
@@ -429,13 +429,13 @@ class FpArc():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_arc
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the start position of the arc radius"""
 
-    mid: Position = Position()
+    mid: Position = field(default_factory=lambda: Position())
     """The `mid` token defines the coordinates of the midpoint along the arc"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the end position of the arc radius"""
 
     layer: str = "F.Cu"

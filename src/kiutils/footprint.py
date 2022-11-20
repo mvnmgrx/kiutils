@@ -890,7 +890,7 @@ class Footprint():
         fp.graphicItems.extend(
             [
                 FpText(
-                    type = 'reference', text = 'REF**', layer = 'F.SilkS',
+                    type = 'reference', text = reference, layer = 'F.SilkS',
                     effects = Effects(font=Font(thickness=0.15)),
                     position = Position(X=0, Y=-0.5, unlocked=True)
                 ),

@@ -21,6 +21,9 @@ from typing import Optional, List
 from kiutils.items.common import Stroke, Position, Effects
 from kiutils.utils.strings import dequote
 
+# FIXME: Several classes have a ``stroke`` member. This feature will be introduced in KiCad 7 and 
+#        has yet to be tested here.
+
 @dataclass
 class FpText():
     """The `fp_text` token defines a graphic line in a footprint definition.
@@ -195,7 +198,6 @@ class FpLine():
         if self.width is not None:
             width = f' (width {self.width})'
         elif self.stroke is not None:
-            # FIXME: This feature lacks a test case as it will be introduced in KiCad 7
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
         else:
             width = ''
@@ -294,8 +296,10 @@ class FpRect():
 
         if self.width is not None:
             width = f' (width {self.width})'
-        else:
+        elif self.stroke is not None:
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
+        else:
+            width = ''
 
         return f'{indents}(fp_rect (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{fill}{locked}{tstamp}){endline}'
 
@@ -419,8 +423,10 @@ class FpCircle():
 
         if self.width is not None:
             width = f' (width {self.width})'
-        else:
+        elif self.stroke is not None:
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
+        else:
+            width = ''
 
         return f'{indents}(fp_circle (center {self.center.X} {self.center.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{fill}{locked}{tstamp}){endline}'
 
@@ -514,8 +520,10 @@ class FpArc():
 
         if self.width is not None:
             width = f' (width {self.width})'
-        else:
+        elif self.stroke is not None:
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
+        else:
+            width = ''
 
         return f'{indents}(fp_arc (start {self.start.X} {self.start.Y}) (mid {self.mid.X} {self.mid.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{locked}{tstamp}){endline}'
 
@@ -613,8 +621,10 @@ class FpPoly():
 
         if self.width is not None:
             width = f' (width {self.width})'
-        else:
+        elif self.stroke is not None:
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
+        else:
+            width = ''
 
         expression = f'{indents}(fp_poly (pts\n'
         for point in self.coordinates:
@@ -709,8 +719,10 @@ class FpCurve():
 
         if self.width is not None:
             width = f' (width {self.width})'
-        else:
+        elif self.stroke is not None:
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
+        else:
+            width = ''
 
         expression = f'{indents}(fp_curve (pts\n'
         for point in self.coordinates:

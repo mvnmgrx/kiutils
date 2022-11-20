@@ -85,19 +85,19 @@ class SyArc():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_arc
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of start point of the arc"""
 
-    mid: Position = Position()
+    mid: Position = field(default_factory=lambda: Position())
     """The `mid` token defines the coordinates of mid point of the arc"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of end point of the arc"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the arc outline is drawn"""
 
-    fill: SyFill = SyFill()
+    fill: SyFill = field(default_factory=lambda: SyFill())
     """The `fill` token attributes define how the arc is filled"""
 
     @classmethod
@@ -160,16 +160,16 @@ class SyCircle():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_circle
     """
 
-    center: Position = Position()
+    center: Position = field(default_factory=lambda: Position())
     """The `center` token defines the coordinates of center point of the circle"""
 
     radius: float = 0.0
     """The `radius` token defines the length of the radius of the circle"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the circle outline is drawn"""
 
-    fill: SyFill = SyFill()
+    fill: SyFill = field(default_factory=lambda: SyFill())
     """The `fill` token attributes define how the circle is filled"""
 
     @classmethod
@@ -230,10 +230,10 @@ class SyCurve():
     points: List[Position] = field(default_factory=list)
     """The `points` token defines the four X/Y coordinates of each point of the curve"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the curve outline is drawn"""
 
-    fill: SyFill = SyFill()
+    fill: SyFill = field(default_factory=lambda: SyFill())
     """The `fill` token attributes define how curve arc is filled"""
 
     @classmethod
@@ -299,10 +299,10 @@ class SyPolyLine():
     points: List[Position] = field(default_factory=list)
     """The `points` token defines the four X/Y coordinates of each point of the polyline"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the polyline outline is drawn"""
 
-    fill: SyFill = SyFill()
+    fill: SyFill = field(default_factory=lambda: SyFill())
     """The `fill` token attributes define how polyline arc is filled"""
 
     @classmethod
@@ -365,16 +365,16 @@ class SyRect():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_rectangle
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token attributes define the coordinates of the start point of the rectangle"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token attributes define the coordinates of the end point of the rectangle"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the rectangle outline is drawn"""
 
-    fill: SyFill = SyFill()
+    fill: SyFill = field(default_factory=lambda: SyFill())
     """The `fill` token attributes define how rectangle arc is filled"""
 
     @classmethod
@@ -435,10 +435,10 @@ class SyText():
     text: str = ""
     """The `text` attribute is a quoted string that defines the text"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates and rotation angle of the text"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` token defines how the text is displayed"""
 
     @classmethod

@@ -27,14 +27,14 @@ class Junction():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_junction_section
     """
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates of the junction"""
 
     diameter: float = 0
     """The `diameter` token attribute defines the DIAMETER of the junction. A diameter of 0
        is the default diameter in the system settings."""
 
-    color: ColorRGBA = ColorRGBA()
+    color: ColorRGBA = field(default_factory=lambda: ColorRGBA())
     """The `color` token attributes define the Red, Green, Blue, and Alpha transparency of
        the junction. If all four attributes are 0, the default junction color is used."""
 
@@ -95,7 +95,7 @@ class NoConnect():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_no_connect_section
     """
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates of the no connect"""
 
     uuid: str = ""
@@ -150,17 +150,17 @@ class BusEntry():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_bus_entry_section
     """
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates of the bus entry"""
 
     uuid: str = ""
     """The `uuid` defines the universally unique identifier"""
 
-    size: Position = Position()         # Re-using Position class here
+    size: Position = field(default_factory=lambda: Position())         # Re-using Position class here
     """The `size` token attributes define the X and Y distance of the end point from
        the position of the bus entry"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the bus entry is drawn"""
 
     @classmethod
@@ -225,7 +225,7 @@ class Connection():
     """The `points` token defines the list of X and Y coordinates of start and end points
        of the wire or bus"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the connection is drawn"""
 
     uuid: str = ""
@@ -293,7 +293,7 @@ class Image():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_image_section
     """
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates of the image"""
 
     scale: Optional[float] = None
@@ -373,7 +373,7 @@ class PolyLine():
     """The `points` token defines the list of X/Y coordinates of to draw line(s)
        between. A minimum of two points is required."""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the graphical line is drawn"""
 
     uuid: str = ""
@@ -442,10 +442,10 @@ class Text():
     text: str = ""
     """The `text` token defines the text string"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` token defines the X and Y coordinates and rotation angle of the text"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` token defines how the text is drawn"""
 
     uuid: str = ""
@@ -518,10 +518,10 @@ class LocalLabel():
     text: str = ""
     """The `text` token defines the text in the label"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` token defines the X and Y coordinates and rotation angle of the label"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` token defines how the label is drawn"""
 
     uuid: str = ""
@@ -598,10 +598,10 @@ class GlobalLabel():
     """The `fields_autoplaced` is a flag that indicates that any PROPERTIES associated
        with the global label have been place automatically"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` token defines the X and Y coordinates and rotation angle of the label"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` token defines how the label is drawn"""
 
     uuid: str = ""
@@ -682,10 +682,10 @@ class HierarchicalLabel():
     """The `shape` token defines the way the global label is drawn. Possible values are:
        `input`, `output`, `bidirectional`, `tri_state`, `passive`."""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` token defines the X and Y coordinates and rotation angle of the label"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` token defines how the label is drawn"""
 
     uuid: str = ""
@@ -754,7 +754,7 @@ class SchematicSymbol():
     """The `libraryIdentifier` defines which symbol in the library symbol section of the schematic
        that this schematic symbol references"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates and angle of rotation of the symbol"""
 
     unit: Optional[int] = None
@@ -869,10 +869,10 @@ class HierarchicalPin():
     """The electrical connect type token defines the type of electrical connect made by the
        sheet pin"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates and angle of rotation of the pin"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` section defines how the pin name text is drawn"""
 
     uuid: str = ""
@@ -936,7 +936,7 @@ class HierarchicalSheet():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_hierarchical_sheet_section
     """
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates and angle of rotation of the sheet in the schematic"""
 
     width: float = 0
@@ -949,20 +949,20 @@ class HierarchicalSheet():
     """The `fields_autoplaced` is a flag that indicates that any PROPERTIES associated
        with the global label have been place automatically"""
 
-    stroke: Stroke = Stroke()
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     """The `stroke` defines how the sheet outline is drawn"""
 
-    fill: ColorRGBA = ColorRGBA
+    fill: ColorRGBA = field(default_factory=lambda: ColorRGBA())
     """The fill defines the color how the sheet is filled"""
 
     uuid: str = ""
     """The `uuid` defines the universally unique identifier"""
 
-    sheetName: Property = Property(key="Sheet name")
+    sheetName: Property = field(default_factory=lambda: Property(key="Sheet name"))
     """The `sheetName` is a property that defines the name of the sheet. The property's
        key should therefore be set to `Sheet name`"""
 
-    fileName: Property = Property(key="Sheet file")
+    fileName: Property = field(default_factory=lambda: Property(key="Sheet file"))
     """The `fileName` is a property that defines the file name of the sheet. The property's
        key should therefore be set to `Sheet file`"""
 

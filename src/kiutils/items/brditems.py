@@ -726,10 +726,10 @@ class Segment():
         https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_track_segment
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the beginning of the line"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the end of the line"""
 
     width: float = 0.1
@@ -815,7 +815,7 @@ class Via():
     locked: bool = False
     """The `locked` token defines if the line cannot be edited"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` token define the coordinates of the center of the via"""
 
     size: float = 0.0
@@ -918,13 +918,13 @@ class Arc():
         https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/#_track_arc
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the beginning of the arc"""
 
-    mid: Position = Position()
+    mid: Position = field(default_factory=lambda: Position())
     """The `mid` token defines the coordinates of the mid point of the radius of the arc"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the end of the arc"""
 
     width: float = 0.2
@@ -1011,7 +1011,7 @@ class Target():
     type: str = "plus"
     """The `type` token specifies the shape of the marker. Valid types are `plus` and `x`."""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` token specifies the position of the target marker"""
 
     size: float = 0

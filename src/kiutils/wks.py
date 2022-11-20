@@ -13,6 +13,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 from os import path
@@ -20,6 +22,7 @@ from os import path
 from kiutils.items.common import Justify
 from kiutils.utils.strings import dequote
 from kiutils.utils import sexpr
+from kiutils.misc.config import KIUTILS_CREATE_NEW_GENERATOR_STR, KIUTILS_CREATE_NEW_VERSION_STR
 
 @dataclass
 class WksFontSize():
@@ -836,10 +839,10 @@ class WorkSheet():
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_header_section"""
 
-    version: str = "20210606"
+    version: str = KIUTILS_CREATE_NEW_VERSION_STR
     """The `version` token defines the work sheet version using the YYYYMMDD date format"""
 
-    generator: str = "kiutils"
+    generator: str = KIUTILS_CREATE_NEW_GENERATOR_STR
     """The `generator` token defines the program used to write the file"""
 
     setup: Setup = Setup()
@@ -905,6 +908,18 @@ class WorkSheet():
             item = cls.from_sexpr(sexpr.parse_sexp(infile.read()))
             item.filePath = filepath
             return item
+
+    @classmethod
+    def create_new(cls) -> WorkSheet:
+        """Creates a new empty worksheet as KiCad would create it
+
+        Returns:
+            WorkSheet: A empty worksheet
+        """
+        return cls(
+            version = KIUTILS_CREATE_NEW_VERSION_STR,
+            generator = KIUTILS_CREATE_NEW_GENERATOR_STR
+        )
 
     def to_file(self, filepath = None):
         """Save the object to a file in S-Expression format

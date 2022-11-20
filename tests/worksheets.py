@@ -29,11 +29,11 @@ class Tests_WorkSheets(unittest.TestCase):
         wks = WorkSheet().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(wks, self.testData))
 
-    def test_createEmptyWorksheet(self):
-        """Tests the parsing of all available worksheet items"""
+    def test_createNewWorksheet(self):
+        """Tests the `create_new()` function to create a new empty worksheet"""
         self.testData.compareToTestFile = True
-        self.testData.pathToTestFile = path.join(WORKSHEET_BASE, 'test_createEmptyWorksheet')
-        wks = WorkSheet()
+        self.testData.pathToTestFile = path.join(WORKSHEET_BASE, 'test_createNewWorksheet')
+        wks = WorkSheet.create_new()
         self.assertTrue(to_file_and_compare(wks, self.testData))
 
     def tearDown(self) -> None:

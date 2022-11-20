@@ -9,6 +9,7 @@ License identifier:
 
 import unittest
 from os import path
+from kiutils.items.schitems import HierarchicalSheetInstance
 
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
 from kiutils.schematic import Schematic
@@ -47,7 +48,7 @@ class Tests_Schematic(unittest.TestCase):
             (symbol_instances)
         )
         </code</pre>"""
-        schematic = Schematic()
+        schematic = Schematic.create_new()
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_createEmptySchematic')
         self.assertTrue(to_file_and_compare(schematic, self.testData))
 

@@ -13,6 +13,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 from os import path
@@ -25,6 +27,7 @@ from kiutils.items.dimensions import Dimension
 from kiutils.utils.strings import dequote
 from kiutils.utils import sexpr
 from kiutils.footprint import Footprint
+from kiutils.misc.config import KIUTILS_CREATE_NEW_VERSION_STR, KIUTILS_CREATE_NEW_GENERATOR_STR
 
 @dataclass
 class Board():
@@ -160,6 +163,56 @@ class Board():
             item = cls.from_sexpr(sexpr.parse_sexp(infile.read()))
             item.filePath = filepath
             return item
+
+    @classmethod
+    def create_new(cls) -> Board:
+        """Creates a new empty board with its attributes set as KiCad would create it
+
+        Returns:
+            Board: Empty board
+        """
+        board = cls(
+            version = KIUTILS_CREATE_NEW_VERSION_STR,
+            generator = KIUTILS_CREATE_NEW_GENERATOR_STR
+        )
+
+        # Add all standard layers to board
+        board.layers.extend([
+            LayerToken(ordinal=0, name='F.Cu', type='signal'), 
+            LayerToken(ordinal=31, name='B.Cu', type='signal'), 
+            LayerToken(ordinal=32, name='B.Adhes', type='user', userName="B.Adhesive"),
+            LayerToken(ordinal=33, name='F.Adhes', type='user', userName="F.Adhesive"),
+            LayerToken(ordinal=34, name='B.Paste', type='user'),
+            LayerToken(ordinal=35, name='F.Paste', type='user'),
+            LayerToken(ordinal=36, name='B.SilkS', type='user', userName="B.Silkscreen"),
+            LayerToken(ordinal=37, name='F.SilkS', type='user', userName="F.Silkscreen"),
+            LayerToken(ordinal=38, name='B.Mask', type='user'),
+            LayerToken(ordinal=39, name='F.Mask', type='user'),
+            LayerToken(ordinal=40, name='Dwgs.User', type='user', userName="User.Drawings"),
+            LayerToken(ordinal=41, name='Cmts.User', type='user', userName="User.Comments"),
+            LayerToken(ordinal=42, name='Eco1.User', type='user', userName="User.Eco1"),
+            LayerToken(ordinal=43, name='Eco2.User', type='user', userName="User.Eco2"),
+            LayerToken(ordinal=44, name='Edge.Cuts', type='user'),
+            LayerToken(ordinal=45, name='Margin', type='user'),
+            LayerToken(ordinal=46, name='B.CrtYd', type='user', userName="B.Courtyard"),
+            LayerToken(ordinal=47, name='F.CrtYd', type='user', userName="F.Courtyard"),
+            LayerToken(ordinal=48, name='B.Fab', type='user'),
+            LayerToken(ordinal=49, name='F.Fab', type='user'),
+            LayerToken(ordinal=50, name='User.1', type='user'),
+            LayerToken(ordinal=51, name='User.2', type='user'),
+            LayerToken(ordinal=52, name='User.3', type='user'),
+            LayerToken(ordinal=53, name='User.4', type='user'),
+            LayerToken(ordinal=54, name='User.5', type='user'),
+            LayerToken(ordinal=55, name='User.6', type='user'),
+            LayerToken(ordinal=56, name='User.7', type='user'),
+            LayerToken(ordinal=57, name='User.8', type='user'),
+            LayerToken(ordinal=58, name='User.9', type='user')
+        ])
+
+        # Append net0 to netlist
+        board.nets.append(Net())
+
+        return board
 
     def to_file(self, filepath = None):
         """Save the object to a file in S-Expression format

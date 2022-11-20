@@ -144,6 +144,18 @@ class LibTable():
             item.filePath = filepath
             return item
 
+    @classmethod
+    def create_new(cls, type: str = 'sym_lib_table') -> Library:
+        """Creates a new empty library table with its attributes set as KiCad would create it
+
+        Args:
+            type (str): ``fp_lib_table`` or ``sym_lib_table``. Defaults to the latter.
+
+        Returns:
+            Library: Empty library table of given type
+        """
+        return cls(type=type)
+
     def to_file(self, filepath = None):
         """Save the object to a file in S-Expression format
 

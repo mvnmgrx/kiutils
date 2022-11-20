@@ -1,0 +1,4 @@
+(kicad_wks (version 20211014) (generator kiutils)
+  (setup (textsize 1.5 1.5)(linewidth 0.15)(textlinewidth 0.15)
+  (left_margin 10.0)(right_margin 10.0)(top_margin 10.0)(bottom_margin 10.0))
+)

@@ -13,6 +13,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 from os import path
@@ -21,6 +23,7 @@ from kiutils.items.common import PageSettings, TitleBlock
 from kiutils.items.schitems import *
 from kiutils.symbol import Symbol
 from kiutils.utils import sexpr
+from kiutils.misc.config import KIUTILS_CREATE_NEW_GENERATOR_STR, KIUTILS_CREATE_NEW_VERSION_STR
 
 @dataclass
 class Schematic():
@@ -166,6 +169,20 @@ class Schematic():
             item = cls.from_sexpr(sexpr.parse_sexp(infile.read()))
             item.filePath = filepath
             return item
+
+    @classmethod
+    def create_new(cls) -> Schematic:
+        """Creates a new empty schematic page with its attributes set as KiCad would create it
+
+        Returns:
+            Schematic: Empty schematic
+        """
+        schematic = cls(
+            version = KIUTILS_CREATE_NEW_VERSION_STR,
+            generator = KIUTILS_CREATE_NEW_GENERATOR_STR
+        )
+        schematic.sheetInstances.append(HierarchicalSheetInstance(instancePath='/', page='1'))
+        return schematic
 
     def to_file(self, filepath = None):
         """Save the object to a file in S-Expression format

@@ -22,7 +22,7 @@ with an SCM like Git or SVN without breaking the layout of the files when the Py
    :caption: Usage
 
    usage/installation
-   usage/basics
+   usage/getting-started
    usage/examples
    usage/development
 
@@ -39,6 +39,7 @@ with an SCM like Git or SVN without breaking the layout of the files when the Py
    module/kiutils
    module/kiutils.items
    module/kiutils.utils
+   module/kiutils.misc
 
 
 

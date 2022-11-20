@@ -40,11 +40,61 @@ class Tests_Footprint(unittest.TestCase):
         """Tests the correct parsing of a footprint with empty `Attributes` field
 
         </p><b>Note:</b> Some earlier versions of KiCad seemed to include the `(attr ..)` token in footprints even
-        when no attributes are set (or when using standard attributes). This test includes an empty 
+        when no attributes are set (or when using standard attributes). This test includes an empty
         attribute token in the footprint and expects it to be gone after parsing. </p>
         """
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_footprintEmptyAttributes')
         footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))
+
+    def test_createNewFootprintTypeSMD(self):
+        """Tests the `create_new()` function to create a new footprint with the type `smd`"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeSMD')
+
+        # Create footprint with correct type
+        footprint = Footprint().create_new(
+            type = 'smd',
+            library_link = 'empty-footprint-smd',
+            value = 'empty-footprint-smd'
+        )
+
+        # Set timestamps to be the same as in the expected test output
+        footprint.tedit = '6328915F'
+
+        self.assertTrue(to_file_and_compare(footprint, self.testData))
+
+    def test_createNewFootprintTypeTHT(self):
+        """Tests the `create_new()` function to create a new footprint with the type `through_hole`"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeTHT')
+
+        # Create footprint with correct type
+        footprint = Footprint().create_new(
+            type = 'through_hole',
+            library_link = 'empty-footprint-through_hole',
+            value = 'empty-footprint-through_hole'
+        )
+
+        # Set timestamps to be the same as in the expected test output
+        footprint.tedit = '63289145'
+
+        self.assertTrue(to_file_and_compare(footprint, self.testData))
+
+    def test_createNewFootprintTypeOther(self):
+        """Tests the `create_new()` function to create a new footprint with the type `other`"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeOther')
+
+        # Create footprint with correct type
+        footprint = Footprint().create_new(
+            type = 'other',
+            library_link = 'empty-footprint-other',
+            value = 'empty-footprint-other'
+        )
+        # Set timestamps to be the same as in the expected test output
+        footprint.tedit = '6328916A'
+
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def tearDown(self) -> None:

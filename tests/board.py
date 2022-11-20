@@ -46,7 +46,7 @@ class Tests_Board(unittest.TestCase):
         self.assertTrue(to_file_and_compare(board, self.testData))
 
     def test_allFpManufacturingAttributes(self):
-        """Tests the parsing of a board with footprints that feature all combinations of 
+        """Tests the parsing of a board with footprints that feature all combinations of
         manufacturing attributes. Tests all possible combinations of the following:
         <ul>
             <li>Board Only: True / False</li>
@@ -54,8 +54,8 @@ class Tests_Board(unittest.TestCase):
             <li>excludeFromPosFiles: True / False</li>
             <li>Type: SMD, THT, Other</li>
         </ul>
-        
-        Furthermore tests if the Attributes() object of a footprint is correctly created even 
+
+        Furthermore tests if the Attributes() object of a footprint is correctly created even
         when the parsed footprint has no (attr ...) token in its S-Expression."""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_allFpManufacturingAttributes')
@@ -64,11 +64,18 @@ class Tests_Board(unittest.TestCase):
         # Test parsing
         self.assertTrue(to_file_and_compare(board, self.testData))
 
-        # Test that attributes object is created, even when an empty attribute list is present in 
+        # Test that attributes object is created, even when an empty attribute list is present in
         # parsed footprint
         attr = Attributes(boardOnly=False, excludeFromBom=False, excludeFromPosFiles=False, type=None)
-        self.assertEqual(attr, board.footprints[11].attributes, 
+        self.assertEqual(attr, board.footprints[11].attributes,
             msg="Parsing of footprint without `attr` field does not yield expected Attributes() object")
+
+    def test_createEmptyBoard(self):
+        """Tests the behavior when creating an empty board"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_createEmptyBoard')
+        board = Board().create_new()
+        self.assertTrue(to_file_and_compare(board, self.testData))
 
     def tearDown(self) -> None:
         cleanup_after_test(self.testData)

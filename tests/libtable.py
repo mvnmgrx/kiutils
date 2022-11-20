@@ -54,6 +54,13 @@ class Tests_LibTable(unittest.TestCase):
         libtable.libs.append(Library())
         self.assertTrue(to_file_and_compare(libtable, self.testData))
 
+    def test_createNewLibTable(self):
+        """Tests the `create_new()` function to create a new library table"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(LIBTABLE_BASE, 'test_createNewLibTable')
+        libtable = LibTable.create_new()
+        self.assertTrue(to_file_and_compare(libtable, self.testData))
+
     def tearDown(self) -> None:
         cleanup_after_test(self.testData)
         return super().tearDown()

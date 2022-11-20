@@ -404,8 +404,9 @@ class Justify():
             newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object or an empty string if no justification is given. This
-            will cause the text to be horizontally and vertically aligend
+            str: S-Expression of this object or an empty string (depending on given indentation and 
+            newline settings) if no justification is given. This will cause the text to be 
+            horizontally and vertically aligend
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

@@ -507,7 +507,7 @@ class Zone():
     name: Optional[str] = None
     """The optional `name` token attribute defines the name of the zone if one has been assigned"""
 
-    hatch: Hatch = Hatch()
+    hatch: Hatch = field(default_factory=lambda: Hatch())
     """The `hatch` token attributes define the zone outline display hatch style and pitch"""
 
     priority: Optional[int] = None

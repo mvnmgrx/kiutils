@@ -26,7 +26,14 @@ class Tests_DesignRules(unittest.TestCase):
         """Tests the parsing of all available design rule items"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(DESIGNRULE_BASE, 'test_allDesignRuleItems')
-        dru = DesignRules().from_file(self.testData.pathToTestFile)
+        dru = DesignRules.from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(dru, self.testData))
+
+    def test_createNewDesignRules(self):
+        """Tests the `create_new()` function to create a new set of design rules"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(DESIGNRULE_BASE, 'test_createNewDesignRules')
+        dru = DesignRules.create_new()
         self.assertTrue(to_file_and_compare(dru, self.testData))
 
     def tearDown(self) -> None:

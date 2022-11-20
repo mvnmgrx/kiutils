@@ -13,6 +13,8 @@ Documentation taken from:
     ??? Syntax help in Pcbnew
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 from os import path
@@ -246,6 +248,15 @@ class DesignRules():
             item.filePath = filepath
             return item
 
+    @classmethod
+    def create_new(cls) -> DesignRules:
+        """Creates a new empty design rules set as KiCad would create it
+
+        Returns:
+            DesignRules: Empty design rules set
+        """
+        return cls(version=1)
+
     def to_file(self, filepath = None):
         """Save the object to a file in S-Expression format
 
@@ -277,9 +288,11 @@ class DesignRules():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        expression = f'(version {self.version})\n\n'
+        expression = f'{indents}(version {self.version})\n'
 
-        for rule in self.rules:
-            expression += rule.to_sexpr()
+        if len(self.rules):
+            expression += f'{indents}\n'
+            for rule in self.rules:
+                expression += f'{indents}{rule.to_sexpr(indent=indent)}'
 
-        return expression
+        return expression + endline

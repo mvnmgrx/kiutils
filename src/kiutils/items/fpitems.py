@@ -195,6 +195,7 @@ class FpLine():
         if self.width is not None:
             width = f' (width {self.width})'
         elif self.stroke is not None:
+            # FIXME: This feature lacks a test case as it will be introduced in KiCad 7
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
         else:
             width = ''

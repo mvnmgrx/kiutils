@@ -194,8 +194,10 @@ class FpLine():
         tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
         if self.width is not None:
             width = f' (width {self.width})'
-        else:
+        elif self.stroke is not None:
             width = f' {self.stroke.to_sexpr(indent=0, newline=False)}'
+        else:
+            width = ''
 
         return f'{indents}(fp_line (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{tstamp}){endline}'
 

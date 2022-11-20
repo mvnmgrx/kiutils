@@ -215,7 +215,7 @@ class Stroke():
     - `dash`, `dash_dot`, `dash_dot_dot` (version 7), `dot`, `default`, `solid`
     """
 
-    color: ColorRGBA = ColorRGBA()
+    color: ColorRGBA = field(default_factory=lambda: ColorRGBA())
     """The `color` token attributes define the line red, green, blue, and alpha color settings"""
 
     @classmethod
@@ -430,10 +430,10 @@ class Effects():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_text_effects
     """
 
-    font: Font = Font()
+    font: Font = field(default_factory=lambda: Font())
     """The `font` token defines how the text is shown"""
 
-    justify: Justify = Justify()
+    justify: Justify = field(default_factory=lambda: Justify())
     """The `justify` token defines the justification of the text"""
 
     hide: bool = False
@@ -795,7 +795,7 @@ class Property():
     id: int = 0
     """The id token defines an integer ID for the property and must be unique"""
 
-    position: Position = Position(angle=0)
+    position: Position = field(default_factory=lambda: Position(angle=0))
     """The `position` defines the X and Y coordinates as well as the rotation angle of the property.
     All three items will initially be set to zero."""
 

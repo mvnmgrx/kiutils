@@ -32,13 +32,13 @@ class GrText():
     text: str = ""
     """The `text` attribute is a string that defines the text"""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y position coordinates and optional orientation angle of the text"""
 
     layer: Optional[str] = None
     """The `layer` token defines the canonical layer the text resides on"""
 
-    effects: Effects = Effects()
+    effects: Effects = field(default_factory=lambda: Effects())
     """The `effects` token defines how the text is displayed"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
@@ -118,8 +118,8 @@ class GrTextBox():
     angle: Optional[float] = None
     layer: str = "F.Cu"
     tstamp: Optional[str] = None
-    effects: Effects = Effects()
-    stroke: Stroke = Stroke()
+    effects: Effects = field(default_factory=lambda: Effects())
+    stroke: Stroke = field(default_factory=lambda: Stroke())
     renderCache: Optional[str] = None
 
     @classmethod
@@ -139,10 +139,10 @@ class GrLine():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_line
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the start of the line"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the end of the line"""
 
     angle: Optional[float] = None
@@ -220,10 +220,10 @@ class GrRect():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_rectangle
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the upper left corner of the rectangle"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the low right corner of the rectangle"""
 
     layer: Optional[str] = None
@@ -302,10 +302,10 @@ class GrCircle():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_circle
     """
 
-    center: Position = Position()
+    center: Position = field(default_factory=lambda: Position())
     """The `center` token defines the coordinates of the center of the circle"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the low right corner of the circle"""
 
     layer: Optional[str] = None
@@ -385,13 +385,13 @@ class GrArc():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_arc
     """
 
-    start: Position = Position()
+    start: Position = field(default_factory=lambda: Position())
     """The `start` token defines the coordinates of the start position of the arc radius"""
 
-    mid: Position = Position()
+    mid: Position = field(default_factory=lambda: Position())
     """The `mid` token defines the coordinates of the midpoint along the arc"""
 
-    end: Position = Position()
+    end: Position = field(default_factory=lambda: Position())
     """The `end` token defines the coordinates of the end position of the arc radius"""
 
     layer: Optional[str] = None

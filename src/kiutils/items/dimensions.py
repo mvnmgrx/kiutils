@@ -254,7 +254,7 @@ class Dimension():
     """The optional `format` token define the dimension formatting for all dimension types except
     center dimensions"""
 
-    style: DimensionStyle = DimensionStyle()
+    style: DimensionStyle = field(default_factory=lambda: DimensionStyle())
     """The `style` token defines the dimension style information"""
 
     @classmethod

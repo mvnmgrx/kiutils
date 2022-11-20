@@ -42,7 +42,7 @@ class Schematic():
     uuid: Optional[str] = None
     """The `uuid` defines the universally unique identifier"""
 
-    paper: PageSettings = PageSettings()
+    paper: PageSettings = field(default_factory=lambda: PageSettings())
     """The `paper` token defines the drawing page size and orientation"""
 
     titleBlock: Optional[TitleBlock] = None

@@ -43,10 +43,10 @@ class Board():
     generator: str = ""
     """The `generator` token defines the program used to write the file"""
 
-    general: GeneralSettings = GeneralSettings()
+    general: GeneralSettings = field(default_factory=lambda: GeneralSettings())
     """The `general` token defines general information about the board"""
 
-    paper: PageSettings = PageSettings()
+    paper: PageSettings = field(default_factory=lambda: PageSettings())
     """The `paper` token defines informations about the page itself"""
 
     titleBlock: Optional[TitleBlock] = None
@@ -55,7 +55,7 @@ class Board():
     layers: List[LayerToken] = field(default_factory=list)
     """The `layers` token defines all of the layers used by the board"""
 
-    setup: SetupData = SetupData()
+    setup: SetupData = field(default_factory=lambda: SetupData())
     """The `setup` token is used to store the current settings used by the board"""
 
     properties: Dict[str, str] = field(default_factory=dict)

@@ -93,7 +93,7 @@ class SymbolPin():
     """The `graphicalStyle` defines the graphical style used to draw the pin. See documentation
     below for valid pin graphical styles and descriptions."""
 
-    position: Position = Position()
+    position: Position = field(default_factory=lambda: Position())
     """The `position` defines the X and Y coordinates and rotation angle of the connection point
     of the pin relative to the symbol origin position"""
 
@@ -103,13 +103,13 @@ class SymbolPin():
     name: str = ""
     """The `name` token defines a string containing the name of the pin"""
 
-    nameEffects: Effects = Effects()
+    nameEffects: Effects = field(default_factory=lambda: Effects())
     """The `nameEffects` token define how the pin's name is displayed"""
 
     number: str = "0"
     """The `number` token defines a string containing the NUMBER of the pin"""
 
-    numberEffects: Effects = Effects()
+    numberEffects: Effects = field(default_factory=lambda: Effects())
     """The `nameEffects` token define how the pin's number is displayed"""
 
     hide: bool = False      # Missing in documentation

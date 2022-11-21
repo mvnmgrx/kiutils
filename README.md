@@ -29,10 +29,15 @@ The following is required to use `kiutils`:
 - Python 3.7 or higher
 
 ## Installation
-KiUtils is available on [PyPI](https://pypi.org/project/kiutils/). Use Python's `pip`
+``kiutils`` is available on [PyPI](https://pypi.org/project/kiutils/). Use Python's `pip`
 to install it:
 ```
 pip install kiutils
+```
+
+If ``kiutils`` is already installed, upgrade it to the latest version using:
+```
+pip install --no-cache-dir --upgrade kiutils
 ```
 
 ## Documentation

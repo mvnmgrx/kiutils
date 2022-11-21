@@ -1,5 +1,8 @@
 # kiutils - CHANGELOG
 
+## v1.2.1 - 21.11.2022
+- Fixed: Broken package config did not included every source file while building the module - (PR #38) 
+
 ## v1.2.0 - 20.11.2022
 - Added: Support for Python 3.11 on all platforms
 - Added: `create_new()` API for all classes that serve files (schematic, board, etc) - (PR #33)

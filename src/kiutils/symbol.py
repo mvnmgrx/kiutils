@@ -243,9 +243,12 @@ class Symbol():
     units: List = field(default_factory=list)
     """The `units` can be one or more child symbol tokens embedded in a parent symbol"""
 
+    unit_numbers: Tuple = ()
+    """The unit numbers: unit and demorgan symbol indexes"""
+
     @classmethod
     def from_sexpr(cls, exp: list):
-        """Convert the given S-Expresstion into a Symbol object
+        """Convert the given S-Expression into a Symbol object
 
         Args:
             exp (list): Part of parsed S-Expression `(symbol ...)`
@@ -281,7 +284,11 @@ class Symbol():
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
             if item[0] == 'power': object.isPower = True
 
-            if item[0] == 'symbol': object.units.append(Symbol().from_sexpr(item))
+            if item[0] == 'symbol':
+                unit_symbol = Symbol().from_sexpr(item)
+                # Store unit numbers
+                unit_symbol.unit_numbers = (unit_symbol.id.split('_')[-2], unit_symbol.id.split('_')[-1])
+                object.units.append(unit_symbol)
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
 
             if item[0] == 'pin': object.pins.append(SymbolPin().from_sexpr(item))
@@ -327,7 +334,7 @@ class Symbol():
         )
         return symbol
 
-    def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
+    def to_sexpr(self, indent: int = 2, newline: bool = True, parent_id = None) -> str:
         """Generate the S-Expression representing this object
 
         Args:
@@ -353,8 +360,13 @@ class Symbol():
         pinnames = f' (pin_names{pnoffset}{pnhide})' if self.pinNames else ''
         pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
         extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
-
-        expression =  f'{indents}(symbol "{dequote(self.id)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
+        
+        # Construct symbol ID
+        symbol_id = dequote(self.id)
+        if self.unit_numbers and parent_id:
+            symbol_id = f'{dequote(parent_id)}_{self.unit_numbers[0]}_{self.unit_numbers[1]}'
+        
+        expression =  f'{indents}(symbol "{symbol_id}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
         for item in self.properties:
             expression += item.to_sexpr(indent+2)
         for item in self.graphicItems:
@@ -362,7 +374,7 @@ class Symbol():
         for item in self.pins:
             expression += item.to_sexpr(indent+2)
         for item in self.units:
-            expression += item.to_sexpr(indent+2)
+            expression += item.to_sexpr(indent+2, parent_id=self.id)
         expression += f'{indents}){endline}'
         return expression
 

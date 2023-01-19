@@ -17,6 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List
 from os import path
+import re
 
 from kiutils.items.common import Effects, Position, Property, Font
 from kiutils.items.syitems import *
@@ -243,8 +244,11 @@ class Symbol():
     units: List = field(default_factory=list)
     """The `units` can be one or more child symbol tokens embedded in a parent symbol"""
 
-    unit_numbers: Tuple = ()
-    """The unit numbers: unit and demorgan symbol indexes"""
+    unitId: int = None
+    """Unit identifier: an integer that identifies which unit the symbol represents"""
+
+    styleId: int = None
+    """Style identifier: indicates which body style the unit represents"""
 
     @classmethod
     def from_sexpr(cls, exp: list):
@@ -285,10 +289,16 @@ class Symbol():
             if item[0] == 'power': object.isPower = True
 
             if item[0] == 'symbol':
-                unit_symbol = Symbol().from_sexpr(item)
-                # Store unit numbers
-                unit_symbol.unit_numbers = (unit_symbol.id.split('_')[-2], unit_symbol.id.split('_')[-1])
-                object.units.append(unit_symbol)
+                # Get symbol unit 
+                symbol_unit = Symbol().from_sexpr(item)
+                # Parse symbol unit identifiers
+                symbol_id_parse = re.match(r"^" + re.escape(object.id) + r"_(\d+?)_(\d+?)$", symbol_unit.id)
+                if not symbol_id_parse:
+                    raise Exception(f'Failed to parse symbol unit identifiers due to invalid format: {symbol_unit.id}')
+                symbol_unit.unitId = int(symbol_id_parse.group(1))
+                symbol_unit.styleId = int(symbol_id_parse.group(2))
+                # Add symbol unit to s-expr
+                object.units.append(symbol_unit)
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
 
             if item[0] == 'pin': object.pins.append(SymbolPin().from_sexpr(item))
@@ -361,10 +371,10 @@ class Symbol():
         pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
         extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
         
-        # Construct symbol ID
+        # Construct Symbol Unit Identifier
         symbol_id = dequote(self.id)
-        if self.unit_numbers and parent_id:
-            symbol_id = f'{dequote(parent_id)}_{self.unit_numbers[0]}_{self.unit_numbers[1]}'
+        if parent_id and self.unitId and self.styleId:
+            symbol_id = f'{dequote(parent_id)}_{str(self.unitId)}_{str(self.styleId)}'
         
         expression =  f'{indents}(symbol "{symbol_id}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
         for item in self.properties:

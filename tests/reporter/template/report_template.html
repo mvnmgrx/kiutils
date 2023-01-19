@@ -73,6 +73,7 @@
                                 <p><pre><code>{{ test_case.kiutils_expected_output }}</code></pre></p>
                                 <h5 style="color:maroon;"">Produced output:</h5>
                                 <p><pre><code>{{ test_case.kiutils_produced_output }}</code></pre></p>
+                                {{ test_case.diff|safe }}
                             </td>
                         </tr>
                         {%- endif %}

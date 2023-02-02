@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import copy
+import difflib
 import traceback
 from unittest import TestResult, TextTestResult
 from unittest.result import failfast
@@ -116,6 +117,12 @@ class _TestInfo(object):
 
             if test_method.testData.producedOutput is not None:
                 self.kiutils_produced_output = test_method.testData.producedOutput
+
+            if self.kiutils_expected_output is not None and self.kiutils_produced_output is not None:
+                self.diff = difflib.HtmlDiff().make_file(
+                    self.kiutils_expected_output.split("\n"),
+                    self.kiutils_produced_output.split("\n"),
+                )
 
         pass
         # .. KiUtils stuff ends here

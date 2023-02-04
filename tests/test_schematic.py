@@ -65,7 +65,3 @@ class Tests_Schematic(unittest.TestCase):
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_hierarchicalSchematicWithAllPrimitives')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
-
-    def tearDown(self) -> None:
-        cleanup_after_test(self.testData)
-        return super().tearDown()

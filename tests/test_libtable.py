@@ -61,8 +61,4 @@ class Tests_LibTable(unittest.TestCase):
         libtable = LibTable.create_new()
         self.assertTrue(to_file_and_compare(libtable, self.testData))
 
-    def tearDown(self) -> None:
-        cleanup_after_test(self.testData)
-        return super().tearDown()
-
     # TODO: Tests with invalid type token

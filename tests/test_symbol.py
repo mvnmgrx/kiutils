@@ -88,7 +88,3 @@ class Tests_Symbol(unittest.TestCase):
 
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
-    def tearDown(self) -> None:
-        cleanup_after_test(self.testData)
-        return super().tearDown()
-

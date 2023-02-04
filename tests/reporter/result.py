@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import platform
 import sys
 import time
 import copy
@@ -360,7 +361,8 @@ class HtmlTestResult(TextTestResult):
 
         header_info = {
             "start_time": start_time,
-            "status": results_summary
+            "status": results_summary,
+            "python_version": f"{sys.version} on {platform.system()}"
         }
         return header_info
 

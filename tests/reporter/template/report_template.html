@@ -5,22 +5,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style>
+        .output-diff {
+            width: calc(100vw - 6rem); 
+            overflow: scroll;
+            border-radius: 4px;
+            border: 1px solid #CCCCCC;
+            background-color: #f5f5f5;
+        }
+
+        .topmost-div {
+            margin-left: 2rem; 
+            margin-right: 2rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="topmost-div">
         <div class="row">
             <div class="col-xs-12">
                 <h2 class="text-capitalize">{{ title }}</h2>
+                <hr>
+                <p class='attribute'><strong>Python Version </strong>{{ header_info.python_version }}</p>
                 <p class='attribute'><strong>Start Time: </strong>{{ header_info.start_time.strftime("%Y-%m-%d %H:%M:%S") }}</p>
                 <p class='attribute'><strong>Duration: </strong>{{ header_info.status.duration }}</p>
                 <p class='attribute'><strong>Summary: </strong>Total: {{ header_info.status.total }}, Pass: {{ header_info.status.success }}{% if header_info.status.failure %}, Fail: {{ header_info.status.failure }}{% endif %}{% if header_info.status.error %}, Error: {{ header_info.status.error }}{% endif %}{% if header_info.status.skip %}, Skip: {{ header_info.status.skip }}{% endif %}</p>
+                <hr>
             </div>
         </div>
         {%- for test_case_name, tests_results in all_results.items() %}
         {%- if tests_results %}
         <div class="row">
-            <div class="col-xs-12 col-sm-10 col-md-10">
-                <table class='table table-hover table-responsive'>
+            <div class="col-xs-12">
+                <table class='table table-responsive'>
                     <thead>
                         <tr>
                             <th>{{ test_case_name }}</th>
@@ -69,11 +86,8 @@
                                 {%- if test_case.stdout %}<p>{{ test_case.stdout }}</p>{% endif %}
                                 {%- if test_case.err %}<p style="color:maroon;">{{ test_case.err[0].__name__ }}: {{ test_case.err[1] }}</p>{% endif %}
                                 {%- if test_case.err %}<p style="color:maroon;"><pre><code>{{ test_case.test_exception_info }}</code></pre></p>{% endif %}
-                                <h5 style="color:maroon;"">Expected output:</h5>
-                                <p><pre><code>{{ test_case.kiutils_expected_output }}</code></pre></p>
-                                <h5 style="color:maroon;"">Produced output:</h5>
-                                <p><pre><code>{{ test_case.kiutils_produced_output }}</code></pre></p>
-                                {{ test_case.diff|safe }}
+                                <h5 style="color:maroon;">Expected (right) vs produced (left):</h5>
+                                <div class="output-diff">{{ test_case.diff|safe }}</div>
                             </td>
                         </tr>
                         {%- endif %}

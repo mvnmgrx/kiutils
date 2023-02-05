@@ -147,11 +147,11 @@ class LibTable():
             return item
 
     @classmethod
-    def create_new(cls, type: str = 'sym_lib_table') -> Library:
+    def create_new(cls, type: str = 'sym_lib_table') -> LibTable:
         """Creates a new empty library table with its attributes set as KiCad would create it
 
         Args:
-            - type (str): ```fp_lib_table``` or ```sym_lib_table```. Defaults to the latter.
+            - type (str): ``fp_lib_table`` or ``sym_lib_table``. Defaults to the latter.
 
         Returns:
             - Library: Empty library table of given type

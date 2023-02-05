@@ -74,9 +74,8 @@ class Position():
 
         return object
 
-    def to_sexpr():
-        """This object does not have a direct S-Expression representation.
-        """
+    def to_sexpr(self) -> str:
+        """This object does not have a direct S-Expression representation."""
         raise NotImplementedError("This object does not have a direct S-Expression representation")
 
 

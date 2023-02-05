@@ -15,6 +15,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_graphic_items
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import List
 
@@ -23,32 +25,32 @@ from kiutils.utils.strings import dequote
 
 @dataclass
 class SyFill():
-    """The `fill` token defines how schematic and symbol library graphical items are filled.
+    """The ``fill`` token defines how schematic and symbol library graphical items are filled.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_fill_definition
     """
 
     type: str = "none"
-    """The `type` attribute defines how the graphical item is filled. Possible values are:
-    - `none`: Graphic is not filled
-    - `outline`: Graphic item filled with the line color
-    - `background`: Graphic item filled with the theme background color
+    """The ``type`` attribute defines how the graphical item is filled. Possible values are:
+    - ``none``: Graphic is not filled
+    - ``outline``: Graphic item filled with the line color
+    - ``background``: Graphic item filled with the theme background color
     """
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SyFill:
         """Convert the given S-Expresstion into a SyFill object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fill ...)`
+            - exp (list): Part of parsed S-Expression ``(fill ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fill
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fill
 
         Returns:
-            SyFill: Object of the class initialized with the given S-Expression
+            - SyFill: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -65,11 +67,11 @@ class SyFill():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -79,40 +81,40 @@ class SyFill():
 
 @dataclass
 class SyArc():
-    """The `arc` token defines a graphical arc in a symbol definition.
+    """The ``arc`` token defines a graphical arc in a symbol definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_arc
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token defines the coordinates of start point of the arc"""
+    """The ``start`` token defines the coordinates of start point of the arc"""
 
     mid: Position = field(default_factory=lambda: Position())
-    """The `mid` token defines the coordinates of mid point of the arc"""
+    """The ``mid`` token defines the coordinates of mid point of the arc"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of end point of the arc"""
+    """The ``end`` token defines the coordinates of end point of the arc"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the arc outline is drawn"""
+    """The ``stroke`` defines how the arc outline is drawn"""
 
     fill: SyFill = field(default_factory=lambda: SyFill())
-    """The `fill` token attributes define how the arc is filled"""
+    """The ``fill`` token attributes define how the arc is filled"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SyArc:
         """Convert the given S-Expresstion into a SyArc object
 
         Args:
-            exp (list): Part of parsed S-Expression `(arc ...)`
+            - exp (list): Part of parsed S-Expression ``(arc ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not arc
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not arc
 
         Returns:
-            SyArc: Object of the class initialized with the given S-Expression
+            - SyArc: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -133,11 +135,11 @@ class SyArc():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 6.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 6.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -154,37 +156,37 @@ class SyArc():
 
 @dataclass
 class SyCircle():
-    """The `circle` token defines a graphical circle in a symbol definition.
+    """The ``circle`` token defines a graphical circle in a symbol definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_circle
     """
 
     center: Position = field(default_factory=lambda: Position())
-    """The `center` token defines the coordinates of center point of the circle"""
+    """The ``center`` token defines the coordinates of center point of the circle"""
 
     radius: float = 0.0
-    """The `radius` token defines the length of the radius of the circle"""
+    """The ``radius`` token defines the length of the radius of the circle"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the circle outline is drawn"""
+    """The ``stroke`` defines how the circle outline is drawn"""
 
     fill: SyFill = field(default_factory=lambda: SyFill())
-    """The `fill` token attributes define how the circle is filled"""
+    """The ``fill`` token attributes define how the circle is filled"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SyCircle:
         """Convert the given S-Expresstion into a SyCircle object
 
         Args:
-            exp (list): Part of parsed S-Expression `(circle ...)`
+            - exp (list): Part of parsed S-Expression ``(circle ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not circle
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not circle
 
         Returns:
-            SyCircle: Object of the class initialized with the given S-Expression
+            - SyCircle: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -204,11 +206,11 @@ class SyCircle():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 6.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 6.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -221,34 +223,34 @@ class SyCircle():
 
 @dataclass
 class SyCurve():
-    """The `curve` token defines a graphical Qubic Bezier curve.
+    """The ``curve`` token defines a graphical Qubic Bezier curve.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_curve
     """
 
     points: List[Position] = field(default_factory=list)
-    """The `points` token defines the four X/Y coordinates of each point of the curve"""
+    """The ``points`` token defines the four X/Y coordinates of each point of the curve"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the curve outline is drawn"""
+    """The ``stroke`` defines how the curve outline is drawn"""
 
     fill: SyFill = field(default_factory=lambda: SyFill())
-    """The `fill` token attributes define how curve arc is filled"""
+    """The ``fill`` token attributes define how curve arc is filled"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SyCurve:
         """Convert the given S-Expresstion into a SyCurve object
 
         Args:
-            exp (list): Part of parsed S-Expression `(curve ...)`
+            - exp (list): Part of parsed S-Expression ``(curve ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not curve
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not curve
 
         Returns:
-            SyCurve: Object of the class initialized with the given S-Expression
+            - SyCurve: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -269,11 +271,11 @@ class SyCurve():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 6.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 6.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -290,34 +292,34 @@ class SyCurve():
 
 @dataclass
 class SyPolyLine():
-    """The `polyline` token defines one or more graphical lines that may or may not define a polygon.
+    """The ``polyline`` token defines one or more graphical lines that may or may not define a polygon.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_line
     """
 
     points: List[Position] = field(default_factory=list)
-    """The `points` token defines the four X/Y coordinates of each point of the polyline"""
+    """The ``points`` token defines the four X/Y coordinates of each point of the polyline"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the polyline outline is drawn"""
+    """The ``stroke`` defines how the polyline outline is drawn"""
 
     fill: SyFill = field(default_factory=lambda: SyFill())
-    """The `fill` token attributes define how polyline arc is filled"""
+    """The ``fill`` token attributes define how polyline arc is filled"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SyPolyLine:
         """Convert the given S-Expresstion into a SyPolyLine object
 
         Args:
-            exp (list): Part of parsed S-Expression `(polyline ...)`
+            - exp (list): Part of parsed S-Expression ``(polyline ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not polyline
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not polyline
 
         Returns:
-            SyPolyLine: Object of the class initialized with the given S-Expression
+            - SyPolyLine: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -338,11 +340,11 @@ class SyPolyLine():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 6.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 6.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -359,37 +361,37 @@ class SyPolyLine():
 
 @dataclass
 class SyRect():
-    """The `rectangle` token defines a graphical rectangle in a symbol definition.
+    """The ``rectangle`` token defines a graphical rectangle in a symbol definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_rectangle
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token attributes define the coordinates of the start point of the rectangle"""
+    """The ``start`` token attributes define the coordinates of the start point of the rectangle"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token attributes define the coordinates of the end point of the rectangle"""
+    """The ``end`` token attributes define the coordinates of the end point of the rectangle"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the rectangle outline is drawn"""
+    """The ``stroke`` defines how the rectangle outline is drawn"""
 
     fill: SyFill = field(default_factory=lambda: SyFill())
-    """The `fill` token attributes define how rectangle arc is filled"""
+    """The ``fill`` token attributes define how rectangle arc is filled"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SyRect:
         """Convert the given S-Expresstion into a SyRect object
 
         Args:
-            exp (list): Part of parsed S-Expression `(rectangle ...)`
+            - exp (list): Part of parsed S-Expression ``(rectangle ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not rectangle
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not rectangle
 
         Returns:
-            SyRect: Object of the class initialized with the given S-Expression
+            - SyRect: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -409,11 +411,11 @@ class SyRect():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 6.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 6.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -426,34 +428,34 @@ class SyRect():
 
 @dataclass
 class SyText():
-    """The `text` token defines a graphical text in a symbol definition.
+    """The ``text`` token defines a graphical text in a symbol definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_text
     """
 
     text: str = ""
-    """The `text` attribute is a quoted string that defines the text"""
+    """The ``text`` attribute is a quoted string that defines the text"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates and rotation angle of the text"""
+    """The ``position`` defines the X and Y coordinates and rotation angle of the text"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` token defines how the text is displayed"""
+    """The ``effects`` token defines how the text is displayed"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SyText:
         """Convert the given S-Expresstion into a SyText object
 
         Args:
-            exp (list): Part of parsed S-Expression `(text ...)`
+            - exp (list): Part of parsed S-Expression ``(text ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not text
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not text
 
         Returns:
-            SyText: Object of the class initialized with the given S-Expression
+            - SyText: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -472,11 +474,11 @@ class SyText():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 6.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 6.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

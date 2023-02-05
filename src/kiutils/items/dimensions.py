@@ -14,6 +14,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_dimension
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 
@@ -23,20 +25,20 @@ from kiutils.utils.strings import dequote
 
 @dataclass
 class DimensionFormat():
-    """The `format` token defines the text formatting of a dimension
+    """The ``format`` token defines the text formatting of a dimension
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_dimension_format
     """
 
     prefix: Optional[str] = None
-    """The optional `prefix` token defines the string to add to the beginning of the dimension text"""
+    """The optional ``prefix`` token defines the string to add to the beginning of the dimension text"""
 
     suffix: Optional[str] = None
-    """The optional `suffix` token defines the string to add to the end of the dimension text"""
+    """The optional ``suffix`` token defines the string to add to the end of the dimension text"""
 
     units: int = 3
-    """The `units` token defines the dimension units used to display the dimension text. Valid units
+    """The ``units`` token defines the dimension units used to display the dimension text. Valid units
     are as follows:
     - 0: Inches
     - 1: Mils
@@ -44,35 +46,35 @@ class DimensionFormat():
     - 3: Automatic"""
 
     unitsFormat: int = 1
-    """The `unitsFormat` token defines how the unit's suffix is formatted. Valid units formats are
+    """The ``unitsFormat`` token defines how the unit's suffix is formatted. Valid units formats are
     as follows:
     - 0: No suffix
     - 1: Bare suffix
     - 2: Wrap suffix in parenthesis"""
 
     precision: int = 4
-    """The `precision` token defines the number of significant digits to display"""
+    """The ``precision`` token defines the number of significant digits to display"""
 
     overrideValue: Optional[str] = None
-    """The optional `overrideValue` token defines the text to substitute for the actual physical
+    """The optional ``overrideValue`` token defines the text to substitute for the actual physical
     dimension"""
 
     suppressZeroes: bool = False
-    """The `suppressZeroes` token removes all trailing zeros from the dimension text"""
+    """The ``suppressZeroes`` token removes all trailing zeros from the dimension text"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> DimensionFormat:
         """Convert the given S-Expresstion into a DimensionFormat object
 
         Args:
-            exp (list): Part of parsed S-Expression `(format ...)`
+            - exp (list): Part of parsed S-Expression ``(format ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not format
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not format
 
         Returns:
-            DimensionFormat: Object of the class initialized with the given S-Expression
+            - DimensionFormat: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -98,11 +100,11 @@ class DimensionFormat():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 4.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -117,31 +119,31 @@ class DimensionFormat():
 
 @dataclass
 class DimensionStyle():
-    """The `style` token defines the style of a dimension
+    """The ``style`` token defines the style of a dimension
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_dimension_style
     """
 
     thickness: float = 0.0
-    """The `thickness` token defines the line thickness of the dimension"""
+    """The ``thickness`` token defines the line thickness of the dimension"""
 
     arrowLength: float = 0.0
-    """The `arrowLength` token defines the length of the dimension arrows"""
+    """The ``arrowLength`` token defines the length of the dimension arrows"""
 
     textPositionMode: int = 0
-    """The `textPositionMode` token defines the position mode of the dimension text. Valid position
+    """The ``textPositionMode`` token defines the position mode of the dimension text. Valid position
     modes are as follows:
     - 0: Text is outside the dimension line
     - 1: Text is in line with the dimension line
     - 2: Text has been manually placed by the user"""
 
     extensionHeight: Optional[float] = None
-    """The optional `extensionHeight` token defines the length of the extension lines past the
+    """The optional ``extensionHeight`` token defines the length of the extension lines past the
     dimension crossbar"""
 
     textFrame: Optional[int] = None
-    """The optional `textFrame` token defines the style of the frame around the dimension text. This
+    """The optional ``textFrame`` token defines the style of the frame around the dimension text. This
     only applies to leader dimensions. Valid text frames are as follows:
     - 0: No text frame
     - 1: Rectangle
@@ -149,27 +151,27 @@ class DimensionStyle():
     - 3:Rounded rectangle"""
 
     extensionOffset: Optional[float] = None
-    """The optional `extensionOffset` token defines the distance from feature points to extension
+    """The optional ``extensionOffset`` token defines the distance from feature points to extension
     line start"""
 
     keepTextAligned: bool = False
-    """The `keepTextAligned` token indicates that the dimension text should be kept in line with the
+    """The ``keepTextAligned`` token indicates that the dimension text should be kept in line with the
     dimension crossbar. When false, the dimension text is shown horizontally regardless of the
     orientation of the dimension."""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> DimensionStyle:
         """Convert the given S-Expresstion into a DimensionStyle object
 
         Args:
-            exp (list): Part of parsed S-Expression `(style ...)`
+            - exp (list): Part of parsed S-Expression ``(style ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not style
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not style
 
         Returns:
-            DimensionStyle: Object of the class initialized with the given S-Expression
+            - DimensionStyle: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -194,11 +196,11 @@ class DimensionStyle():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 4.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -213,63 +215,63 @@ class DimensionStyle():
 
 @dataclass
 class Dimension():
-    """The `dimension` token defines a dimension in the PCB
+    """The ``dimension`` token defines a dimension in the PCB
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_dimension
     """
 
     locked: bool = False
-    """The optional `locked` token specifies if the dimension can be moved"""
+    """The optional ``locked`` token specifies if the dimension can be moved"""
 
     type: str = "aligned"
-    """The `type` token defines the type of dimension. Valid dimension types are `aligned`,
-    `leader`, `center`, `orthogonal` (and `radial` in KiCad version 7)"""
+    """The ``type`` token defines the type of dimension. Valid dimension types are ``aligned``,
+    ``leader``, ``center``, ``orthogonal`` (and ``radial`` in KiCad version 7)"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the polygon resides on"""
+    """The ``layer`` token defines the canonical layer the polygon resides on"""
 
     tstamp: Optional[str] = None
-    """The `tstamp` token defines the unique identifier for the footprint. This only applies
+    """The ``tstamp`` token defines the unique identifier for the footprint. This only applies
     to footprints defined in the board file format."""
 
     pts: List[Position] = field(default_factory=list)
-    """The `pts` token define the list of xy coordinates of the dimension"""
+    """The ``pts`` token define the list of xy coordinates of the dimension"""
 
     height: Optional[float] = None
-    """The optional `height` token defines the height of aligned dimensions"""
+    """The optional ``height`` token defines the height of aligned dimensions"""
 
     orientation: Optional[float] = None
-    """The optional `orientation` token defines the rotation angle for orthogonal dimensions"""
+    """The optional ``orientation`` token defines the rotation angle for orthogonal dimensions"""
 
     leaderLength: Optional[float] = None
-    """The optional `leaderLength` token attribute defines the distance from the marked radius to
+    """The optional ``leaderLength`` token attribute defines the distance from the marked radius to
     the knee for radial dimensions."""
 
     grText: Optional[GrText] = None
-    """The optional `grText` token define the dimension text formatting for all dimension types
+    """The optional ``grText`` token define the dimension text formatting for all dimension types
     except center dimensions"""
 
     format: Optional[DimensionFormat] = None
-    """The optional `format` token define the dimension formatting for all dimension types except
+    """The optional ``format`` token define the dimension formatting for all dimension types except
     center dimensions"""
 
     style: DimensionStyle = field(default_factory=lambda: DimensionStyle())
-    """The `style` token defines the dimension style information"""
+    """The ``style`` token defines the dimension style information"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Dimension:
         """Convert the given S-Expresstion into a Dimension object
 
         Args:
-            exp (list): Part of parsed S-Expression `(dimension ...)`
+            - exp (list): Part of parsed S-Expression ``(dimension ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not dimension
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not dimension
 
         Returns:
-            Dimension: Object of the class initialized with the given S-Expression
+            - Dimension: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -301,14 +303,14 @@ class Dimension():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Raises:
-            Exception: When number of coordinate points of the dimension equals 0
+            - Exception: When number of coordinate points of the dimension equals 0
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

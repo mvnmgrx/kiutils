@@ -103,7 +103,7 @@ class LibTable():
         """Convert the given S-Expresstion into a LibTable object
 
         Args:
-            - exp (list): Part of parsed S-Expression ```(sym_lib_table ...)``` or `(fp_lib_table ...)`
+            - exp (list): Part of parsed S-Expression ``(sym_lib_table ...)`` or ``(fp_lib_table ...)``
 
         Raises:
             - Exception: When given parameter's type is not a list

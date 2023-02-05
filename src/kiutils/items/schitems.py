@@ -238,7 +238,7 @@ class Connection():
         """Convert the given S-Expresstion into a Connection object
 
         Args:
-            - exp (list): Part of parsed S-Expression ```(wire ...)``` or ``(bus ...)``
+            - exp (list): Part of parsed S-Expression ``(wire ...)`` or ``(bus ...)``
 
         Raises:
             - Exception: When given parameter's type is not a list

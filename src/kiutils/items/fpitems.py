@@ -23,7 +23,7 @@ from typing import Optional, List
 from kiutils.items.common import Stroke, Position, Effects
 from kiutils.utils.strings import dequote
 
-# FIXME: Several classes have a ```stroke``` member. This feature will be introduced in KiCad 7 and 
+# FIXME: Several classes have a ``stroke`` member. This feature will be introduced in KiCad 7 and 
 #        has yet to be tested here.
 
 @dataclass

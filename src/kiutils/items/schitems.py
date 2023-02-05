@@ -260,7 +260,6 @@ class Connection():
                 for point in item[1:]:
                     object.points.append(Position().from_sexpr(point))
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'size': object.size = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
         return object
 

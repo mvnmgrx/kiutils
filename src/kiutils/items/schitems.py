@@ -330,7 +330,6 @@ class Image():
         object = cls()
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
             if item[0] == 'scale': object.scale = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'data':

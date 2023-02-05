@@ -194,6 +194,10 @@ class DesignRules():
     rules: List[Rule] = field(default_factory=list)
     """The ``rules`` token defines a list of custom design rules"""
 
+    filePath: Optional[str] = None
+    """The ``filePath`` token defines the path-like string to the schematic file. Automatically set when
+    ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> DesignRules:
         """Convert the given S-Expresstion into a DesignRules object
@@ -261,7 +265,7 @@ class DesignRules():
         """Save the object to a file in S-Expression format
 
         Args:
-            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set,
                                         the attribute ``self.filePath`` will be used instead.
 
         Raises:

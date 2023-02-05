@@ -67,7 +67,7 @@ class Tests_Symbol(unittest.TestCase):
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
     def test_createNewSymbolInEmptyLibrary(self):
-        """Tests the `create_new()` function to create an empty symbol that is added to a 
+        """Tests the ``create_new()`` function to create an empty symbol that is added to a 
         symbol library"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_createNewSymbolInEmptyLibrary')

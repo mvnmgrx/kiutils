@@ -37,9 +37,9 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_footprintEmptyAttributes(self):
-        """Tests the correct parsing of a footprint with empty `Attributes` field
+        """Tests the correct parsing of a footprint with empty ``Attributes`` field
 
-        </p><b>Note:</b> Some earlier versions of KiCad seemed to include the `(attr ..)` token in footprints even
+        </p><b>Note:</b> Some earlier versions of KiCad seemed to include the ``(attr ..)`` token in footprints even
         when no attributes are set (or when using standard attributes). This test includes an empty
         attribute token in the footprint and expects it to be gone after parsing. </p>
         """
@@ -48,7 +48,7 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_createNewFootprintTypeSMD(self):
-        """Tests the `create_new()` function to create a new footprint with the type `smd`"""
+        """Tests the ``create_new()`` function to create a new footprint with the type ``smd``"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeSMD')
 
@@ -65,7 +65,7 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_createNewFootprintTypeTHT(self):
-        """Tests the `create_new()` function to create a new footprint with the type `through_hole`"""
+        """Tests the ``create_new()`` function to create a new footprint with the type ``through_hole``"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeTHT')
 
@@ -82,7 +82,7 @@ class Tests_Footprint(unittest.TestCase):
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
     def test_createNewFootprintTypeOther(self):
-        """Tests the `create_new()` function to create a new footprint with the type `other`"""
+        """Tests the ``create_new()`` function to create a new footprint with the type ``other``"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_createNewFootprintTypeOther')
 

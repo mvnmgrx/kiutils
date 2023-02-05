@@ -37,7 +37,7 @@ class Tests_Schematic(unittest.TestCase):
     def test_createEmptySchematic(self):
         """Tests that an empty schematic generates S-Expression as expected from KiCad
 
-        Note: This test currently disregards an empty `(symbol_instances)` token as it seems that this
+        Note: This test currently disregards an empty ``(symbol_instances)`` token as it seems that this
         only exists when empty KiCad schematics are created. This is what should be expected for
         empty schematics:
 

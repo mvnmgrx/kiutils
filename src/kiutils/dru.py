@@ -24,63 +24,63 @@ from kiutils.utils.strings import dequote
 
 @dataclass
 class Constraint():
-    """The `Constraint` token defines a design rule's constraint"""
+    """The ``Constraint`` token defines a design rule's constraint"""
 
     type: str = "clearance"
-    """The `type` token defines the type of constraint. Defaults to `clearance`. Allowed types:
-    - `annular_width` - Width of an annular ring
-    - `clearance` - Clearance between two items
-    - `courtyard_clearance` - Clearance between two courtyards
-    - `diff_pair_gap` - Gap between differential pairs
-    - `diff_pair_uncoupled` - ???
-    - `disallow` - ??? Do not allow this rule
-    - `edge_clearance` - Clearance between the item and board edges
-    - `length` - Length of the item
-    - `hole_clearance` - Clearance between the item and holes
-    - `hole_size` - Size of the holes associated with this item
-    - `silk_clearance` - Clearance to silk screen
-    - `skew` - Difference in length between the items associated with this constraint
-    - `track_width` - Width of the tracks associated with this constraint
-    - `via_count` - Number of vias
-    - `via_diameter` - Diameter of vias associated with this constraint
+    """The ``type`` token defines the type of constraint. Defaults to ``clearance``. Allowed types:
+    - ``annular_width`` - Width of an annular ring
+    - ``clearance`` - Clearance between two items
+    - ``courtyard_clearance`` - Clearance between two courtyards
+    - ``diff_pair_gap`` - Gap between differential pairs
+    - ``diff_pair_uncoupled`` - ???
+    - ``disallow`` - ??? Do not allow this rule
+    - ``edge_clearance`` - Clearance between the item and board edges
+    - ``length`` - Length of the item
+    - ``hole_clearance`` - Clearance between the item and holes
+    - ``hole_size`` - Size of the holes associated with this item
+    - ``silk_clearance`` - Clearance to silk screen
+    - ``skew`` - Difference in length between the items associated with this constraint
+    - ``track_width`` - Width of the tracks associated with this constraint
+    - ``via_count`` - Number of vias
+    - ``via_diameter`` - Diameter of vias associated with this constraint
     """
 
     min: Optional[str] = None
-    """The `min` token defines the minimum allowed in this constraint"""
+    """The ``min`` token defines the minimum allowed in this constraint"""
 
     opt: Optional[str] = None
-    """The `opt` token defines the optimum allowed in this constraint"""
+    """The ``opt`` token defines the optimum allowed in this constraint"""
 
     max: Optional[str] = None
-    """The `max` token defines the maximum allowed in this constraint"""
+    """The ``max`` token defines the maximum allowed in this constraint"""
 
     elements: List[str] = field(default_factory=list)
-    """The `items` token defines a list of zero or more element types to include in this constraint.
+    """The ``items`` token defines a list of zero or more element types to include in this constraint.
     The following element types are available:
-    - `buried_via`
-    - `micro_via`
-    - `via`
-    - `graphic`
-    - `hole`
-    - `pad`
-    - `text`
-    - `track`
-    - `zone`
+    - ``buried_via``
+    - ``micro_via``
+    - ``via``
+    - ``graphic``
+    - ``hole``
+    - ``pad``
+    - ``text``
+    - ``track``
+    - ``zone``
     """
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Constraint:
         """Convert the given S-Expresstion into a Constraint object
 
         Args:
-            exp (list): Part of parsed S-Expression `(constraint ...)`
+            - exp (list): Part of parsed S-Expression ``(constraint ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the list's first parameter is not the `(constraint ..)` token
+            - Exception: When given parameter's type is not a list
+            - Exception: When the list's first parameter is not the ``(constraint ..)`` token
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Constraint: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -102,11 +102,11 @@ class Constraint():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -121,35 +121,35 @@ class Constraint():
 
 @dataclass
 class Rule():
-    """The `Rule` token defines a custom design rule"""
+    """The ``Rule`` token defines a custom design rule"""
 
     name: str = ""
-    """The `name` token defines the name of the custom design rule"""
+    """The ``name`` token defines the name of the custom design rule"""
 
     constraints: List[Constraint] = field(default_factory=list)
-    """The `constraints` token defines a list of constraints for this custom design rule"""
+    """The ``constraints`` token defines a list of constraints for this custom design rule"""
 
     condition: str = ""
-    """The `condition` token defines the conditions that apply for this rule. Check KiCad syntax
+    """The ``condition`` token defines the conditions that apply for this rule. Check KiCad syntax
     reference for more information. Example rule:
     - `A.inDiffPair('*') && !AB.isCoupledDiffPair()`"""
 
     layer: Optional[str] = None
-    """The optional `layer` token defines the canonical layer the rule applys to"""
+    """The optional ``layer`` token defines the canonical layer the rule applys to"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Rule:
         """Convert the given S-Expresstion into a Rule object
 
         Args:
-            exp (list): Part of parsed S-Expression `(rule ...)`
+            - exp (list): Part of parsed S-Expression ``(rule ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the list's first parameter is not the `(rule ..)` token
+            - Exception: When given parameter's type is not a list
+            - Exception: When the list's first parameter is not the ``(rule ..)`` token
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Rule: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -169,10 +169,10 @@ class Rule():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
 
@@ -186,27 +186,27 @@ class Rule():
 
 @dataclass
 class DesignRules():
-    """The `DesignRules` token defines a set of custom design rules (`.kicad_dru` files)"""
+    """The ``DesignRules`` token defines a set of custom design rules (`.kicad_dru` files)"""
 
     version: int = 1
-    """The `version` token defines the version of the file for the KiCad parser. Defaults to 1."""
+    """The ``version`` token defines the version of the file for the KiCad parser. Defaults to 1."""
 
     rules: List[Rule] = field(default_factory=list)
-    """The `rules` token defines a list of custom design rules"""
+    """The ``rules`` token defines a list of custom design rules"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> DesignRules:
         """Convert the given S-Expresstion into a DesignRules object
 
         Args:
-            exp (list): Part of parsed S-Expression `(version ...)`
+            - exp (list): Part of parsed S-Expression ``(version ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the list's first parameter is not the `(version ..)` token
+            - Exception: When given parameter's type is not a list
+            - Exception: When the list's first parameter is not the ``(version ..)`` token
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - DesignRules: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -224,18 +224,18 @@ class DesignRules():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str):
+    def from_file(cls, filepath: str) -> DesignRules:
         """Load a custom design rules set directly from a KiCad design rules file (`.kicad_dru`) and
-        sets the `self.filePath` attribute to the given file path.
+        sets the ``self.filePath`` attribute to the given file path.
 
         Args:
-            filepath (str): Path or path-like object that points to the file
+            - filepath (str): Path or path-like object that points to the file
 
         Raises:
-            Exception: If the given path is not a file
+            - Exception: If the given path is not a file
 
         Returns:
-            Footprint: Object of the DesignRules class initialized with the given KiCad file
+            - Footprint: Object of the DesignRules class initialized with the given KiCad file
         """
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
@@ -253,7 +253,7 @@ class DesignRules():
         """Creates a new empty design rules set as KiCad would create it
 
         Returns:
-            DesignRules: Empty design rules set
+            - DesignRules: Empty design rules set
         """
         return cls(version=1)
 
@@ -261,11 +261,11 @@ class DesignRules():
         """Save the object to a file in S-Expression format
 
         Args:
-            filepath (str, optional): Path-like string to the file. Defaults to None. If not set, the
-            attribute `self.filePath` will be used instead
+            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+                                        the attribute ``self.filePath`` will be used instead.
 
         Raises:
-            Exception: If no file path is given via the argument or via `self.filePath`
+            - Exception: If no file path is given via the argument or via `self.filePath`
         """
         if filepath is None:
             if self.filePath is None:

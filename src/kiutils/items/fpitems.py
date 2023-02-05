@@ -15,59 +15,61 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_graphics_items
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 
 from kiutils.items.common import Stroke, Position, Effects
 from kiutils.utils.strings import dequote
 
-# FIXME: Several classes have a ``stroke`` member. This feature will be introduced in KiCad 7 and 
+# FIXME: Several classes have a ```stroke``` member. This feature will be introduced in KiCad 7 and 
 #        has yet to be tested here.
 
 @dataclass
 class FpText():
-    """The `fp_text` token defines a graphic line in a footprint definition.
+    """The ``fp_text`` token defines a graphic line in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_text
     """
 
     type: str = "reference"
-    """The `type` attribute defines the type of text. Valid types are `reference`, `value`, and
-    `user`"""
+    """The ``type`` attribute defines the type of text. Valid types are ``reference``, ``value``, and
+    ``user``"""
 
     text: str = "%REF"
-    """The `text` attribute is a string that defines the text"""
+    """The ``text`` attribute is a string that defines the text"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y position coordinates and optional orientation angle of
+    """The ``position`` defines the X and Y position coordinates and optional orientation angle of
     the text"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the text resides on"""
+    """The ``layer`` token defines the canonical layer the text resides on"""
 
     hide: bool = False
-    """The optional `hide` token, defines if the text is hidden"""
+    """The optional ``hide`` token, defines if the text is hidden"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` token defines how the text is displayed"""
+    """The ``effects`` token defines how the text is displayed"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the text object"""
+    """The ``tstamp`` token defines the unique identifier of the text object"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpText:
         """Convert the given S-Expresstion into a FpText object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fp_text ...)`
+            - exp (list): Part of parsed S-Expression ``(fp_text ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fp_text
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fp_text
 
         Returns:
-            FpText: Object of the class initialized with the given S-Expression
+            - FpText: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -92,11 +94,11 @@ class FpText():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -114,48 +116,48 @@ class FpText():
 
 @dataclass
 class FpLine():
-    """The `fp_line` token defines a graphic line in a footprint definition.
+    """The ``fp_line`` token defines a graphic line in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_line
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token defines the coordinates of the upper left corner of the line"""
+    """The ``start`` token defines the coordinates of the upper left corner of the line"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the low right corner of the line"""
+    """The ``end`` token defines the coordinates of the low right corner of the line"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the line resides on"""
+    """The ``layer`` token defines the canonical layer the line resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the line. (prior to version 7)"""
+    """The ``width`` token defines the line width of the line. (prior to version 7)"""
 
     stroke: Optional[Stroke] = None   # Used for KiCad >= 7
-    """The `stroke` describes the line width and style of the line. (version 7)"""
+    """The ``stroke`` describes the line width and style of the line. (version 7)"""
 
     # FIXME: This is not implemented in to_sexpr() because it does not seem to be used on lines
     #        in footprints. Further testing required ..
     locked: bool = False
-    """The optional `locked` token defines if the line cannot be edited"""
+    """The optional ``locked`` token defines if the line cannot be edited"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the line object"""
+    """The ``tstamp`` token defines the unique identifier of the line object"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpLine:
         """Convert the given S-Expresstion into a FpLine object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fp_line ...)`
+            - exp (list): Part of parsed S-Expression ``(fp_line ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fp_line
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fp_line
 
         Returns:
-            FpLine: Object of the class initialized with the given S-Expression
+            - FpLine: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -186,11 +188,11 @@ class FpLine():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -206,50 +208,50 @@ class FpLine():
 
 @dataclass
 class FpRect():
-    """The `fp_rect` token defines a graphic rectangle in a footprint definition.
+    """The ``fp_rect`` token defines a graphic rectangle in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_rectangle
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token defines the coordinates of the upper left corner of the rectangle"""
+    """The ``start`` token defines the coordinates of the upper left corner of the rectangle"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the low right corner of the rectangle"""
+    """The ``end`` token defines the coordinates of the low right corner of the rectangle"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the rectangle resides on"""
+    """The ``layer`` token defines the canonical layer the rectangle resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the rectangle. (prior to version 7)"""
+    """The ``width`` token defines the line width of the rectangle. (prior to version 7)"""
 
     stroke: Optional[Stroke] = None   # Used for KiCad >= 7
-    """The `stroke` describes the line width and style of the rectangle. (version 7)"""
+    """The ``stroke`` describes the line width and style of the rectangle. (version 7)"""
 
     fill: Optional[str] = None
-    """The optional `fill` toke defines how the rectangle is filled. Valid fill types are solid
+    """The optional ``fill`` toke defines how the rectangle is filled. Valid fill types are solid
     and none. If not defined, the rectangle is not filled."""
 
     locked: bool = False
-    """The optional `locked` token defines if the rectangle cannot be edited"""
+    """The optional ``locked`` token defines if the rectangle cannot be edited"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the rectangle object"""
+    """The ``tstamp`` token defines the unique identifier of the rectangle object"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpRect:
         """Convert the given S-Expresstion into a FpRect object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fp_rect ...)`
+            - exp (list): Part of parsed S-Expression ``(fp_rect ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fp_rect
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fp_rect
 
         Returns:
-            FpRect: Object of the class initialized with the given S-Expression
+            - FpRect: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -281,11 +283,11 @@ class FpRect():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -324,7 +326,7 @@ class FpTextBox():
     renderCache: Optional[str] = None
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpTextBox:
         """Not implemented yet"""
         raise NotImplementedError("FpTextBoxes are not yet handled! Please report this bug along with the file being parsed.")
 
@@ -334,49 +336,49 @@ class FpTextBox():
 
 @dataclass
 class FpCircle():
-    """The `fp_circle ` token defines a graphic circle in a footprint definition.
+    """The ``fp_circle `` token defines a graphic circle in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_circle
     """
 
     center: Position = field(default_factory=lambda: Position())
-    """The `center` token defines the coordinates of the center of the circle"""
+    """The ``center`` token defines the coordinates of the center of the circle"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the low right corner of the circle"""
+    """The ``end`` token defines the coordinates of the low right corner of the circle"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the circle resides on"""
+    """The ``layer`` token defines the canonical layer the circle resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the circle. (prior to version 7)"""
+    """The ``width`` token defines the line width of the circle. (prior to version 7)"""
 
     stroke: Optional[Stroke] = None   # Used for KiCad >= 7
-    """The `stroke` describes the line width and style of the circle. (version 7)"""
+    """The ``stroke`` describes the line width and style of the circle. (version 7)"""
 
     fill: Optional[str] = None
-    """The optional `fill` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the circle is not filled."""
+    """The optional ``fill`` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the circle is not filled."""
 
     locked: bool = False
-    """The optional `locked` token defines if the circle cannot be edited"""
+    """The optional ``locked`` token defines if the circle cannot be edited"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the circle object"""
+    """The ``tstamp`` token defines the unique identifier of the circle object"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpCircle:
         """Convert the given S-Expresstion into a FpCircle object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fp_circle ...)`
+            - exp (list): Part of parsed S-Expression ``(fp_circle ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fp_circle
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fp_circle
 
         Returns:
-            FpCircle: Object of the class initialized with the given S-Expression
+            - FpCircle: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -408,11 +410,11 @@ class FpCircle():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -432,49 +434,49 @@ class FpCircle():
 
 @dataclass
 class FpArc():
-    """The `fp_arc` token defines a graphic arc in a footprint definition.
+    """The ``fp_arc`` token defines a graphic arc in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_arc
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token defines the coordinates of the start position of the arc radius"""
+    """The ``start`` token defines the coordinates of the start position of the arc radius"""
 
     mid: Position = field(default_factory=lambda: Position())
-    """The `mid` token defines the coordinates of the midpoint along the arc"""
+    """The ``mid`` token defines the coordinates of the midpoint along the arc"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the end position of the arc radius"""
+    """The ``end`` token defines the coordinates of the end position of the arc radius"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the arc resides on"""
+    """The ``layer`` token defines the canonical layer the arc resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the arc. (prior to version 7)"""
+    """The ``width`` token defines the line width of the arc. (prior to version 7)"""
 
     stroke: Optional[Stroke] = None   # Used for KiCad >= 7
-    """The `stroke` describes the line width and style of the arc. (version 7)"""
+    """The ``stroke`` describes the line width and style of the arc. (version 7)"""
 
     locked: bool = False
-    """The optional `locked` token defines if the arc cannot be edited"""
+    """The optional ``locked`` token defines if the arc cannot be edited"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the arc object"""
+    """The ``tstamp`` token defines the unique identifier of the arc object"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpArc:
         """Convert the given S-Expresstion into a FpArc object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fp_arc ...)`
+            - exp (list): Part of parsed S-Expression ``(fp_arc ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fp_arc
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fp_arc
 
         Returns:
-            FpArc: Object of the class initialized with the given S-Expression
+            - FpArc: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -506,11 +508,11 @@ class FpArc():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -529,47 +531,47 @@ class FpArc():
 
 @dataclass
 class FpPoly():
-    """The `fp_poly` token defines a graphic polygon in a footprint definition.
+    """The ``fp_poly`` token defines a graphic polygon in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_polygon
     """
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the polygon resides on"""
+    """The ``layer`` token defines the canonical layer the polygon resides on"""
 
     coordinates: List[Position] = field(default_factory=list)
-    """The `coordinates` define the list of X/Y coordinates of the polygon outline"""
+    """The ``coordinates`` define the list of X/Y coordinates of the polygon outline"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the polygon. (prior to version 7)"""
+    """The ``width`` token defines the line width of the polygon. (prior to version 7)"""
 
     stroke: Optional[Stroke] = None   # Used for KiCad >= 7
-    """The `stroke` describes the line width and style of the polygon. (version 7)"""
+    """The ``stroke`` describes the line width and style of the polygon. (version 7)"""
 
     fill: Optional[str] = None
-    """The optional `fill` toke defines how the polygon is filled. Valid fill types are solid
+    """The optional ``fill`` toke defines how the polygon is filled. Valid fill types are solid
     and none. If not defined, the rectangle is not filled."""
 
     locked: bool = False
-    """The optional `locked` token defines if the polygon cannot be edited"""
+    """The optional ``locked`` token defines if the polygon cannot be edited"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the polygon object"""
+    """The ``tstamp`` token defines the unique identifier of the polygon object"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpPoly:
         """Convert the given S-Expresstion into a FpPoly object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fp_poly ...)`
+            - exp (list): Part of parsed S-Expression ``(fp_poly ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fp_poly
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fp_poly
 
         Returns:
-            FpPoly: Object of the class initialized with the given S-Expression
+            - FpPoly: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -601,14 +603,14 @@ class FpPoly():
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
         """Generate the S-Expression representing this object. When no coordinates are set
-           in the polygon, the resulting S-Expression will be left empty.
+        in the polygon, the resulting S-Expression will be left empty.
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -634,43 +636,43 @@ class FpPoly():
 
 @dataclass
 class FpCurve():
-    """The `fp_curve` token defines a graphic Cubic Bezier curve in a footprint definition.
+    """The ``fp_curve`` token defines a graphic Cubic Bezier curve in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_curve
     """
 
     coordinates: List[Position] = field(default_factory=list)
-    """The `coordinates` define the list of X/Y coordinates of the curve outline"""
+    """The ``coordinates`` define the list of X/Y coordinates of the curve outline"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the curve resides on"""
+    """The ``layer`` token defines the canonical layer the curve resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the curve. (prior to version 7)"""
+    """The ``width`` token defines the line width of the curve. (prior to version 7)"""
 
     stroke: Optional[Stroke] = None   # Used for KiCad >= 7
-    """The `stroke` describes the line width and style of the curve. (version 7)"""
+    """The ``stroke`` describes the line width and style of the curve. (version 7)"""
 
     locked: bool = False
-    """The optional `locked` token defines if the curve cannot be edited"""
+    """The optional ``locked`` token defines if the curve cannot be edited"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the curve object"""
+    """The ``tstamp`` token defines the unique identifier of the curve object"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> FpCurve:
         """Convert the given S-Expresstion into a FpCurve object
 
         Args:
-            exp (list): Part of parsed S-Expression `(fp_curve ...)`
+            - exp (list): Part of parsed S-Expression ``(fp_curve ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not fp_curve
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not fp_curve
 
         Returns:
-            FpCurve: Object of the class initialized with the given S-Expression
+            - FpCurve: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -700,14 +702,14 @@ class FpCurve():
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
         """Generate the S-Expression representing this object. When no coordinates are set
-           in the curve, the resulting S-Expression will be left empty.
+        in the curve, the resulting S-Expression will be left empty.
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

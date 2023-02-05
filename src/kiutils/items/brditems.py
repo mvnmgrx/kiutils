@@ -750,9 +750,6 @@ class Segment():
     tstamp: str = ""
     """The ``tstamp`` token defines the unique identifier of the line object"""
 
-    locked: bool = False
-    """The ``locked`` token defines if the object may be moved or not"""
-
     @classmethod
     def from_sexpr(cls, exp: list) -> Segment:
         """Convert the given S-Expresstion into a Segment object

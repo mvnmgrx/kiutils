@@ -527,9 +527,6 @@ class LocalLabel():
     uuid: str = ""
     """The ``uuid`` defines the universally unique identifier"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
-
     @classmethod
     def from_sexpr(cls, exp: list) -> LocalLabel:
         """Convert the given S-Expresstion into a LocalLabel object

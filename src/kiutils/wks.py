@@ -26,27 +26,27 @@ from kiutils.misc.config import KIUTILS_CREATE_NEW_GENERATOR_STR, KIUTILS_CREATE
 
 @dataclass
 class WksFontSize():
-    """The `WksFontSize` token defines the size of a font in a worksheet"""
+    """The ``WksFontSize`` token defines the size of a font in a worksheet"""
 
     width: float = 1.0
-    """The `width` token defines the width of the font. Defaults to 1."""
+    """The ``width`` token defines the width of the font. Defaults to 1."""
 
     height: float = 1.0
-    """The `height` token defines the height of the font. Defaults to 1."""
+    """The ``height`` token defines the height of the font. Defaults to 1."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> WksFontSize:
         """Convert the given S-Expresstion into a WksFontSize object
 
         Args:
-            exp (list): Part of parsed S-Expression `(size ...)`
+            - exp (list): Part of parsed S-Expression ``(size ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list or its length is not equal to 3
-            Exception: When the first item of the list is not `size`
+            - Exception: When given parameter's type is not a list or its length is not equal to 3
+            - Exception: When the first item of the list is not ``size``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - WksFontSize: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) != 3:
             raise Exception("Expression does not have the correct type")
@@ -63,11 +63,11 @@ class WksFontSize():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -75,33 +75,33 @@ class WksFontSize():
 
 @dataclass
 class WksFont():
-    """The `WksFont` token defines how a text is drawn"""
+    """The ``WksFont`` token defines how a text is drawn"""
 
     linewidth: Optional[float] = None
-    """The optional `linewidth` token defines the width of the font's lines"""
+    """The optional ``linewidth`` token defines the width of the font's lines"""
 
     size: Optional[WksFontSize] = None
-    """The optional `size` token defines the size of the font"""
+    """The optional ``size`` token defines the size of the font"""
 
     bold: bool = False
-    """The `bold` token defines if the font is drawn bold. Defaults to False."""
+    """The ``bold`` token defines if the font is drawn bold. Defaults to False."""
 
     italic: bool = False
-    """The `italic` token defines if the font is drawn italic. Defaults to False."""
+    """The ``italic`` token defines if the font is drawn italic. Defaults to False."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> WksFont:
         """Convert the given S-Expresstion into a WksFont object
 
         Args:
-            exp (list): Part of parsed S-Expression `(font ...)`
+            - exp (list): Part of parsed S-Expression ``(font ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `font`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``font``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - WksFont: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -123,12 +123,12 @@ class WksFont():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object. Will return an empty string, if all members of this
-            class are set to None.
+            - str: S-Expression of this object. Will return an empty string, if all members of this
+                   class are set to ``None``.
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -145,32 +145,32 @@ class WksFont():
 
 @dataclass
 class WksPosition():
-    """The `WksPosition` token defines the positional coordinates and rotation of an worksheet
+    """The ``WksPosition`` token defines the positional coordinates and rotation of an worksheet
     object.
     """
 
     X: float = 0.0
-    """The `X` attribute defines the horizontal position of the object. Defaults to 0."""
+    """The ``X`` attribute defines the horizontal position of the object. Defaults to 0."""
 
     Y: float = 0.0
-    """The `Y` attribute defines the vertical position of the object. Defaults to 0."""
+    """The ``Y`` attribute defines the vertical position of the object. Defaults to 0."""
 
     corner: Optional[str] = None
-    """The optional `corner` token is used to define the initial corner for repeating"""
+    """The optional ``corner`` token is used to define the initial corner for repeating"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> WksPosition:
         """Convert the given S-Expresstion into a WksPosition object
 
         Args:
-            exp (list): Part of parsed S-Expression `(xxx ...)`
+            - exp (list): Part of parsed S-Expression ``(xxx ...)``
 
         Raises:
-            Exception: When the given expression is not of type `list` or the list is less than
-            3 items long
+            - Exception: When the given expression is not of type ``list`` or the list is less than
+                         3 items long
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - WksPosition: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) < 3:
             raise Exception("Expression does not have the correct type")
@@ -186,61 +186,60 @@ class WksPosition():
         return object
 
     def to_sexpr():
-        """This object does not have a direct S-Expression representation.
-        """
+        """This object does not have a direct S-Expression representation."""
         raise NotImplementedError("This object does not have a direct S-Expression representation")
 
 @dataclass
 class Line():
-    """The `Line` token defines how a line is drawn in a work sheet
+    """The ``Line`` token defines how a line is drawn in a work sheet
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_graphical_line"""
 
     name: str = ""
-    """The `name` token defines the name of the line object"""
+    """The ``name`` token defines the name of the line object"""
 
     start: WksPosition = field(default_factory=lambda: WksPosition())
-    """The `start` token defines the start position of the line"""
+    """The ``start`` token defines the start position of the line"""
 
     end: WksPosition = field(default_factory=lambda: WksPosition())
-    """The `end` token defines the end position of the line"""
+    """The ``end`` token defines the end position of the line"""
 
     option: Optional[str] = None
-    """The optional `option` token defines on which pages the line shall be shown. Possible values
+    """The optional ``option`` token defines on which pages the line shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
     lineWidth: Optional[float] = None
-    """The optional `lineWidth` token attribute defines the width of the rectangle lines"""
+    """The optional ``lineWidth`` token attribute defines the width of the rectangle lines"""
 
     repeat: Optional[int] = None
-    """The optional `repeat` token defines the count for repeated incremental lines"""
+    """The optional ``repeat`` token defines the count for repeated incremental lines"""
 
     incrx: Optional[float] = None
-    """The optional `incrx` token defines the repeat distance on the X axis"""
+    """The optional ``incrx`` token defines the repeat distance on the X axis"""
 
     incry: Optional[float] = None
-    """The optional `incry` token defines the repeat distance on the Y axis"""
+    """The optional ``incry`` token defines the repeat distance on the Y axis"""
 
     comment: Optional[str] = None
-    """The optional `comment` token is a comment for the line object"""
+    """The optional ``comment`` token is a comment for the line object"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
-        """Convert the given S-Expresstion into a TbText object
+    def from_sexpr(cls, exp: list) -> Line:
+        """Convert the given S-Expresstion into a Line object
 
         Args:
-            exp (list): Part of parsed S-Expression `(line ...)`
+            - exp (list): Part of parsed S-Expression ``(line ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `tbtext`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``tbtext``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Line: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -265,11 +264,11 @@ class Line():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -291,55 +290,55 @@ class Line():
 
 @dataclass
 class Rect():
-    """The `Rect` token defines how a rectangle is drawn in a work sheet
+    """The ``Rect`` token defines how a rectangle is drawn in a work sheet
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_graphical_rectangle"""
 
     name: str = ""
-    """The `name` token defines the name of the rectangle object"""
+    """The ``name`` token defines the name of the rectangle object"""
 
     start: WksPosition = field(default_factory=lambda: WksPosition())
-    """The `start` token defines the start position of the rectangle"""
+    """The ``start`` token defines the start position of the rectangle"""
 
     end: WksPosition = field(default_factory=lambda: WksPosition())
-    """The `end` token defines the end position of the rectangle"""
+    """The ``end`` token defines the end position of the rectangle"""
 
     option: Optional[str] = None
-    """The optional `option` token defines on which pages the rectangle shall be shown. Possible values
+    """The optional ``option`` token defines on which pages the rectangle shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
     lineWidth: Optional[float] = None
-    """The optional `lineWidth` token attribute defines the width of the rectangle lines"""
+    """The optional ``lineWidth`` token attribute defines the width of the rectangle lines"""
 
     repeat: Optional[int] = None
-    """The optional `repeat` token defines the count for repeated incremental rectangles"""
+    """The optional ``repeat`` token defines the count for repeated incremental rectangles"""
 
     incrx: Optional[float] = None
-    """The optional `incrx` token defines the repeat distance on the X axis"""
+    """The optional ``incrx`` token defines the repeat distance on the X axis"""
 
     incry: Optional[float] = None
-    """The optional `incry` token defines the repeat distance on the Y axis"""
+    """The optional ``incry`` token defines the repeat distance on the Y axis"""
 
     comment: Optional[str] = None
-    """The optional `comment` token is a comment for the rectangle object"""
+    """The optional ``comment`` token is a comment for the rectangle object"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
-        """Convert the given S-Expresstion into a TbText object
+    def from_sexpr(cls, exp: list) -> Rect:
+        """Convert the given S-Expresstion into a Rect object
 
         Args:
-            exp (list): Part of parsed S-Expression `(rect ...)`
+            - exp (list): Part of parsed S-Expression ``(rect ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `rect`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``rect``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Rect: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -364,11 +363,11 @@ class Rect():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -390,56 +389,56 @@ class Rect():
 
 @dataclass
 class Polygon():
-    """The `Polygon` token defines a graphical polygon in a worksheet
+    """The ``Polygon`` token defines a graphical polygon in a worksheet
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_graphical_polygon
     """
 
     name: str = ""
-    """The `name` token defines the name of the polygon"""
+    """The ``name`` token defines the name of the polygon"""
 
     position: WksPosition = field(default_factory=lambda: WksPosition())
-    """The `position` token defines the coordinates of the polygon"""
+    """The ``position`` token defines the coordinates of the polygon"""
 
     option: Optional[str] = None
-    """The optional `option` token defines on which pages the polygon shall be shown. Possible values
+    """The optional ``option`` token defines on which pages the polygon shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
     rotate: Optional[float] = None
-    """The optional `rotate` token defines the rotation angle of the polygon object"""
+    """The optional ``rotate`` token defines the rotation angle of the polygon object"""
 
     coordinates: List[WksPosition] = field(default_factory=list)
-    """The `coordinates` token defines a list of X/Y coordinates that forms the polygon"""
+    """The ``coordinates`` token defines a list of X/Y coordinates that forms the polygon"""
 
     repeat: Optional[int] = None
-    """The optional `repeat` token defines the count for repeated incremental polygons"""
+    """The optional ``repeat`` token defines the count for repeated incremental polygons"""
 
     incrx: Optional[float] = None
-    """The optional `incrx` token defines the repeat distance on the X axis"""
+    """The optional ``incrx`` token defines the repeat distance on the X axis"""
 
     incry: Optional[float] = None
-    """The optional `incry` token defines the repeat distance on the Y axis"""
+    """The optional ``incry`` token defines the repeat distance on the Y axis"""
 
     comment: Optional[str] = None
-    """The optional `comment` token is a comment for the polygon object"""
+    """The optional ``comment`` token is a comment for the polygon object"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Polygon:
         """Convert the given S-Expresstion into a Polygon object
 
         Args:
-            exp (list): Part of parsed S-Expression `(polygon ...)`
+            - exp (list): Part of parsed S-Expression ``(polygon ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `polygon`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``polygon``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Polygon: Object of the class initialized with the given S-Expression
         """
         # TODO: Polygons seem to not be available in the WKS editor GUI. Are those still a feature?
         raise NotImplementedError("Polygons are not yet handled! Please report this bug along with the file being parsed.")
@@ -448,54 +447,54 @@ class Polygon():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         raise NotImplementedError("Polygons are not yet handled! Please report this bug along with the file being parsed.")
 
 @dataclass
 class Bitmap():
-    """The `Polygon` token defines on or more embedded images
+    """The ``Polygon`` token defines on or more embedded images
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_image
     """
 
     name: str = ""
-    """The `name` token defines the name of the bitmap"""
+    """The ``name`` token defines the name of the bitmap"""
 
     position: WksPosition = field(default_factory=lambda: WksPosition())
-    """The `position` token defines the coordinates of the bitmap"""
+    """The ``position`` token defines the coordinates of the bitmap"""
 
     option: Optional[str] = None
-    """The optional `option` token defines on which pages the image shall be shown. Possible values
+    """The optional ``option`` token defines on which pages the image shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
     scale: float = 1.0
-    """The `scale` token defines the scale of the bitmap object"""
+    """The ``scale`` token defines the scale of the bitmap object"""
 
     repeat: Optional[int] = None
-    """The optional `repeat` token defines the count for repeated incremental bitmaps"""
+    """The optional ``repeat`` token defines the count for repeated incremental bitmaps"""
 
     incrx: Optional[float] = None
-    """The optional `incrx` token defines the repeat distance on the X axis"""
+    """The optional ``incrx`` token defines the repeat distance on the X axis"""
 
     incry: Optional[float] = None
-    """The optional `incry` token defines the repeat distance on the Y axis"""
+    """The optional ``incry`` token defines the repeat distance on the Y axis"""
 
     # Comments seem to be buggy as of 25.06.2022 ..
     comment: Optional[str] = None
-    """The optional `comment` token is a comment for the bitmap object"""
+    """The optional ``comment`` token is a comment for the bitmap object"""
 
     # TODO: Parse this nonesense as a binary struct to make it more useful
     pngdata: List[str] = field(default_factory=list)
-    """The `pngdata` token defines a list of strings representing up to 32 bytes per entry of
+    """The ``pngdata`` token defines a list of strings representing up to 32 bytes per entry of
     the image being saved.
 
     Format:
@@ -506,18 +505,18 @@ class Bitmap():
     """
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Bitmap:
         """Convert the given S-Expresstion into a Bitmap object
 
         Args:
-            exp (list): Part of parsed S-Expression `(bitmap ...)`
+            - exp (list): Part of parsed S-Expression ``(bitmap ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `bitmap`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``bitmap``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Bitmap: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -546,11 +545,11 @@ class Bitmap():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -577,71 +576,71 @@ class Bitmap():
 
 @dataclass
 class TbText():
-    """The `TbText` token define text used in the title block of a work sheet
+    """The ``TbText`` token define text used in the title block of a work sheet
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_title_block_text"""
 
     text: str = ""
-    """The `text` token defines the text itself"""
+    """The ``text`` token defines the text itself"""
 
     name: str = ""
-    """The `name` token defines the name of the text object"""
+    """The ``name`` token defines the name of the text object"""
 
     position: WksPosition = field(default_factory=lambda: WksPosition())
-    """The `position` token defines the position of the text"""
+    """The ``position`` token defines the position of the text"""
 
     option: Optional[str] = None
-    """The optional `option` token defines on which pages the text shall be shown. Possible values
+    """The optional ``option`` token defines on which pages the text shall be shown. Possible values
     are:
     - None: Item will be shown on all pages
     - `notonpage1`: On all pages except page 1
     - `page1only`: Only visible on page 1"""
 
     rotate: Optional[float] = None
-    """The optional `rotate` token defines the rotation of the text in degrees"""
+    """The optional ``rotate`` token defines the rotation of the text in degrees"""
 
     font: WksFont = field(default_factory=lambda: WksFont())
-    """The `font` token define how the text is drawn"""
+    """The ``font`` token define how the text is drawn"""
 
     justify: Optional[Justify] = None
-    """The optional `justify` token defines the justification of the text"""
+    """The optional ``justify`` token defines the justification of the text"""
 
     maxlen: Optional[float] = None
-    """The optional `maxlen` token defines the maximum length of the text"""
+    """The optional ``maxlen`` token defines the maximum length of the text"""
 
     maxheight: Optional[float] = None
-    """The optional `maxheight` token defines the maximum height of the text"""
+    """The optional ``maxheight`` token defines the maximum height of the text"""
 
     repeat: Optional[int] = None
-    """The optional `repeat` token defines the count for repeated incremental text"""
+    """The optional ``repeat`` token defines the count for repeated incremental text"""
 
     incrx: Optional[float] = None
-    """The optional `incrx` token defines the repeat distance on the X axis"""
+    """The optional ``incrx`` token defines the repeat distance on the X axis"""
 
     incry: Optional[float] = None
-    """The optional `incry` token defines the repeat distance on the Y axis"""
+    """The optional ``incry`` token defines the repeat distance on the Y axis"""
 
     incrlabel: Optional[int] = None
-    """The optional `incrlabel` token defines the amount of characters that are moved with every
+    """The optional ``incrlabel`` token defines the amount of characters that are moved with every
     repeated incremental text"""
 
     comment: Optional[str] = None
-    """The optional `comment` token is a comment for the text object"""
+    """The optional ``comment`` token is a comment for the text object"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> TbText:
         """Convert the given S-Expresstion into a TbText object
 
         Args:
-            exp (list): Part of parsed S-Expression `(tbtext ...)`
+            - exp (list): Part of parsed S-Expression ``(tbtext ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `tbtext`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``tbtext``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - TbText: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -671,11 +670,11 @@ class TbText():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -703,27 +702,27 @@ class TbText():
 
 @dataclass
 class TextSize():
-    """The `TextSize` define the default width and height of text"""
+    """The ``TextSize`` define the default width and height of text"""
 
     width: float = 1.5
-    """The `width` token defines the default width of a text element. Defaults to 1,5."""
+    """The ``width`` token defines the default width of a text element. Defaults to 1,5."""
 
     height: float = 1.5
-    """The `height` token defines the default height of a text element. Defaults to 1,5."""
+    """The ``height`` token defines the default height of a text element. Defaults to 1,5."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> TextSize:
         """Convert the given S-Expresstion into a TextSize object
 
         Args:
-            exp (list): Part of parsed S-Expression `(textsize ...)`
+            - exp (list): Part of parsed S-Expression ``(textsize ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list or when its not exactly 3 long
-            Exception: When the first item of the list is not `textsize`
+            - Exception: When given parameter's type is not a list or when its not exactly 3 long
+            - Exception: When the first item of the list is not ``textsize``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - TextSize: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) != 3:
             raise Exception("Expression does not have the correct type")
@@ -740,11 +739,11 @@ class TextSize():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -752,46 +751,46 @@ class TextSize():
 
 @dataclass
 class Setup():
-    """The `setup` token defines the configuration information for the work sheet
+    """The ``setup`` token defines the configuration information for the work sheet
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_set_up_section"""
 
     textSize: TextSize = field(default_factory=lambda: TextSize())
-    """The `textSize` token defines the default width and height of text"""
+    """The ``textSize`` token defines the default width and height of text"""
 
     lineWidth: float = 0.15
-    """The `lineWidth` token attribute defines the default width of lines. Defaults to 0,15."""
+    """The ``lineWidth`` token attribute defines the default width of lines. Defaults to 0,15."""
 
     textLineWidth: float = 0.15
-    """The `textLineWidth` token attribute define the default width of the lines used to draw 
+    """The ``textLineWidth`` token attribute define the default width of the lines used to draw 
     text. Defaults to 0,15."""
 
     leftMargin: float = 10.0
-    """The `leftMargin` token defines the distance from the left edge of the page"""
+    """The ``leftMargin`` token defines the distance from the left edge of the page"""
 
     rightMargin: float = 10.0
-    """The `rightMargin` token defines the distance from the right edge of the page"""
+    """The ``rightMargin`` token defines the distance from the right edge of the page"""
 
     topMargin: float = 10.0
-    """The `topMargin` token defines the distance from the top edge of the page"""
+    """The ``topMargin`` token defines the distance from the top edge of the page"""
 
     bottomMargin: float = 10.0
-    """The `bottomMargin` token defines the distance from the bottom edge of the page"""
+    """The ``bottomMargin`` token defines the distance from the bottom edge of the page"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Setup:
         """Convert the given S-Expresstion into a Setup object
 
         Args:
-            exp (list): Part of parsed S-Expression `(setup ...)`
+            - exp (list): Part of parsed S-Expression ``(setup ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `setup`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``setup``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Setup: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -814,11 +813,11 @@ class Setup():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -834,40 +833,40 @@ class Setup():
 
 @dataclass
 class WorkSheet():
-    """The `WorkSheet` token defines a KiCad worksheet (.kicad_wks file)
+    """The ``WorkSheet`` token defines a KiCad worksheet (.kicad_wks file)
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/#_header_section"""
 
     version: str = KIUTILS_CREATE_NEW_VERSION_STR
-    """The `version` token defines the work sheet version using the YYYYMMDD date format"""
+    """The ``version`` token defines the work sheet version using the YYYYMMDD date format"""
 
     generator: str = KIUTILS_CREATE_NEW_GENERATOR_STR
-    """The `generator` token defines the program used to write the file"""
+    """The ``generator`` token defines the program used to write the file"""
 
     setup: Setup = field(default_factory=lambda: Setup())
-    """The `setup` token defines the configuration information for the work sheet"""
+    """The ``setup`` token defines the configuration information for the work sheet"""
 
     drawingObjects: List = field(default_factory=list)
-    """The `drawingObjects` token can contain zero or more texts, lines, rectangles, polys or images"""
+    """The ``drawingObjects`` token can contain zero or more texts, lines, rectangles, polys or images"""
 
     filePath: Optional[str] = None
-    """The `filePath` token defines the path-like string to the board file. Automatically set when
-    `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
+    """The ``filePath`` token defines the path-like string to the board file. Automatically set when
+    ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
-        """Convert the given S-Expresstion into a Worksheet object
+    def from_sexpr(cls, exp: list) -> WorkSheet:
+        """Convert the given S-Expresstion into a WorkSheet object
 
         Args:
-            exp (list): Part of parsed S-Expression `(kicad_wks ...)`
+            - exp (list): Part of parsed S-Expression ``(kicad_wks ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not `kicad_wks`
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not ``kicad_wks``
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - WorkSheet: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -888,18 +887,18 @@ class WorkSheet():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str):
+    def from_file(cls, filepath: str) -> WorkSheet:
         """Load a worksheet directly from a KiCad worksheet file (`.kicad_wks`) and sets the
-        `self.filePath` attribute to the given file path.
+        ``self.filePath`` attribute to the given file path.
 
         Args:
-            filepath (str): Path or path-like object that points to the file
+            - filepath (str): Path or path-like object that points to the file
 
         Raises:
-            Exception: If the given path is not a file
+            - Exception: If the given path is not a file
 
         Returns:
-            Footprint: Object of the WorkSheet class initialized with the given KiCad worksheet
+            - WorkSheet: Object of the WorkSheet class initialized with the given KiCad worksheet
         """
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
@@ -925,11 +924,11 @@ class WorkSheet():
         """Save the object to a file in S-Expression format
 
         Args:
-            filepath (str, optional): Path-like string to the file. Defaults to None. If not set, the
-            attribute `self.filePath` will be used instead
+            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+                                        the attribute ``self.filePath`` will be used instead.
 
         Raises:
-            Exception: If no file path is given via the argument or via `self.filePath`
+            - Exception: If no file path is given via the argument or via `self.filePath`
         """
         if filepath is None:
             if self.filePath is None:
@@ -943,11 +942,11 @@ class WorkSheet():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

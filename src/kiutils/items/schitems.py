@@ -13,6 +13,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
@@ -21,39 +23,39 @@ from kiutils.utils.strings import dequote
 
 @dataclass
 class Junction():
-    """The `junction` token defines a junction in the schematic
+    """The ``junction`` token defines a junction in the schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_junction_section
     """
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates of the junction"""
+    """The ``position`` defines the X and Y coordinates of the junction"""
 
     diameter: float = 0
-    """The `diameter` token attribute defines the DIAMETER of the junction. A diameter of 0
+    """The ``diameter`` token attribute defines the DIAMETER of the junction. A diameter of 0
        is the default diameter in the system settings."""
 
     color: ColorRGBA = field(default_factory=lambda: ColorRGBA())
-    """The `color` token attributes define the Red, Green, Blue, and Alpha transparency of
+    """The ``color`` token attributes define the Red, Green, Blue, and Alpha transparency of
        the junction. If all four attributes are 0, the default junction color is used."""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Junction:
         """Convert the given S-Expresstion into a Junction object
 
         Args:
-            exp (list): Part of parsed S-Expression `(junction ...)`
+            - exp (list): Part of parsed S-Expression ``(junction ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not junction
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not junction
 
         Returns:
-            Junction: Object of the class initialized with the given S-Expression
+            - Junction: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -73,11 +75,11 @@ class Junction():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -89,31 +91,31 @@ class Junction():
 
 @dataclass
 class NoConnect():
-    """The `no_connect` token defines a unused pin connection in the schematic
+    """The ``no_connect`` token defines a unused pin connection in the schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_no_connect_section
     """
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates of the no connect"""
+    """The ``position`` defines the X and Y coordinates of the no connect"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> NoConnect:
         """Convert the given S-Expresstion into a NoConnect object
 
         Args:
-            exp (list): Part of parsed S-Expression `(no_connect ...)`
+            - exp (list): Part of parsed S-Expression ``(no_connect ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not no_connect
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not no_connect
 
         Returns:
-            NoConnect: Object of the class initialized with the given S-Expression
+            - NoConnect: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -131,11 +133,11 @@ class NoConnect():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -144,38 +146,38 @@ class NoConnect():
 
 @dataclass
 class BusEntry():
-    """The `bus_entry` token defines a bus entry in the schematic
+    """The ``bus_entry`` token defines a bus entry in the schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_bus_entry_section
     """
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates of the bus entry"""
+    """The ``position`` defines the X and Y coordinates of the bus entry"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     size: Position = field(default_factory=lambda: Position())         # Re-using Position class here
-    """The `size` token attributes define the X and Y distance of the end point from
+    """The ``size`` token attributes define the X and Y distance of the end point from
        the position of the bus entry"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the bus entry is drawn"""
+    """The ``stroke`` defines how the bus entry is drawn"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> BusEntry:
         """Convert the given S-Expresstion into a BusEntry object
 
         Args:
-            exp (list): Part of parsed S-Expression `(bus_entry ...)`
+            - exp (list): Part of parsed S-Expression ``(bus_entry ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not bus_entry
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not bus_entry
 
         Returns:
-            BusEntry: Object of the class initialized with the given S-Expression
+            - BusEntry: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -195,11 +197,11 @@ class BusEntry():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -212,38 +214,38 @@ class BusEntry():
 
 @dataclass
 class Connection():
-    """The `wire` and `bus` tokens define wires and buses in the schematic
+    """The ``wire`` and ``bus`` tokens define wires and buses in the schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_wire_and_bus_section
     """
 
     type: str = "wire"
-    """The `type` token defines wether the connection is a `bus` or a `wire`"""
+    """The ``type`` token defines wether the connection is a ``bus`` or a ``wire``"""
 
     points: List[Position] = field(default_factory=list)
-    """The `points` token defines the list of X and Y coordinates of start and end points
+    """The ``points`` token defines the list of X and Y coordinates of start and end points
        of the wire or bus"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the connection is drawn"""
+    """The ``stroke`` defines how the connection is drawn"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Connection:
         """Convert the given S-Expresstion into a Connection object
 
         Args:
-            exp (list): Part of parsed S-Expression `(wire ...)` or `(bus ...)`
+            - exp (list): Part of parsed S-Expression ```(wire ...)``` or ``(bus ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not wire or bus
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not wire or bus
 
         Returns:
-            Connection: Object of the class initialized with the given S-Expression
+            - Connection: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -266,11 +268,11 @@ class Connection():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -287,38 +289,38 @@ class Connection():
 
 @dataclass
 class Image():
-    """The `image` token defines on or more embedded images in a schematic
+    """The ``image`` token defines on or more embedded images in a schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_image_section
     """
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates of the image"""
+    """The ``position`` defines the X and Y coordinates of the image"""
 
     scale: Optional[float] = None
-    """The optional `scale` token attribute defines the scale factor (size) of the image"""
+    """The optional ``scale`` token attribute defines the scale factor (size) of the image"""
 
     data: List[str] = field(default_factory=list)
-    """The `data` token attribute defines the image data in the portable network graphics
+    """The ``data`` token attribute defines the image data in the portable network graphics
        format (PNG) encoded with MIME type base64 as a list of strings"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Image:
         """Convert the given S-Expresstion into a Image object
 
         Args:
-            exp (list): Part of parsed S-Expression `(image ...)`
+            - exp (list): Part of parsed S-Expression ``(image ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not image
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not image
 
         Returns:
-            Image: Object of the class initialized with the given S-Expression
+            - Image: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -341,11 +343,11 @@ class Image():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -363,35 +365,35 @@ class Image():
 
 @dataclass
 class PolyLine():
-    """The `polyline` token defines one or more lines that may or may not represent a polygon
+    """The ``polyline`` token defines one or more lines that may or may not represent a polygon
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_graphical_line_section
     """
 
     points: List[Position] = field(default_factory=list)
-    """The `points` token defines the list of X/Y coordinates of to draw line(s)
+    """The ``points`` token defines the list of X/Y coordinates of to draw line(s)
        between. A minimum of two points is required."""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the graphical line is drawn"""
+    """The ``stroke`` defines how the graphical line is drawn"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> PolyLine:
         """Convert the given S-Expresstion into a PolyLine object
 
         Args:
-            exp (list): Part of parsed S-Expression `(polyline ...)`
+            - exp (list): Part of parsed S-Expression ``(polyline ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not polyline
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not polyline
 
         Returns:
-            PolyLine: Object of the class initialized with the given S-Expression
+            - PolyLine: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -412,11 +414,11 @@ class PolyLine():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -433,37 +435,37 @@ class PolyLine():
 
 @dataclass
 class Text():
-    """The `text` token defines graphical text in a schematic
+    """The ``text`` token defines graphical text in a schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_graphical_text_section
     """
 
     text: str = ""
-    """The `text` token defines the text string"""
+    """The ``text`` token defines the text string"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` token defines the X and Y coordinates and rotation angle of the text"""
+    """The ``position`` token defines the X and Y coordinates and rotation angle of the text"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` token defines how the text is drawn"""
+    """The ``effects`` token defines how the text is drawn"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Text:
         """Convert the given S-Expresstion into a Text object
 
         Args:
-            exp (list): Part of parsed S-Expression `(text ...)`
+            - exp (list): Part of parsed S-Expression ``(text ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not text
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not text
 
         Returns:
-            Text: Object of the class initialized with the given S-Expression
+            - Text: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -483,11 +485,11 @@ class Text():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -509,40 +511,40 @@ class Text():
 
 @dataclass
 class LocalLabel():
-    """The `label` token defines an wire or bus label name in a schematic
+    """The ``label`` token defines an wire or bus label name in a schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#local_label_section
     """
 
     text: str = ""
-    """The `text` token defines the text in the label"""
+    """The ``text`` token defines the text in the label"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` token defines the X and Y coordinates and rotation angle of the label"""
+    """The ``position`` token defines the X and Y coordinates and rotation angle of the label"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` token defines how the label is drawn"""
+    """The ``effects`` token defines how the label is drawn"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> LocalLabel:
         """Convert the given S-Expresstion into a LocalLabel object
 
         Args:
-            exp (list): Part of parsed S-Expression `(label ...)`
+            - exp (list): Part of parsed S-Expression ``(label ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not label
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not label
 
         Returns:
-            LocalLabel: Object of the class initialized with the given S-Expression
+            - LocalLabel: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -562,11 +564,11 @@ class LocalLabel():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -581,49 +583,49 @@ class LocalLabel():
 
 @dataclass
 class GlobalLabel():
-    """The `global_label` token defines a label name that is visible across all schematics in a design
+    """The ``global_label`` token defines a label name that is visible across all schematics in a design
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_global_label_section
     """
 
     text: str = ""
-    """The `text` token defines the text in the label"""
+    """The ``text`` token defines the text in the label"""
 
     shape: str = "input"
-    """The `shape` token defines the way the global label is drawn. Possible values are:
-       `input`, `output`, `bidirectional`, `tri_state`, `passive`."""
+    """The ``shape`` token defines the way the global label is drawn. Possible values are:
+       ``input``, ``output``, ``bidirectional``, ``tri_state``, ``passive``."""
 
     fieldsAutoplaced: bool = False
-    """The `fields_autoplaced` is a flag that indicates that any PROPERTIES associated
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
        with the global label have been place automatically"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` token defines the X and Y coordinates and rotation angle of the label"""
+    """The ``position`` token defines the X and Y coordinates and rotation angle of the label"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` token defines how the label is drawn"""
+    """The ``effects`` token defines how the label is drawn"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     properties: List[Property] = field(default_factory=list)
-    """	The `properties` token defines a list of properties of the global label. Currently, the
+    """	The ``properties`` token defines a list of properties of the global label. Currently, the
     only supported property is the inter-sheet reference"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> GlobalLabel:
         """Convert the given S-Expresstion into a GlobalLabel object
 
         Args:
-            exp (list): Part of parsed S-Expression `(global_label ...)`
+            - exp (list): Part of parsed S-Expression ``(global_label ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not global_label
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not global_label
 
         Returns:
-            GlobalLabel: Object of the class initialized with the given S-Expression
+            - GlobalLabel: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -646,11 +648,11 @@ class GlobalLabel():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -668,7 +670,7 @@ class GlobalLabel():
 
 @dataclass
 class HierarchicalLabel():
-    """The `hierarchical_label` token defines a label that are used by hierarchical sheets to
+    """The ``hierarchical_label`` token defines a label that are used by hierarchical sheets to
     define connections between sheet in hierarchical designs
 
     Documentation:
@@ -676,34 +678,34 @@ class HierarchicalLabel():
     """
 
     text: str = ""
-    """The `text` token defines the text in the label"""
+    """The ``text`` token defines the text in the label"""
 
     shape: str = "input"
-    """The `shape` token defines the way the global label is drawn. Possible values are:
-       `input`, `output`, `bidirectional`, `tri_state`, `passive`."""
+    """The ``shape`` token defines the way the global label is drawn. Possible values are:
+       ``input``, ``output``, ``bidirectional``, ``tri_state``, ``passive``."""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` token defines the X and Y coordinates and rotation angle of the label"""
+    """The ``position`` token defines the X and Y coordinates and rotation angle of the label"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` token defines how the label is drawn"""
+    """The ``effects`` token defines how the label is drawn"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> HierarchicalLabel:
         """Convert the given S-Expresstion into a HierarchicalLabel object
 
         Args:
-            exp (list): Part of parsed S-Expression `(hierarchical_label ...)`
+            - exp (list): Part of parsed S-Expression ``(hierarchical_label ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not hierarchical_label
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not hierarchical_label
 
         Returns:
-            HierarchicalLabel: Object of the class initialized with the given S-Expression
+            - HierarchicalLabel: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -724,11 +726,11 @@ class HierarchicalLabel():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -743,7 +745,7 @@ class HierarchicalLabel():
 
 @dataclass
 class SchematicSymbol():
-    """The `symbol` token in the symbol section of the schematic defines an instance of a symbol
+    """The ``symbol`` token in the symbol section of the schematic defines an instance of a symbol
        from the library symbol section of the schematic
 
     Documentation:
@@ -751,18 +753,18 @@ class SchematicSymbol():
     """
 
     libraryIdentifier: str = ""
-    """The `libraryIdentifier` defines which symbol in the library symbol section of the schematic
+    """The ``libraryIdentifier`` defines which symbol in the library symbol section of the schematic
        that this schematic symbol references"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates and angle of rotation of the symbol"""
+    """The ``position`` defines the X and Y coordinates and angle of rotation of the symbol"""
 
     unit: Optional[int] = None
-    """The optional `unit` token attribute defines which unit in the symbol library definition that the
+    """The optional ``unit`` token attribute defines which unit in the symbol library definition that the
        schematic symbol represents"""
 
     inBom: bool = False
-    """The `in_bom` token attribute determines whether the schematic symbol appears in any bill
+    """The ``in_bom`` token attribute determines whether the schematic symbol appears in any bill
        of materials output"""
 
     onBoard: bool = False
@@ -770,37 +772,37 @@ class SchematicSymbol():
        exported to the board via the netlist"""
 
     fieldsAutoplaced: bool = False
-    """The `fields_autoplaced` is a flag that indicates that any PROPERTIES associated
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
        with the global label have been place automatically"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     properties: List[Property] = field(default_factory=list)
-    """The `properties` section defines a list of symbol properties of the schematic symbol"""
+    """The ``properties`` section defines a list of symbol properties of the schematic symbol"""
 
     pins: Dict[str, str] = field(default_factory=dict)
-    """The `pins` token defines a dictionary with pin numbers in form of strings as keys and
+    """The ``pins`` token defines a dictionary with pin numbers in form of strings as keys and
        uuid's as values"""
 
     mirror: Optional[str] = None
-    """The `mirror` token defines if the symbol is mirrored in the schematic. Accepted values: `x` or `y`.
+    """The ``mirror`` token defines if the symbol is mirrored in the schematic. Accepted values: ``x`` or ``y``.
     When mirroring around the x and y axis at the same time use some additional rotation to get the correct
     orientation of the symbol."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> SchematicSymbol:
         """Convert the given S-Expresstion into a SchematicSymbol object
 
         Args:
-            exp (list): Part of parsed S-Expression `(symbol ...)`
+            - exp (list): Part of parsed S-Expression ``(symbol ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not symbol
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not symbol
 
         Returns:
-            SchematicSymbol: Object of the class initialized with the given S-Expression
+            - SchematicSymbol: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -826,11 +828,11 @@ class SchematicSymbol():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -854,7 +856,7 @@ class SchematicSymbol():
 
 @dataclass
 class HierarchicalPin():
-    """The `pin` token in a sheet object defines an electrical connection between the sheet in a
+    """The ``pin`` token in a sheet object defines an electrical connection between the sheet in a
        schematic with the hierarchical label defined in the associated schematic file
 
     Documentation:
@@ -862,7 +864,7 @@ class HierarchicalPin():
     """
 
     name: str = ""
-    """	The `name` attribute defines the name of the sheet pin. It must have an identically named
+    """	The ``name`` attribute defines the name of the sheet pin. It must have an identically named
         hierarchical label in the associated schematic file."""
 
     connectionType: str = "input"
@@ -870,27 +872,27 @@ class HierarchicalPin():
        sheet pin"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates and angle of rotation of the pin"""
+    """The ``position`` defines the X and Y coordinates and angle of rotation of the pin"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` section defines how the pin name text is drawn"""
+    """The ``effects`` section defines how the pin name text is drawn"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> HierarchicalPin:
         """Convert the given S-Expresstion into a HierarchicalPin object
 
         Args:
-            exp (list): Part of parsed S-Expression `(pin ...)`
+            - exp (list): Part of parsed S-Expression ``(pin ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not pin
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not pin
 
         Returns:
-            HierarchicalPin: Object of the class initialized with the given S-Expression
+            - HierarchicalPin: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -911,11 +913,11 @@ class HierarchicalPin():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 4.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -930,59 +932,59 @@ class HierarchicalPin():
 
 @dataclass
 class HierarchicalSheet():
-    """The `sheet` token defines a hierarchical sheet of the schematic
+    """The ``sheet`` token defines a hierarchical sheet of the schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_hierarchical_sheet_section
     """
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates and angle of rotation of the sheet in the schematic"""
+    """The ``position`` defines the X and Y coordinates and angle of rotation of the sheet in the schematic"""
 
     width: float = 0
-    """The `width` token defines the width of the sheet"""
+    """The ``width`` token defines the width of the sheet"""
 
     height: float = 0
-    """The `height` token defines the height of the sheet"""
+    """The ``height`` token defines the height of the sheet"""
 
     fieldsAutoplaced: bool = False
-    """The `fields_autoplaced` is a flag that indicates that any PROPERTIES associated
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
        with the global label have been place automatically"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
-    """The `stroke` defines how the sheet outline is drawn"""
+    """The ``stroke`` defines how the sheet outline is drawn"""
 
     fill: ColorRGBA = field(default_factory=lambda: ColorRGBA())
     """The fill defines the color how the sheet is filled"""
 
     uuid: str = ""
-    """The `uuid` defines the universally unique identifier"""
+    """The ``uuid`` defines the universally unique identifier"""
 
     sheetName: Property = field(default_factory=lambda: Property(key="Sheet name"))
-    """The `sheetName` is a property that defines the name of the sheet. The property's
+    """The ``sheetName`` is a property that defines the name of the sheet. The property's
        key should therefore be set to `Sheet name`"""
 
     fileName: Property = field(default_factory=lambda: Property(key="Sheet file"))
-    """The `fileName` is a property that defines the file name of the sheet. The property's
+    """The ``fileName`` is a property that defines the file name of the sheet. The property's
        key should therefore be set to `Sheet file`"""
 
     pins: List[HierarchicalPin] = field(default_factory=list)
-    """The `pins` section is a list of hierarchical pins that map a hierarchical label defined in
+    """The ``pins`` section is a list of hierarchical pins that map a hierarchical label defined in
        the associated schematic file"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> HierarchicalSheet:
         """Convert the given S-Expresstion into a HierarchicalSheet object
 
         Args:
-            exp (list): Part of parsed S-Expression `(sheet ...)`
+            - exp (list): Part of parsed S-Expression ``(sheet ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not sheet
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not sheet
 
         Returns:
-            HierarchicalSheet: Object of the class initialized with the given S-Expression
+            - HierarchicalSheet: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -1012,11 +1014,11 @@ class HierarchicalSheet():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -1044,25 +1046,25 @@ class HierarchicalSheetInstance():
     """
 
     instancePath: str = "/"
-    """The `instancePath` attribute is the path to the sheet instance"""
+    """The ``instancePath`` attribute is the path to the sheet instance"""
 
     page: str = "1"
-    """The `page` token defines the page number of the schematic represented by the sheet
+    """The ``page`` token defines the page number of the schematic represented by the sheet
        instance information. Page numbers can be any valid string."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> HierarchicalSheetInstance:
         """Convert the given S-Expresstion into a HierarchicalSheetInstance object
 
         Args:
-            exp (list): Part of parsed S-Expression `(path ...)`
+            - exp (list): Part of parsed S-Expression ``(path ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not path
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not path
 
         Returns:
-            HierarchicalSheetInstance: Object of the class initialized with the given S-Expression
+            - HierarchicalSheetInstance: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -1080,11 +1082,11 @@ class HierarchicalSheetInstance():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 4.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -1093,17 +1095,17 @@ class HierarchicalSheetInstance():
 
 @dataclass
 class SymbolInstance():
-    """The `symbol_instance` token defines the per symbol information for the entire schematic
+    """The ``symbol_instance`` token defines the per symbol information for the entire schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_symbol_instance_section
     """
 
     path: str = "/"
-    """The `path` attribute is the path to the sheet instance"""
+    """The ``path`` attribute is the path to the sheet instance"""
 
     reference: str = ""
-    """The `reference` token attribute is a string that defines the reference designator for
+    """The ``reference`` token attribute is a string that defines the reference designator for
        the symbol instance"""
 
     unit: int = 0
@@ -1114,21 +1116,21 @@ class SymbolInstance():
     """The value token attribute is a string that defines the value field for the symbol instance"""
 
     footprint: str = ""
-    """The `footprint` token attribute is a string that defines the LIBRARY_IDENTIFIER for footprint associated with the symbol instance"""
+    """The ``footprint`` token attribute is a string that defines the LIBRARY_IDENTIFIER for footprint associated with the symbol instance"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> SymbolInstance:
         """Convert the given S-Expresstion into a SymbolInstance object
 
         Args:
-            exp (list): Part of parsed S-Expression `(path ...)`
+            - exp (list): Part of parsed S-Expression ``(path ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not path
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not path
 
         Returns:
-            SymbolInstance: Object of the class initialized with the given S-Expression
+            - SymbolInstance: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -1149,11 +1151,11 @@ class SymbolInstance():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 4.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

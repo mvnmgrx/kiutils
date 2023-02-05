@@ -185,7 +185,7 @@ class WksPosition():
 
         return object
 
-    def to_sexpr():
+    def to_sexpr(self) -> str:
         """This object does not have a direct S-Expression representation."""
         raise NotImplementedError("This object does not have a direct S-Expression representation")
 

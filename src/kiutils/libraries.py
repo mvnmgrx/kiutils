@@ -10,6 +10,8 @@ Major changes:
     19.02.2022 - created
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 from os import path
@@ -19,37 +21,37 @@ from kiutils.utils import sexpr
 
 @dataclass
 class Library():
-    """The `library` token defines either a symbol library or a footprint library in
-    a library table file (`fp_lib_table` or `sym_lib_table`)"""
+    """The ``library`` token defines either a symbol library or a footprint library in
+    a library table file (``fp_lib_table`` or ``sym_lib_table``)"""
 
     name: str = ""
-    """The `name` token defines the name of the library as displayed in the project"""
+    """The ``name`` token defines the name of the library as displayed in the project"""
 
     type: str = "KiCad"
-    """The `type` token defines the type of the library, usually `KiCad`"""
+    """The ``type`` token defines the type of the library, usually ``KiCad``"""
 
     uri: str = ""
-    """The `uri` token defines the path to the library files"""
+    """The ``uri`` token defines the path to the library files"""
 
     options: str = ""
-    """The `options` token (..) TBD"""
+    """The ``options`` token (..) TBD"""
 
     description: str = ""
-    """The `description` token (..) TBD"""
+    """The ``description`` token (..) TBD"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Library:
         """Convert the given S-Expresstion into a Library object
 
         Args:
-            exp (list): Part of parsed S-Expression `(lib ...)`
+            - exp (list): Part of parsed S-Expression ``(lib ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not lib
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not lib
 
         Returns:
-            Library: Object of the class initialized with the given S-Expression
+            - Library: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -70,11 +72,11 @@ class Library():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -83,32 +85,32 @@ class Library():
 
 @dataclass
 class LibTable():
-    """The `libtable` token defines the `fp_lib_table` or `sym_lib_table` file of KiCad"""
+    """The ``libtable`` token defines the ``fp_lib_table`` or ``sym_lib_table`` file of KiCad"""
 
     type: str = 'sym_lib_table'
-    """The `type` token defines the type of the library table. Valid values are `fp_lib_table` or
-    `sym_lib_table`."""
+    """The ``type`` token defines the type of the library table. Valid values are ``fp_lib_table`` or
+    ``sym_lib_table``."""
 
     libs: List[Library] = field(default_factory=list)
-    """The `libs` token holds a list of librarys that this library table object holds"""
+    """The ``libs`` token holds a list of librarys that this library table object holds"""
 
     filePath: Optional[str] = None
-    """The `filePath` token defines the path-like string to the library file. Automatically set when
-    `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
+    """The ``filePath`` token defines the path-like string to the library file. Automatically set when
+    ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
-        """Convert the given S-Expresstion into a Library object
+    def from_sexpr(cls, exp: list) -> LibTable:
+        """Convert the given S-Expresstion into a LibTable object
 
         Args:
-            exp (list): Part of parsed S-Expression `(sym_lib_table ...)` or `(fp_lib_table ...)`
+            - exp (list): Part of parsed S-Expression ```(sym_lib_table ...)``` or `(fp_lib_table ...)`
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not lib
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not lib
 
         Returns:
-            Library: Object of the class initialized with the given S-Expression
+            - LibTable: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -123,18 +125,18 @@ class LibTable():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str):
+    def from_file(cls, filepath: str) -> LibTable:
         """Load a library table directly from a KiCad library table file and sets the
-        `self.filePath` attribute to the given file path.
+        ``self.filePath`` attribute to the given file path.
 
         Args:
-            filepath (str): Path or path-like object that points to the file
+            - filepath (str): Path or path-like object that points to the file
 
         Raises:
-            Exception: If the given path is not a file
+            - Exception: If the given path is not a file
 
         Returns:
-            Footprint: Object of the Footprint class initialized with the given KiCad footprint
+            - LibTable: Object of the LibTable class initialized with the given KiCad library table
         """
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
@@ -149,10 +151,10 @@ class LibTable():
         """Creates a new empty library table with its attributes set as KiCad would create it
 
         Args:
-            type (str): ``fp_lib_table`` or ``sym_lib_table``. Defaults to the latter.
+            - type (str): ```fp_lib_table``` or ```sym_lib_table```. Defaults to the latter.
 
         Returns:
-            Library: Empty library table of given type
+            - Library: Empty library table of given type
         """
         return cls(type=type)
 
@@ -160,11 +162,11 @@ class LibTable():
         """Save the object to a file in S-Expression format
 
         Args:
-            filepath (str, optional): Path-like string to the file. Defaults to None. If not set, the
-            attribute `self.filePath` will be used instead
+            -  filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+                                         the attribute ``self.filePath`` will be used instead.
 
         Raises:
-            Exception: If no file path is given via the argument or via `self.filePath`
+            - Exception: If no file path is given via the argument or via `self.filePath`
         """
         if filepath is None:
             if self.filePath is None:
@@ -178,11 +180,11 @@ class LibTable():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

@@ -195,6 +195,13 @@ class Symbol():
     "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers are only valid it top
     level symbols and unit identifiers are on valid as unit symbols inside a parent symbol."""
 
+    libraryNickname: Optional[str] = None
+    entryName: Optional[str] = None
+    """ The schematic symbol library and printed circuit board footprint library file formats use library identifiers.
+    Library identifiers are defined as a quoted string using the "LIBRARY_NICKNAME:ENTRY_NAME" format where
+    "LIBRARY_NICKNAME" is the nickname of the library in the symbol or footprint library table and
+    "ENTRY_NAME" is the name of the symbol or footprint in the library separated by a colon. """
+
     extends: Optional[str] = None
     """The optional `extends` token attribute defines the "LIBRARY_ID" of another symbol inside the
     current library from which to derive a new symbol. Extended symbols currently can only have
@@ -244,10 +251,13 @@ class Symbol():
     units: List = field(default_factory=list)
     """The `units` can be one or more child symbol tokens embedded in a parent symbol"""
 
-    unitId: int = None
+    parentSymbolName: Optional[str] = None
+    """The parent symbol name each unit belongs to"""
+
+    unitId: Optional[int] = None
     """Unit identifier: an integer that identifies which unit the symbol represents"""
 
-    styleId: int = None
+    styleId: Optional[int] = None
     """Style identifier: indicates which body style the unit represents"""
 
     @classmethod
@@ -272,6 +282,13 @@ class Symbol():
 
         object = cls()
         object.id = exp[1]
+        
+        library_identifier = re.match(r"^(\w+):(.+)$", object.id)
+        if library_identifier:
+            # Split library indentifier into library nickname and entry name
+            object.libraryNickname = library_identifier.group(1)
+            object.entryName = library_identifier.group(2)
+
         for item in exp[2:]:
             if item[0] == 'extends': object.extends = item[1]
             if item[0] == 'pin_numbers':
@@ -287,17 +304,19 @@ class Symbol():
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
             if item[0] == 'power': object.isPower = True
-
+            
             if item[0] == 'symbol':
-                # Get symbol unit 
+                # Create a new subsymbol and parse its unit and style identifiers
                 symbol_unit = Symbol().from_sexpr(item)
-                # Parse symbol unit identifiers
-                symbol_id_parse = re.match(r"^" + re.escape(object.id) + r"_(\d+?)_(\d+?)$", symbol_unit.id)
+                if object.entryName:
+                    symbol_unit.parentSymbolName = object.entryName
+                else:
+                    symbol_unit.parentSymbolName = object.id
+                symbol_id_parse = re.match(r"^" + re.escape(symbol_unit.parentSymbolName) + r"_(\d+?)_(\d+?)$", symbol_unit.id)
                 if not symbol_id_parse:
-                    raise Exception(f'Failed to parse symbol unit identifiers due to invalid format: {symbol_unit.id}')
+                    raise Exception(f'Failed to parse symbol unit identifiers due to invalid format: {symbol_unit.id=}')
                 symbol_unit.unitId = int(symbol_id_parse.group(1))
                 symbol_unit.styleId = int(symbol_id_parse.group(2))
-                # Add symbol unit to s-expr
                 object.units.append(symbol_unit)
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
 
@@ -344,7 +363,7 @@ class Symbol():
         )
         return symbol
 
-    def to_sexpr(self, indent: int = 2, newline: bool = True, parent_id = None) -> str:
+    def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
         """Generate the S-Expression representing this object
 
         Args:
@@ -373,8 +392,8 @@ class Symbol():
         
         # Construct Symbol Unit Identifier
         symbol_id = dequote(self.id)
-        if parent_id and self.unitId and self.styleId:
-            symbol_id = f'{dequote(parent_id)}_{str(self.unitId)}_{str(self.styleId)}'
+        if self.parentSymbolName and self.unitId and self.styleId:
+            symbol_id = f'{self.parentSymbolName}_{self.unitId}_{self.styleId}'
         
         expression =  f'{indents}(symbol "{symbol_id}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
         for item in self.properties:
@@ -384,7 +403,7 @@ class Symbol():
         for item in self.pins:
             expression += item.to_sexpr(indent+2)
         for item in self.units:
-            expression += item.to_sexpr(indent+2, parent_id=self.id)
+            expression += item.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 

@@ -190,10 +190,26 @@ class Symbol():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbols
     """
 
-    id: str = ""
     """Each symbol must have a unique "LIBRARY_ID" for each top level symbol in the library or a unique
     "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers are only valid it top
     level symbols and unit identifiers are on valid as unit symbols inside a parent symbol."""
+    @property
+    def id(self):
+        return self._id
+    @id.setter
+    def id(self, symbol_id):
+        self._id = symbol_id
+        library_identifier = re.match(r"^(\w+):(.+)$", self._id)
+        if library_identifier:
+            # Split library indentifier into library nickname and entry name
+            self.libraryNickname = library_identifier.group(1)
+            self.entryName = library_identifier.group(2)
+        
+        for unit in self.units:
+            if self.entryName:
+                unit.parentSymbolName = self.entryName
+            else:
+                unit.parentSymbolName = self._id
 
     libraryNickname: Optional[str] = None
     entryName: Optional[str] = None
@@ -282,13 +298,6 @@ class Symbol():
 
         object = cls()
         object.id = exp[1]
-        
-        library_identifier = re.match(r"^(\w+):(.+)$", object.id)
-        if library_identifier:
-            # Split library indentifier into library nickname and entry name
-            object.libraryNickname = library_identifier.group(1)
-            object.entryName = library_identifier.group(2)
-
         for item in exp[2:]:
             if item[0] == 'extends': object.extends = item[1]
             if item[0] == 'pin_numbers':

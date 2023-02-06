@@ -35,7 +35,3 @@ class Tests_DesignRules(unittest.TestCase):
         self.testData.pathToTestFile = path.join(DESIGNRULE_BASE, 'test_createNewDesignRules')
         dru = DesignRules.create_new()
         self.assertTrue(to_file_and_compare(dru, self.testData))
-
-    def tearDown(self) -> None:
-        cleanup_after_test(self.testData)
-        return super().tearDown()

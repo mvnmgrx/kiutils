@@ -96,7 +96,3 @@ class Tests_Footprint(unittest.TestCase):
         footprint.tedit = '6328916A'
 
         self.assertTrue(to_file_and_compare(footprint, self.testData))
-
-    def tearDown(self) -> None:
-        cleanup_after_test(self.testData)
-        return super().tearDown()

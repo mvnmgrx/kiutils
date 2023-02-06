@@ -13,7 +13,3 @@ License identifier:
 #     def setUp(self) -> None:
 #         prepare_test(self)
 #         return super().setUp()
-
-#     def tearDown(self) -> None:
-#         cleanup_after_test(self.testData)
-#         return super().tearDown()

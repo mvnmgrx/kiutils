@@ -76,7 +76,3 @@ class Tests_Board(unittest.TestCase):
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_createEmptyBoard')
         board = Board().create_new()
         self.assertTrue(to_file_and_compare(board, self.testData))
-
-    def tearDown(self) -> None:
-        cleanup_after_test(self.testData)
-        return super().tearDown()

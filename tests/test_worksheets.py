@@ -35,7 +35,3 @@ class Tests_WorkSheets(unittest.TestCase):
         self.testData.pathToTestFile = path.join(WORKSHEET_BASE, 'test_createNewWorksheet')
         wks = WorkSheet.create_new()
         self.assertTrue(to_file_and_compare(wks, self.testData))
-
-    def tearDown(self) -> None:
-        cleanup_after_test(self.testData)
-        return super().tearDown()

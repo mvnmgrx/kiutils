@@ -31,12 +31,17 @@ def to_file_and_compare(object, test_data: TestData) -> bool:
     """Write the object to a file using its `to_file()` method and comparing the output with
     the given expected output supplied by a file with `.expected` suffix
 
+    Cleans up the test files afterwards, leaving only failing test outputs behind. Test output
+    is furthermore saved to `test_data.expectedOutput` and `test_data.producedOutput` to be
+    displayed in the HTML test report.
+
     Args:
-        object: KiUtils object with a `to_file()` method
-        test_data (TestData): Test data object of the currently running test (contains path to test file)
+        - object: KiUtils object with a `to_file()` method
+        - test_data (TestData): Test data object of the currently running test (contains path to 
+                                test file)
 
     Returns:
-        bool: True, if both the output of `to_file()` and the given expected output are the same
+        - bool: True, if both the output of `to_file()` and the given expected output are the same
     """
     # Create S-Expression from object
     if test_data.pathToTestFile is None:
@@ -51,6 +56,7 @@ def to_file_and_compare(object, test_data: TestData) -> bool:
         compare_file = f'{test_data.pathToTestFile}.expected'
 
     test_data.wasSuccessful = filecmp.cmp(f'{test_data.pathToTestFile}.testoutput', compare_file)
+    cleanup_after_test(test_data)
     return test_data.wasSuccessful
 
 def load_contents(file: str) -> str:

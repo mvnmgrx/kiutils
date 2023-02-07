@@ -199,17 +199,25 @@ class Symbol():
     @id.setter
     def id(self, symbol_id):
         self._id = symbol_id
+
         library_identifier = re.match(r"^(\w+):(.+)$", self._id)
         if library_identifier:
             # Split library indentifier into library nickname and entry name
             self.libraryNickname = library_identifier.group(1)
             self.entryName = library_identifier.group(2)
+        if self.entryName:
+            symbol_name = self.entryName
+        else:
+            symbol_name = self._id
+
+        # Update Value property
+        for property in self.properties:
+            if property.key == 'Value':
+                property.value = symbol_name
         
+        # Update units parent symbol name
         for unit in self.units:
-            if self.entryName:
-                unit.parentSymbolName = self.entryName
-            else:
-                unit.parentSymbolName = self._id
+            unit.parentSymbolName = symbol_name
 
     libraryNickname: Optional[str] = None
     entryName: Optional[str] = None
@@ -401,7 +409,7 @@ class Symbol():
         
         # Construct Symbol Unit Identifier
         symbol_id = dequote(self.id)
-        if self.parentSymbolName and self.unitId and self.styleId:
+        if self.parentSymbolName is not None and self.unitId is not None and self.styleId is not None:
             symbol_id = f'{self.parentSymbolName}_{self.unitId}_{self.styleId}'
         
         expression =  f'{indents}(symbol "{symbol_id}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'

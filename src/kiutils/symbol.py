@@ -229,14 +229,9 @@ class Symbol():
                 else:
                     self.entryName = symbol_id
 
-        # Update Value property
-        for property in self.properties:
-            if property.key == 'Value':
-                property.value = self.entryName
-        
         # Update units id to match parent id
         for unit in self.units:
-            unit.id = self.id
+            unit.entryName = self.entryName
 
     libraryNickname: Optional[str] = None
     entryName: str = None

@@ -3,7 +3,7 @@
     (property "Reference" "U" (id 0) (at 0 16.51 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "AD1853JRS" (id 1) (at 0 13.97 0)
+    (property "Value" "AD1853" (id 1) (at 0 13.97 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm" (id 2) (at 0.635 -5.715 0)

@@ -195,29 +195,48 @@ class Symbol():
     level symbols and unit identifiers are on valid as unit symbols inside a parent symbol."""
     @property
     def id(self):
-        return self._id
+        unit_style_ids = f"_{self.unitId}_{self.styleId}" if (self.unitId is not None and self.styleId is not None) else ""
+        if self.libraryNickname:
+            return f'{self.libraryNickname}:{self.entryName}{unit_style_ids}'
+        else:
+            return f'{self.entryName}{unit_style_ids}'
+
     @id.setter
     def id(self, symbol_id):
-        self._id = symbol_id
-
-        library_identifier = re.match(r"^(\w+):(.+)$", self._id)
-        if library_identifier:
-            # Split library indentifier into library nickname and entry name
-            self.libraryNickname = library_identifier.group(1)
-            self.entryName = library_identifier.group(2)
-        if self.entryName:
-            symbol_name = self.entryName
+        # Split library id into nickname, entry name, unit id and style id (if any)
+        parse_symbol_id = re.match(r"^(.+?):(.+?)_(\d+?)_(\d+?)$", symbol_id)
+        if parse_symbol_id:
+            self.libraryNickname = parse_symbol_id.group(1)
+            self.entryName = parse_symbol_id.group(2)
+            self.unitId = int(parse_symbol_id.group(3))
+            self.styleId = int(parse_symbol_id.group(4))
         else:
-            symbol_name = self._id
+            parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
+            if parse_symbol_id:
+                self.libraryNickname = parse_symbol_id.group(1)
+                entryName_t = parse_symbol_id.group(2)
+            else:
+                entryName_t = symbol_id
+
+            parse_symbol_id = re.match(r"^(.+?)_(\d+?)_(\d+?)$", entryName_t)
+            if parse_symbol_id:
+                self.entryName = parse_symbol_id.group(1)
+                self.unitId = int(parse_symbol_id.group(2))
+                self.styleId = int(parse_symbol_id.group(3))
+            else:
+                if self.libraryNickname:
+                    self.entryName = entryName_t
+                else:
+                    self.entryName = symbol_id
 
         # Update Value property
         for property in self.properties:
             if property.key == 'Value':
-                property.value = symbol_name
+                property.value = self.entryName
         
-        # Update units parent symbol name
+        # Update units id to match parent id
         for unit in self.units:
-            unit.parentSymbolName = symbol_name
+            unit.id = self.id
 
     libraryNickname: Optional[str] = None
     entryName: Optional[str] = None
@@ -275,9 +294,6 @@ class Symbol():
     units: List = field(default_factory=list)
     """The `units` can be one or more child symbol tokens embedded in a parent symbol"""
 
-    parentSymbolName: Optional[str] = None
-    """The parent symbol name each unit belongs to"""
-
     unitId: Optional[int] = None
     """Unit identifier: an integer that identifies which unit the symbol represents"""
 
@@ -321,22 +337,8 @@ class Symbol():
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
             if item[0] == 'power': object.isPower = True
-            
-            if item[0] == 'symbol':
-                # Create a new subsymbol and parse its unit and style identifiers
-                symbol_unit = Symbol().from_sexpr(item)
-                if object.entryName:
-                    symbol_unit.parentSymbolName = object.entryName
-                else:
-                    symbol_unit.parentSymbolName = object.id
-                symbol_id_parse = re.match(r"^" + re.escape(symbol_unit.parentSymbolName) + r"_(\d+?)_(\d+?)$", symbol_unit.id)
-                if not symbol_id_parse:
-                    raise Exception(f'Failed to parse symbol unit identifiers due to invalid format: {symbol_unit.id=}')
-                symbol_unit.unitId = int(symbol_id_parse.group(1))
-                symbol_unit.styleId = int(symbol_id_parse.group(2))
-                object.units.append(symbol_unit)
+            if item[0] == 'symbol': object.units.append(Symbol().from_sexpr(item))
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
-
             if item[0] == 'pin': object.pins.append(SymbolPin().from_sexpr(item))
             if item[0] == 'arc': object.graphicItems.append(SyArc().from_sexpr(item))
             if item[0] == 'circle': object.graphicItems.append(SyCircle().from_sexpr(item))
@@ -407,12 +409,7 @@ class Symbol():
         pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
         extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
         
-        # Construct Symbol Unit Identifier
-        symbol_id = dequote(self.id)
-        if self.parentSymbolName is not None and self.unitId is not None and self.styleId is not None:
-            symbol_id = f'{self.parentSymbolName}_{self.unitId}_{self.styleId}'
-        
-        expression =  f'{indents}(symbol "{symbol_id}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
+        expression =  f'{indents}(symbol "{dequote(self.id)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
         for item in self.properties:
             expression += item.to_sexpr(indent+2)
         for item in self.graphicItems:

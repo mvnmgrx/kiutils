@@ -72,7 +72,7 @@ class Tests_Symbol(unittest.TestCase):
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_createNewSymbolInEmptyLibrary')
         
-        # Create an empty symbol libraray
+        # Create an empty symbol library
         symbolLib = SymbolLib(
             version = KIUTILS_CREATE_NEW_VERSION_STR,
             generator = 'kiutils'
@@ -88,3 +88,21 @@ class Tests_Symbol(unittest.TestCase):
 
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
+    def test_renameSymbol(self):
+        """Rename symbol inside library and verify all units are also renamed"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_renameSymbol')
+        symbolLib = SymbolLib().from_file(path.join(SYMBOL_BASE, 'test_symbolDemorganSyItems'))
+        symbol = symbolLib.symbols[0]
+        symbol.id = 'AD1853JRS'
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))
+
+    def test_mergeLibraries(self):
+        """Merge two symbol libraries together"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_mergedLibraries')
+        symbolLib1 = SymbolLib().from_file(path.join(SYMBOL_BASE, 'test_analogDACs'))
+        symbolLib2 = SymbolLib().from_file(path.join(SYMBOL_BASE, 'test_symbolDemorganSyItems'))
+        for symbol in symbolLib2.symbols:
+            symbolLib1.symbols.insert(0, symbol)
+        self.assertTrue(to_file_and_compare(symbolLib1, self.testData))

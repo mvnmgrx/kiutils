@@ -239,7 +239,7 @@ class Symbol():
             unit.id = self.id
 
     libraryNickname: Optional[str] = None
-    entryName: Optional[str] = None
+    entryName: str = None
     """ The schematic symbol library and printed circuit board footprint library file formats use library identifiers.
     Library identifiers are defined as a quoted string using the "LIBRARY_NICKNAME:ENTRY_NAME" format where
     "LIBRARY_NICKNAME" is the nickname of the library in the symbol or footprint library table and
@@ -337,8 +337,10 @@ class Symbol():
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
             if item[0] == 'power': object.isPower = True
+
             if item[0] == 'symbol': object.units.append(Symbol().from_sexpr(item))
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
+
             if item[0] == 'pin': object.pins.append(SymbolPin().from_sexpr(item))
             if item[0] == 'arc': object.graphicItems.append(SyArc().from_sexpr(item))
             if item[0] == 'circle': object.graphicItems.append(SyCircle().from_sexpr(item))
@@ -408,7 +410,7 @@ class Symbol():
         pinnames = f' (pin_names{pnoffset}{pnhide})' if self.pinNames else ''
         pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
         extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
-        
+
         expression =  f'{indents}(symbol "{dequote(self.id)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
         for item in self.properties:
             expression += item.to_sexpr(indent+2)

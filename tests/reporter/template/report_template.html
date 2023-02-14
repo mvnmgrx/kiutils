@@ -86,7 +86,7 @@
                                 {%- if test_case.stdout %}<p>{{ test_case.stdout }}</p>{% endif %}
                                 {%- if test_case.err %}<p style="color:maroon;">{{ test_case.err[0].__name__ }}: {{ test_case.err[1] }}</p>{% endif %}
                                 {%- if test_case.err %}<p style="color:maroon;"><pre><code>{{ test_case.test_exception_info }}</code></pre></p>{% endif %}
-                                <h5 style="color:maroon;">Expected (right) vs produced (left):</h5>
+                                <h5 style="color:maroon;">Expected (left) vs produced (right):</h5>
                                 <div class="output-diff">{{ test_case.diff|safe }}</div>
                             </td>
                         </tr>

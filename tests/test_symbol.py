@@ -88,13 +88,13 @@ class Tests_Symbol(unittest.TestCase):
 
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
-    def test_renameSymbol(self):
-        """Rename symbol inside library and verify all units are also renamed"""
-        self.testData.compareToTestFile = True
-        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_renameSymbol')
-        symbolLib = SymbolLib().from_file(path.join(SYMBOL_BASE, 'test_symbolDemorganSyItems'))
+    def test_renameParentIdUsingIdToken(self):
+        """Rename symbol inside library using the id token setter and verify all units are renamed
+        correctly as well as the ``Value`` property stayed the same."""
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_renameParentIdUsingIdToken')
+        symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
         symbol = symbolLib.symbols[0]
-        symbol.id = 'AD1853JRS'
+        symbol.id = 'ExampleLibrary:AD2023'
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
     def test_mergeLibraries(self):

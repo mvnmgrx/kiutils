@@ -149,12 +149,14 @@ class Schematic():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str) -> Schematic:
+    def from_file(cls, filepath: str, encoding: Optional[str] = None) -> Schematic:
         """Load a schematic directly from a KiCad schematic file (`.kicad_sch`) and sets the
         ``self.filePath`` attribute to the given file path.
 
         Args:
             - filepath (str): Path or path-like object that points to the file
+            - encoding (str, optional): Encoding of the input file. Defaults to None (platform 
+                                        dependent encoding).
 
         Raises:
             - Exception: If the given path is not a file
@@ -165,7 +167,7 @@ class Schematic():
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
 
-        with open(filepath, 'r') as infile:
+        with open(filepath, 'r', encoding=encoding) as infile:
             item = cls.from_sexpr(sexpr.parse_sexp(infile.read()))
             item.filePath = filepath
             return item
@@ -184,12 +186,14 @@ class Schematic():
         schematic.sheetInstances.append(HierarchicalSheetInstance(instancePath='/', page='1'))
         return schematic
 
-    def to_file(self, filepath = None):
+    def to_file(self, filepath = None, encoding: Optional[str] = None):
         """Save the object to a file in S-Expression format
 
         Args:
             - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
                                         the attribute ``self.filePath`` will be used instead.
+            - encoding (str, optional): Encoding of the output file. Defaults to None (platform 
+                                        dependent encoding).
 
         Raises:
             - Exception: If no file path is given via the argument or via `self.filePath`
@@ -199,7 +203,7 @@ class Schematic():
                 raise Exception("File path not set")
             filepath = self.filePath
 
-        with open(filepath, 'w') as outfile:
+        with open(filepath, 'w', encoding=encoding) as outfile:
             outfile.write(self.to_sexpr())
 
     def to_sexpr(self, indent=0, newline=True) -> str:

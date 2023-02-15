@@ -887,12 +887,14 @@ class WorkSheet():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str) -> WorkSheet:
+    def from_file(cls, filepath: str, encoding: Optional[str] = None) -> WorkSheet:
         """Load a worksheet directly from a KiCad worksheet file (`.kicad_wks`) and sets the
         ``self.filePath`` attribute to the given file path.
 
         Args:
             - filepath (str): Path or path-like object that points to the file
+            - encoding (str, optional): Encoding of the input file. Defaults to None (platform 
+                                        dependent encoding).
 
         Raises:
             - Exception: If the given path is not a file
@@ -903,7 +905,7 @@ class WorkSheet():
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
 
-        with open(filepath, 'r') as infile:
+        with open(filepath, 'r', encoding=encoding) as infile:
             item = cls.from_sexpr(sexpr.parse_sexp(infile.read()))
             item.filePath = filepath
             return item

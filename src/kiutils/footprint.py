@@ -31,41 +31,41 @@ from kiutils.misc.config import KIUTILS_CREATE_NEW_VERSION_STR
 
 @dataclass
 class Attributes():
-    """The `attr` token defines the list of attributes of a footprint.
+    """The ``attr`` token defines the list of attributes of a footprint.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_attributes
     """
 
     type: Optional[str] = None
-    """The optional `type` token defines the type of footprint. Valid footprint types are `smd` and
-    `through_hole`. May be none when no attributes are set."""
+    """The optional ``type`` token defines the type of footprint. Valid footprint types are ``smd`` and
+    ``through_hole``. May be none when no attributes are set."""
 
     boardOnly: bool = False
-    """The optional `boardOnly` token indicates that the footprint is only defined in the board
+    """The optional ``boardOnly`` token indicates that the footprint is only defined in the board
     and has no reference to any schematic symbol"""
 
     excludeFromPosFiles: bool = False
-    """The optional `excludeFromPosFiles` token indicates that the footprint position information
+    """The optional ``excludeFromPosFiles`` token indicates that the footprint position information
     should not be included when creating position files"""
 
     excludeFromBom: bool = False
-    """The optional `excludeFromBom` token indicates that the footprint should be excluded when
+    """The optional ``excludeFromBom`` token indicates that the footprint should be excluded when
     creating bill of materials (BOM) files"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Attributes:
         """Convert the given S-Expresstion into a Attributes object
 
         Args:
-            exp (list): Part of parsed S-Expression `(attr ...)`
+            - exp (list): Part of parsed S-Expression ``(attr ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not attr
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not attr
 
         Returns:
-            Attributes: Object of the class initialized with the given S-Expression
+            - Attributes: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -89,19 +89,19 @@ class Attributes():
     def to_sexpr(self, indent=0, newline=False) -> str:
         """Generate the S-Expression representing this object. Will return an empty string, if the
         following attributes are selected:
-        - `type`: None
-        - `boardOnly`: False
-        - `excludeFromBom`: False
-        - `excludeFromPosFiles`: False
+        - ``type``: None
+        - ``boardOnly``: False
+        - ``excludeFromBom``: False
+        - ``excludeFromPosFiles``: False
 
-        KiCad won't add the `(attr ..)` token to a footprint when this combination is selected.
+        KiCad won't add the ``(attr ..)`` token to a footprint when this combination is selected.
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         if (self.type == None
             and self.boardOnly == False
@@ -128,37 +128,37 @@ class Attributes():
 
 @dataclass
 class Model():
-    """The `model` token defines the 3D model associated with a footprint.
+    """The ``model`` token defines the 3D model associated with a footprint.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_3d_model
     """
 
     path: str = ""
-    """The `path` attribute is the path and file name of the 3D model"""
+    """The ``path`` attribute is the path and file name of the 3D model"""
 
     pos: Coordinate = field(default_factory=lambda: Coordinate(0.0, 0.0, 0.0))
-    """The `pos` token specifies the 3D position coordinates of the model relative to the footprint"""
+    """The ``pos`` token specifies the 3D position coordinates of the model relative to the footprint"""
 
     scale: Coordinate = field(default_factory=lambda: Coordinate(1.0, 1.0, 1.0))
-    """The `scale` token specifies the model scale factor for each 3D axis"""
+    """The ``scale`` token specifies the model scale factor for each 3D axis"""
 
     rotate: Coordinate = field(default_factory=lambda: Coordinate(0.0, 0.0, 0.0))
-    """The `rotate` token specifies the model rotation for each 3D axis relative to the footprint"""
+    """The ``rotate`` token specifies the model rotation for each 3D axis relative to the footprint"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Model:
         """Convert the given S-Expresstion into a Model object
 
         Args:
-            exp (list): Part of parsed S-Expression `(model ...)`
+            - exp (list): Part of parsed S-Expression ``(model ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list or the list is not 5 long
-            Exception: When the first item of the list is not model
+            - Exception: When given parameter's type is not a list or the list is not 5 long
+            - Exception: When the first item of the list is not model
 
         Returns:
-            Model: Object of the class initialized with the given S-Expression
+            - Model: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) != 5:
             raise Exception("Expression does not have the correct type")
@@ -177,11 +177,11 @@ class Model():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -194,37 +194,37 @@ class Model():
 
 @dataclass
 class DrillDefinition():
-    """The `drill` token defines the drill attributes for a footprint pad.
+    """The ``drill`` token defines the drill attributes for a footprint pad.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_pad_drill_definition
     """
 
     oval: bool = False
-    """The `oval` token defines if the drill is oval instead of round"""
+    """The ``oval`` token defines if the drill is oval instead of round"""
 
     diameter: float = 0.0
-    """The `diameter` attribute defines the drill diameter"""
+    """The ``diameter`` attribute defines the drill diameter"""
 
     width: Optional[float] = None
-    """The optional `width` attribute defines the width of the slot for oval drills"""
+    """The optional ``width`` attribute defines the width of the slot for oval drills"""
 
     offset: Optional[Position] = None
-    """The optional `offset` token defines the drill offset coordinates from the center of the pad"""
+    """The optional ``offset`` token defines the drill offset coordinates from the center of the pad"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> DrillDefinition:
         """Convert the given S-Expresstion into a DrillDefinition object
 
         Args:
-            exp (list): Part of parsed S-Expression `(drill ...)`
+            - exp (list): Part of parsed S-Expression ``(drill ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not drill
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not drill
 
         Returns:
-            DrillDefinition: Object of the class initialized with the given S-Expression
+            - DrillDefinition: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -233,7 +233,7 @@ class DrillDefinition():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
-        # Depending on the `oval` token, the fields may be shifted ..
+        # Depending on the ``oval`` token, the fields may be shifted ..
         if exp[1] == 'oval':
             object.oval = True
             object.diameter = exp[2]
@@ -243,7 +243,7 @@ class DrillDefinition():
             if len(exp) > 2:
                 object.width = exp[2]
 
-        # The `offset` token may not be given
+        # The ``offset`` token may not be given
         for item in exp:
             if type(item) != type([]): continue
             if item[0] == 'offset': object.offset = Position().from_sexpr(item)
@@ -253,11 +253,11 @@ class DrillDefinition():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -270,33 +270,33 @@ class DrillDefinition():
 
 @dataclass
 class PadOptions():
-    """The `options` token attributes define the settings used for custom pads. This token is
+    """The ``options`` token attributes define the settings used for custom pads. This token is
     only used when a custom pad is defined.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_custom_pad_options
     """
     clearance: str = "outline"
-    """The `clearance` token defines the type of clearance used for a custom pad. Valid clearance
-    types are `outline` and `convexhull`."""
+    """The ``clearance`` token defines the type of clearance used for a custom pad. Valid clearance
+    types are ``outline`` and ``convexhull``."""
 
     anchor: str = "rect"
-    """The `anchor` token defines the anchor pad shape of a custom pad. Valid anchor pad shapes
+    """The ``anchor`` token defines the anchor pad shape of a custom pad. Valid anchor pad shapes
     are rect and circle."""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> PadOptions:
         """Convert the given S-Expresstion into a PadOptions object
 
         Args:
-            exp (list): Part of parsed S-Expression `(options ...)`
+            - exp (list): Part of parsed S-Expression ``(options ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not options
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not options
 
         Returns:
-            PadOptions: Object of the class initialized with the given S-Expression
+            - PadOptions: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -314,11 +314,11 @@ class PadOptions():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -327,120 +327,120 @@ class PadOptions():
 
 @dataclass
 class Pad():
-    """The `pad` token defines a pad in a footprint definition.
+    """The ``pad`` token defines a pad in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_pad
     """
 
     number: str = "x"
-    """The `number` attribute is the pad number"""
+    """The ``number`` attribute is the pad number"""
 
     type: str = "smd"
-    """The pad `type` can be defined as `thru_hole`, `smd`, `connect`, or `np_thru_hole`"""
+    """The pad ``type`` can be defined as ``thru_hole``, ``smd``, ``connect``, or ``np_thru_hole``"""
 
     shape: str = "rect"
-    """The pad `shape` can be defined as `circle`, `rect`, `oval`, `trapezoid`, `roundrect`, or
-    `custom`"""
+    """The pad ``shape`` can be defined as ``circle``, ``rect``, ``oval``, ``trapezoid``, ``roundrect``, or
+    ``custom``"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates and optional orientation angle of the pad"""
+    """The ``position`` defines the X and Y coordinates and optional orientation angle of the pad"""
 
     locked: bool = False
-    """The optional `locked` token defines if the footprint pad can be edited"""
+    """The optional ``locked`` token defines if the footprint pad can be edited"""
 
     size: Position = field(default_factory=lambda: Position())         # Size uses Position class for simplicity for now
-    """The `size` token defines the width and height of the pad"""
+    """The ``size`` token defines the width and height of the pad"""
 
     drill: Optional[DrillDefinition] = None
-    """The optional pad `drill` token defines the pad drill requirements"""
+    """The optional pad ``drill`` token defines the pad drill requirements"""
 
     # TODO: Test case for one-layer pad??
     layers: List[str] = field(default_factory=list)
-    """The `layers` token defines the layer or layers the pad reside on"""
+    """The ``layers`` token defines the layer or layers the pad reside on"""
 
     property: Optional[str] = None
-    """The optional `property` token defines any special properties for the pad. Valid properties
-    are `pad_prop_bga`, `pad_prop_fiducial_glob`, `pad_prop_fiducial_loc`, `pad_prop_testpoint`,
-    `pad_prop_heatsink`, `pad_prop_heatsink`, and `pad_prop_castellated`"""
+    """The optional ``property`` token defines any special properties for the pad. Valid properties
+    are ``pad_prop_bga``, ``pad_prop_fiducial_glob``, ``pad_prop_fiducial_loc``, ``pad_prop_testpoint``,
+    ``pad_prop_heatsink``, ``pad_prop_heatsink``, and ``pad_prop_castellated``"""
 
     removeUnusedLayers: bool = False
-    """The optional `removeUnusedLayers` token specifies that the copper should be removed from
+    """The optional ``removeUnusedLayers`` token specifies that the copper should be removed from
     any layers the pad is not connected to"""
 
     keepEndLayers: bool = False
-    """The optional `keepEndLayers` token specifies that the top and bottom layers should be
+    """The optional ``keepEndLayers`` token specifies that the top and bottom layers should be
     retained when removing the copper from unused layers"""
 
     roundrectRatio: Optional[float] = None
-    """The optional `roundrectRatio` token defines the scaling factor of the pad to corner radius
+    """The optional ``roundrectRatio`` token defines the scaling factor of the pad to corner radius
     for rounded rectangular and chamfered corner rectangular pads. The scaling factor is a
     number between 0 and 1."""
 
     chamferRatio: Optional[float] = None   # Adds a newline before
-    """The optional `chamferRatio` token defines the scaling factor of the pad to chamfer size.
+    """The optional ``chamferRatio`` token defines the scaling factor of the pad to chamfer size.
     The scaling factor is a number between 0 and 1."""
 
     chamfer: List[str] = field(default_factory=list)
-    """The optional `chamfer` token defines a list of one or more rectangular pad corners that
-    get chamfered. Valid chamfer corner attributes are `top_left`, `top_right`, `bottom_left`,
-    and `bottom_right`."""
+    """The optional ``chamfer`` token defines a list of one or more rectangular pad corners that
+    get chamfered. Valid chamfer corner attributes are ``top_left``, ``top_right``, ``bottom_left``,
+    and ``bottom_right``."""
 
     net: Optional[Net] = None
-    """The optional `net` token defines the integer number and name string of the net connection
+    """The optional ``net`` token defines the integer number and name string of the net connection
     for the pad."""
 
     tstamp: Optional[str] = None           # Used since KiCad 6
-    """The optional `tstamp` token defines the unique identifier of the pad object"""
+    """The optional ``tstamp`` token defines the unique identifier of the pad object"""
 
     pinFunction: Optional[str] = None
-    """The optional `pinFunction` token attribute defines the associated schematic symbol pin name"""
+    """The optional ``pinFunction`` token attribute defines the associated schematic symbol pin name"""
 
     pinType: Optional[str] = None
-    """The optional `pinType` token attribute defines the associated schematic pin electrical type"""
+    """The optional ``pinType`` token attribute defines the associated schematic pin electrical type"""
 
     dieLength: Optional[float] = None      # Adds a newline before
-    """The optional `dieLength` token attribute defines the die length between the component pad
+    """The optional ``dieLength`` token attribute defines the die length between the component pad
     and physical chip inside the component package"""
 
     solderMaskMargin: Optional[float] = None
-    """The optional `solderMaskMargin` token attribute defines the distance between the pad and
+    """The optional ``solderMaskMargin`` token attribute defines the distance between the pad and
     the solder mask for the pad. If not set, the footprint solder_mask_margin is used."""
 
     solderPasteMargin: Optional[float] = None
-    """The optional `solderPasteMargin` token attribute defines the distance the solder paste
+    """The optional ``solderPasteMargin`` token attribute defines the distance the solder paste
     should be changed for the pad"""
 
     solderPasteMarginRatio: Optional[float] = None
-    """The optional `solderPasteMarginRatio` token attribute defines the percentage to reduce the
+    """The optional ``solderPasteMarginRatio`` token attribute defines the percentage to reduce the
     pad outline by to generate the solder paste size"""
 
     clearance: Optional[float] = None
-    """The optional `clearance` token attribute defines the clearance from all copper to the pad.
+    """The optional ``clearance`` token attribute defines the clearance from all copper to the pad.
     If not set, the footprint clearance is used."""
 
     zoneConnect: Optional[int] = None
-    """The optional `zoneConnect` token attribute defines type of zone connect for the pad. If
+    """The optional ``zoneConnect`` token attribute defines type of zone connect for the pad. If
     not defined, the footprint zone_connection setting is used. Valid connection types are
     integers values from 0 to 3 which defines:
-       - 0: Pad is not connect to zone
-       - 1: Pad is connected to zone using thermal relief
-       - 2: Pad is connected to zone using solid fill
-       - 3: Only through hold pad is connected to zone using thermal relief
+    - 0: Pad is not connect to zone
+    - 1: Pad is connected to zone using thermal relief
+    - 2: Pad is connected to zone using solid fill
+    - 3: Only through hold pad is connected to zone using thermal relief
     """
 
     thermalWidth: Optional[float] = None
-    """The optional `thermalWidth` token attribute defines the thermal relief spoke width used for
+    """The optional ``thermalWidth`` token attribute defines the thermal relief spoke width used for
     zone connection for the pad. This only affects a pad connected to a zone with a thermal
     relief. If not set, the footprint thermal_width setting is used."""
 
     thermalGap: Optional[float] = None
-    """The optional `thermalGap` token attribute defines the distance from the pad to the zone of
+    """The optional ``thermalGap`` token attribute defines the distance from the pad to the zone of
     the thermal relief connection for the pad. This only affects a pad connected to a zone
     with a thermal relief. If not set, the footprint thermal_gap setting is used."""
 
     customPadOptions: Optional[PadOptions] = None
-    """The optional `customPadOptions` token defines the options when a custom pad is defined"""
+    """The optional ``customPadOptions`` token defines the options when a custom pad is defined"""
 
     # Documentation seems wrong about primitives here. It seems like its just a list
     # of graphical objects, but the docu suggests, besides the list, two other params
@@ -449,22 +449,22 @@ class Pad():
     # generator. These two params may be found in gr_poly or gr_XX only.
     # So for now, the custom pad primitives are only a list of graphical objects
     customPadPrimitives: List = field(default_factory=list)
-    """The optional `customPadPrimitives` defines the drawing objects and options used to define
+    """The optional ``customPadPrimitives`` defines the drawing objects and options used to define
     a custom pad"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Pad:
         """Convert the given S-Expresstion into a Pad object
 
         Args:
-            exp (list): Part of parsed S-Expression `(pad ...)`
+            - exp (list): Part of parsed S-Expression ``(pad ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not pad
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not pad
 
         Returns:
-            Pad: Object of the class initialized with the given S-Expression
+            - Pad: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -527,11 +527,11 @@ class Pad():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -637,85 +637,85 @@ class Pad():
 
 @dataclass
 class Footprint():
-    """The `footprint` token defines a footprint.
+    """The ``footprint`` token defines a footprint.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint
     """
 
     libraryLink: str = ""
-    """The `libraryLink` attribute defines the link to footprint library of the footprint.
+    """The ``libraryLink`` attribute defines the link to footprint library of the footprint.
     This only applies to footprints defined in the board file format."""
 
     version: Optional[str] = None
-    """The `version` token attribute defines the symbol library version using the YYYYMMDD date format"""
+    """The ``version`` token attribute defines the symbol library version using the YYYYMMDD date format"""
 
     generator: Optional[str] = None
-    """The `generator` token attribute defines the program used to write the file"""
+    """The ``generator`` token attribute defines the program used to write the file"""
 
     locked: bool = False
-    """The optional `locked` token defines a flag to indicate the footprint cannot be edited"""
+    """The optional ``locked`` token defines a flag to indicate the footprint cannot be edited"""
 
     placed: bool = False
-    """The optional `placed` token defines a flag to indicate that the footprint has not been placed"""
+    """The optional ``placed`` token defines a flag to indicate that the footprint has not been placed"""
 
     layer: str = "F.Cu"
-    """The `layer` token defines the canonical layer the footprint is placed"""
+    """The ``layer`` token defines the canonical layer the footprint is placed"""
 
     tedit: str = remove_prefix(hex(calendar.timegm(datetime.datetime.now().utctimetuple())), '0x')
-    """The `tedit` token defines a the last time the footprint was edited"""
+    """The ``tedit`` token defines a the last time the footprint was edited"""
 
     tstamp: Optional[str] = None
-    """The `tstamp` token defines the unique identifier for the footprint. This only applies
+    """The ``tstamp`` token defines the unique identifier for the footprint. This only applies
     to footprints defined in the board file format."""
 
     position: Optional[Position] = None
-    """The `position` token defines the X and Y coordinates and rotational angle of the
+    """The ``position`` token defines the X and Y coordinates and rotational angle of the
     footprint. This only applies to footprints defined in the board file format."""
 
     description: Optional[str] = None
-    """The optional `description` token defines a string containing the description of the footprint"""
+    """The optional ``description`` token defines a string containing the description of the footprint"""
 
     tags: Optional[str] = None
-    """The optional `tags` token defines a string of search tags for the footprint"""
+    """The optional ``tags`` token defines a string of search tags for the footprint"""
 
     properties: Dict = field(default_factory=dict)
-    """The `properties` token defines dictionary of properties as key / value pairs where key being
+    """The ``properties`` token defines dictionary of properties as key / value pairs where key being
     the name of the property and value being the description of the property"""
 
     path: Optional[str] = None
-    """The `path` token defines the hierarchical path of the schematic symbol linked to the footprint.
+    """The ``path`` token defines the hierarchical path of the schematic symbol linked to the footprint.
     This only applies to footprints defined in the board file format."""
 
     autoplaceCost90: Optional[int] = None
-    """The optional `autoplaceCost90` token defines the vertical cost of when using the automatic
+    """The optional ``autoplaceCost90`` token defines the vertical cost of when using the automatic
     footprint placement tool. Valid values are integers 1 through 10. This only applies to footprints
     defined in the board file format."""
 
     autoplaceCost180: Optional[int] = None
-    """The optional `autoplaceCost180` token defines the horizontal cost of when using the automatic
+    """The optional ``autoplaceCost180`` token defines the horizontal cost of when using the automatic
     footprint placement tool. Valid values are integers 1 through 10. This only applies to footprints
     defined in the board file format."""
 
     solderMaskMargin: Optional[float] = None
-    """The optional `solderMaskMargin` token defines the solder mask distance from all pads in the
+    """The optional ``solderMaskMargin`` token defines the solder mask distance from all pads in the
     footprint. If not set, the board solder_mask_margin setting is used."""
 
     solderPasteMargin: Optional[float] = None
-    """The optional `solderPasteMargin` token defines the solder paste distance from all pads in
+    """The optional ``solderPasteMargin`` token defines the solder paste distance from all pads in
     the footprint. If not set, the board solder_paste_margin setting is used."""
 
     solderPasteRatio: Optional[float] = None
-    """The optional `solderPasteRatio` token defines the percentage of the pad size used to define
+    """The optional ``solderPasteRatio`` token defines the percentage of the pad size used to define
     the solder paste for all pads in the footprint. If not set, the board solder_paste_ratio setting
     is used."""
 
     clearance: Optional[float] = None
-    """The optional `clearance` token defines the clearance to all board copper objects for all pads
+    """The optional ``clearance`` token defines the clearance to all board copper objects for all pads
     in the footprint. If not set, the board clearance setting is used."""
 
     zoneConnect: Optional[int] = None
-    """The optional `zoneConnect` token defines how all pads are connected to filled zone. If not
+    """The optional ``zoneConnect`` token defines how all pads are connected to filled zone. If not
     defined, then the zone connect_pads setting is used. Valid connection types are integers values
     from 0 to 3 which defines:
       - 0: Pads are not connect to zone
@@ -725,52 +725,52 @@ class Footprint():
     """
 
     thermalWidth: Optional[float] = None
-    """The optional `thermalWidth` token defined the thermal relief spoke width used for zone connections
+    """The optional ``thermalWidth`` token defined the thermal relief spoke width used for zone connections
     for all pads in the footprint. This only affects pads connected to zones with thermal reliefs. If
     not set, the zone thermal_width setting is used."""
 
     thermalGap: Optional[float] = None
-    """The optional `thermalGap` is the distance from the pad to the zone of thermal relief connections
+    """The optional ``thermalGap`` is the distance from the pad to the zone of thermal relief connections
     for all pads in the footprint. If not set, the zone thermal_gap setting is used. If not set, the
     zone thermal_gap setting is used."""
 
     attributes: Attributes = field(default_factory=lambda: Attributes())
-    """The optional `attributes` section defines the attributes of the footprint"""
+    """The optional ``attributes`` section defines the attributes of the footprint"""
 
     graphicItems: List = field(default_factory=list)
-    """The `graphic` objects section is a list of one or more graphical objects in the footprint. At a
+    """The ``graphic`` objects section is a list of one or more graphical objects in the footprint. At a
     minimum, the reference designator and value text objects are defined. All other graphical objects
     are optional."""
 
     pads: List[Pad] = field(default_factory=list)
-    """The optional `pads` section is a list of pads in the footprint"""
+    """The optional ``pads`` section is a list of pads in the footprint"""
 
     zones: List[Zone] = field(default_factory=list)
-    """The optional `zones` section is a list of keep out zones in the footprint"""
+    """The optional ``zones`` section is a list of keep out zones in the footprint"""
 
     groups: List[Group] = field(default_factory=list)
-    """The optional `groups` section is a list of grouped objects in the footprint"""
+    """The optional ``groups`` section is a list of grouped objects in the footprint"""
 
     models: List[Model] = field(default_factory=list)
-    """The `3D model` section defines the 3D model object associated with the footprint"""
+    """The ``3D model`` section defines the 3D model object associated with the footprint"""
 
     filePath: Optional[str] = None
-    """The `filePath` token defines the path-like string to the library file. Automatically set when
-    `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
+    """The ``filePath`` token defines the path-like string to the library file. Automatically set when
+    ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Footprint:
         """Convert the given S-Expresstion into a Footprint object
 
         Args:
-            exp (list): Part of parsed S-Expression `(footprint ...)`
+            - exp (list): Part of parsed S-Expression ``(footprint ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not footprint
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not footprint
 
         Returns:
-            Footprint: Object of the class initialized with the given S-Expression
+            - Footprint: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -839,18 +839,18 @@ class Footprint():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str):
+    def from_file(cls, filepath: str) -> Footprint:
         """Load a footprint directly from a KiCad footprint file (`.kicad_mod`) and sets the
-        `self.filePath` attribute to the given file path.
+        ``self.filePath`` attribute to the given file path.
 
         Args:
-            filepath (str): Path or path-like object that points to the file
+            - filepath (str): Path or path-like object that points to the file
 
         Raises:
-            Exception: If the given path is not a file
+            - Exception: If the given path is not a file
 
         Returns:
-            Footprint: Object of the Footprint class initialized with the given KiCad footprint
+            - Footprint: Object of the Footprint class initialized with the given KiCad footprint
         """
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
@@ -868,14 +868,14 @@ class Footprint():
 
         Args:
             - library_link (str): Denotes the name of the library as well as the footprint. Like `Connector:Conn01x02`)
-            - value (str): The value text item (printed on the fabrication layer as `value` attribute)
-            - type (str, optional): Type of footprint (`smd`, `through_hole` or `other`). Defaults to 'other'.
-            - reference (str, optional): Reference of the footprint. Defaults to `REF**`.
+            - value (str): The value text item (printed on the fabrication layer as ``value`` attribute)
+            - type (str): Type of footprint (``smd``, ``through_hole`` or ``other``). Defaults to 'other'.
+            - reference (str): Reference of the footprint. Defaults to `REF**`.
         Raises:
-            Exception: When the given type is something other than listed above
+            - Exception: When the given type is something other than listed above
 
         Returns:
-            Footprint: Empty footprint
+            - Footprint: Empty footprint
         """
         if type not in ['smd', 'through_hole', 'other']:
             raise Exception("Unsupported type was given")
@@ -907,7 +907,7 @@ class Footprint():
             ]
         )
 
-        # The type `other` does not set the attributes type token
+        # The type ``other`` does not set the attributes type token
         if type != 'other':
             fp.attributes.type = type
 
@@ -917,11 +917,11 @@ class Footprint():
         """Save the object to a file in S-Expression format
 
         Args:
-            filepath (str, optional): Path-like string to the file. Defaults to None. If not set, the
-            attribute `self.filePath` will be used instead
+            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+              the attribute ``self.filePath`` will be used instead.
 
         Raises:
-            Exception: If no file path is given via the argument or via `self.filePath`
+            - Exception: If no file path is given via the argument or via `self.filePath`
         """
         if filepath is None:
             if self.filePath is None:
@@ -935,12 +935,12 @@ class Footprint():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
-            layerInFirstLine (bool, optional): Prints the `layer` token in the first line. Defaults to False
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+            - layerInFirstLine (bool): Prints the ``layer`` token in the first line. Defaults to False
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

@@ -17,8 +17,8 @@ TEST_BASE = os.path.join('tests', 'testdata')
 @dataclass
 class TestData():
     """Data container to relay testcase-specific information to the report generator. May be added
-    as a member to `unittest.TestCase` in the `setUp()` function. The object will then be
-    available in `result._TestInfo()` classes constructor."""
+    as a member to ``unittest.TestCase`` in the ``setUp()`` function. The object will then be
+    available in ``result._TestInfo()`` classes constructor."""
     producedOutput: Optional[str] = None
     expectedOutput: Optional[str] = None
     ownDescription: Optional[str] = None
@@ -28,20 +28,20 @@ class TestData():
 
 
 def to_file_and_compare(object, test_data: TestData) -> bool:
-    """Write the object to a file using its `to_file()` method and comparing the output with
-    the given expected output supplied by a file with `.expected` suffix
+    """Write the object to a file using its ``to_file()`` method and comparing the output with
+    the given expected output supplied by a file with ``.expected`` suffix
 
     Cleans up the test files afterwards, leaving only failing test outputs behind. Test output
-    is furthermore saved to `test_data.expectedOutput` and `test_data.producedOutput` to be
+    is furthermore saved to ``test_data.expectedOutput`` and ``test_data.producedOutput`` to be
     displayed in the HTML test report.
 
     Args:
-        - object: KiUtils object with a `to_file()` method
+        - object: KiUtils object with a ``to_file()`` method
         - test_data (TestData): Test data object of the currently running test (contains path to 
                                 test file)
 
     Returns:
-        - bool: True, if both the output of `to_file()` and the given expected output are the same
+        - bool: True, if both the output of ``to_file()`` and the given expected output are the same
     """
     # Create S-Expression from object
     if test_data.pathToTestFile is None:
@@ -86,7 +86,7 @@ def cleanup_after_test(test_data: TestData):
         test_data (TestData): Test data structure of test case that finished last
 
     Raises:
-        Exception: When `test_data.pathToTestFile` is None
+        Exception: When ``test_data.pathToTestFile`` is None
     """
     if test_data.pathToTestFile is None:
         raise Exception("Path to testfile must not be None!")

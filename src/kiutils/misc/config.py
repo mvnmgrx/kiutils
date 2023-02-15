@@ -11,7 +11,7 @@ Major changes:
 """
 
 KIUTILS_CREATE_NEW_VERSION_STR = '20211014'
-"""Version string used in `create_new()` class functions"""
+"""Version string used in ``create_new()`` class functions"""
 
 KIUTILS_CREATE_NEW_GENERATOR_STR = 'kiutils'
-"""Generator string used in `create_new()` class functions"""
+"""Generator string used in ``create_new()`` class functions"""

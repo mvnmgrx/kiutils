@@ -15,6 +15,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphic_items
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List
 
@@ -23,43 +25,43 @@ from kiutils.utils.strings import dequote
 
 @dataclass
 class GrText():
-    """The `gr_text` token defines a graphical text.
+    """The ``gr_text`` token defines a graphical text.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_text
     """
 
     text: str = ""
-    """The `text` attribute is a string that defines the text"""
+    """The ``text`` attribute is a string that defines the text"""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y position coordinates and optional orientation angle of the text"""
+    """The ``position`` defines the X and Y position coordinates and optional orientation angle of the text"""
 
     layer: Optional[str] = None
-    """The `layer` token defines the canonical layer the text resides on"""
+    """The ``layer`` token defines the canonical layer the text resides on"""
 
     effects: Effects = field(default_factory=lambda: Effects())
-    """The `effects` token defines how the text is displayed"""
+    """The ``effects`` token defines how the text is displayed"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the text object"""
+    """The ``tstamp`` token defines the unique identifier of the text object"""
 
     locked: bool = False
-    """The `locked` token defines if the object may be moved or not"""
+    """The ``locked`` token defines if the object may be moved or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrText:
         """Convert the given S-Expresstion into a GrText object
 
         Args:
-            exp (list): Part of parsed S-Expression `(gr_text ...)`
+            - exp (list): Part of parsed S-Expression ``(gr_text ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not gr_text
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not gr_text
 
         Returns:
-            GrText: Object of the class initialized with the given S-Expression
+            - GrText: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -83,11 +85,11 @@ class GrText():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -123,7 +125,7 @@ class GrTextBox():
     renderCache: Optional[str] = None
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrTextBox:
         """Not implemented yet"""
         raise NotImplementedError("GrTextBoxes are not yet handled! Please report this bug along with the file being parsed.")
 
@@ -133,46 +135,46 @@ class GrTextBox():
 
 @dataclass
 class GrLine():
-    """The `gr_line` token defines a graphical line.
+    """The ``gr_line`` token defines a graphical line.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_line
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token defines the coordinates of the start of the line"""
+    """The ``start`` token defines the coordinates of the start of the line"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the end of the line"""
+    """The ``end`` token defines the coordinates of the end of the line"""
 
     angle: Optional[float] = None
-    """The optional `angle` token defines the rotational angle of the line"""
+    """The optional ``angle`` token defines the rotational angle of the line"""
 
     layer: Optional[str] = None
-    """The `layer` token defines the canonical layer the rectangle resides on"""
+    """The ``layer`` token defines the canonical layer the rectangle resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the rectangle. (prior to version 7)"""
+    """The ``width`` token defines the line width of the rectangle. (prior to version 7)"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the rectangle object"""
+    """The ``tstamp`` token defines the unique identifier of the rectangle object"""
 
     locked: bool = False
-    """The `locked` token defines if the object may be moved or not"""
+    """The ``locked`` token defines if the object may be moved or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrLine:
         """Convert the given S-Expresstion into a GrLine object
 
         Args:
-            exp (list): Part of parsed S-Expression `(gr_line ...)`
+            - exp (list): Part of parsed S-Expression ``(gr_line ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not gr_line
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not gr_line
 
         Returns:
-            GrLine: Object of the class initialized with the given S-Expression
+            - GrLine: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -196,11 +198,11 @@ class GrLine():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -214,46 +216,46 @@ class GrLine():
 
 @dataclass
 class GrRect():
-    """The `gr_rect` token defines a graphical rectangle.
+    """The ``gr_rect`` token defines a graphical rectangle.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_rectangle
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token defines the coordinates of the upper left corner of the rectangle"""
+    """The ``start`` token defines the coordinates of the upper left corner of the rectangle"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the low right corner of the rectangle"""
+    """The ``end`` token defines the coordinates of the low right corner of the rectangle"""
 
     layer: Optional[str] = None
-    """The `layer` token defines the canonical layer the rectangle resides on"""
+    """The ``layer`` token defines the canonical layer the rectangle resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the rectangle. (prior to version 7)"""
+    """The ``width`` token defines the line width of the rectangle. (prior to version 7)"""
 
     fill: Optional[str] = None
-    """The optional `fill` toke defines how the rectangle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
+    """The optional ``fill`` toke defines how the rectangle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the rectangle object"""
+    """The ``tstamp`` token defines the unique identifier of the rectangle object"""
 
     locked: bool = False
-    """The `locked` token defines if the object may be moved or not"""
+    """The ``locked`` token defines if the object may be moved or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrRect:
         """Convert the given S-Expresstion into a GrRect object
 
         Args:
-            exp (list): Part of parsed S-Expression `(gr_rect ...)`
+            - exp (list): Part of parsed S-Expression ``(gr_rect ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not gr_rect
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not gr_rect
 
         Returns:
-            GrRect: Object of the class initialized with the given S-Expression
+            - GrRect: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -278,11 +280,11 @@ class GrRect():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -296,46 +298,46 @@ class GrRect():
 
 @dataclass
 class GrCircle():
-    """The `gr_circle ` token defines a graphical circle.
+    """The ``gr_circle `` token defines a graphical circle.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_circle
     """
 
     center: Position = field(default_factory=lambda: Position())
-    """The `center` token defines the coordinates of the center of the circle"""
+    """The ``center`` token defines the coordinates of the center of the circle"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the low right corner of the circle"""
+    """The ``end`` token defines the coordinates of the low right corner of the circle"""
 
     layer: Optional[str] = None
-    """The `layer` token defines the canonical layer the circle resides on"""
+    """The ``layer`` token defines the canonical layer the circle resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the circle. (prior to version 7)"""
+    """The ``width`` token defines the line width of the circle. (prior to version 7)"""
 
     fill: Optional[str] = None
-    """The optional `fill` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
+    """The optional ``fill`` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the circle object"""
+    """The ``tstamp`` token defines the unique identifier of the circle object"""
 
     locked: bool = False
-    """The `locked` token defines if the object may be moved or not"""
+    """The ``locked`` token defines if the object may be moved or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrCircle:
         """Convert the given S-Expresstion into a GrCircle object
 
         Args:
-            exp (list): Part of parsed S-Expression `(gr_circle ...)`
+            - exp (list): Part of parsed S-Expression ``(gr_circle ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not gr_circle
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not gr_circle
 
         Returns:
-            GrCircle: Object of the class initialized with the given S-Expression
+            - GrCircle: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -361,11 +363,11 @@ class GrCircle():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -379,46 +381,46 @@ class GrCircle():
 
 @dataclass
 class GrArc():
-    """The `gr_arc` token defines a graphic arc.
+    """The ``gr_arc`` token defines a graphic arc.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_arc
     """
 
     start: Position = field(default_factory=lambda: Position())
-    """The `start` token defines the coordinates of the start position of the arc radius"""
+    """The ``start`` token defines the coordinates of the start position of the arc radius"""
 
     mid: Position = field(default_factory=lambda: Position())
-    """The `mid` token defines the coordinates of the midpoint along the arc"""
+    """The ``mid`` token defines the coordinates of the midpoint along the arc"""
 
     end: Position = field(default_factory=lambda: Position())
-    """The `end` token defines the coordinates of the end position of the arc radius"""
+    """The ``end`` token defines the coordinates of the end position of the arc radius"""
 
     layer: Optional[str] = None
-    """The `layer` token defines the canonical layer the arc resides on"""
+    """The ``layer`` token defines the canonical layer the arc resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the arc. (prior to version 7)"""
+    """The ``width`` token defines the line width of the arc. (prior to version 7)"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the arc object."""
+    """The ``tstamp`` token defines the unique identifier of the arc object."""
 
     locked: bool = False
-    """The `locked` token defines if the object may be moved or not"""
+    """The ``locked`` token defines if the object may be moved or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrArc:
         """Convert the given S-Expresstion into a GrArc object
 
         Args:
-            exp (list): Part of parsed S-Expression `(gr_arc ...)`
+            - exp (list): Part of parsed S-Expression ``(gr_arc ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not gr_arc
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not gr_arc
 
         Returns:
-            GrArc: Object of the class initialized with the given S-Expression
+            - GrArc: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -444,11 +446,11 @@ class GrArc():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -461,43 +463,43 @@ class GrArc():
 
 @dataclass
 class GrPoly():
-    """The `gr_poly` token defines a graphic polygon in a footprint definition.
+    """The ``gr_poly`` token defines a graphic polygon in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_polygon
     """
 
     layer: Optional[str] = None
-    """The `coordinates` define the list of X/Y coordinates of the polygon outline"""
+    """The ``coordinates`` define the list of X/Y coordinates of the polygon outline"""
 
     coordinates: List[Position] = field(default_factory=list)
-    """The `layer` token defines the canonical layer the polygon resides on"""
+    """The ``layer`` token defines the canonical layer the polygon resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the polygon. (prior to version 7)"""
+    """The ``width`` token defines the line width of the polygon. (prior to version 7)"""
 
     fill: Optional[str] = None
-    """The optional `fill` toke defines how the polygon is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
+    """The optional ``fill`` toke defines how the polygon is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the polygon object"""
+    """The ``tstamp`` token defines the unique identifier of the polygon object"""
 
     locked: bool = False
-    """The `locked` token defines if the object may be moved or not"""
+    """The ``locked`` token defines if the object may be moved or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrPoly:
         """Convert the given S-Expresstion into a GrPoly object
 
         Args:
-            exp (list): Part of parsed S-Expression `(gr_poly ...)`
+            - exp (list): Part of parsed S-Expression ``(gr_poly ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not gr_poly
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not gr_poly
 
         Returns:
-            GrPoly: Object of the class initialized with the given S-Expression
+            - GrPoly: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -523,16 +525,17 @@ class GrPoly():
 
     def to_sexpr(self, indent: int = 2, newline: bool = True, pts_newline: bool = False) -> str:
         """Generate the S-Expression representing this object. When no coordinates are set
-           in the polygon, the resulting S-Expression will be left empty.
+        in the polygon, the resulting S-Expression will be left empty.
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
-            pts_newline (bool, optional): Adds a newline for the `(pts ..)` token as KiCad treats
-            this different in Board files than Footprint files. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+            - pts_newline (bool): Adds a newline for the ``(pts ..)`` token as KiCad treats
+                                  this different in Board files than Footprint files. Defaults to 
+                                  False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -557,39 +560,39 @@ class GrPoly():
 
 @dataclass
 class GrCurve():
-    """The `gr_curve` token defines a graphic Cubic Bezier curve in a footprint definition.
+    """The ``gr_curve`` token defines a graphic Cubic Bezier curve in a footprint definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_curve
     """
     coordinates: List[Position] = field(default_factory=list)
-    """The `coordinates` define the list of X/Y coordinates of the curve outline"""
+    """The ``coordinates`` define the list of X/Y coordinates of the curve outline"""
 
     layer: Optional[str] = None
-    """The `layer` token defines the canonical layer the curve resides on"""
+    """The ``layer`` token defines the canonical layer the curve resides on"""
 
     width: Optional[float] = 0.12     # Used for KiCad < 7
-    """The `width` token defines the line width of the curve. (prior to version 7)"""
+    """The ``width`` token defines the line width of the curve. (prior to version 7)"""
 
     tstamp: Optional[str] = None      # Used since KiCad 6
-    """The `tstamp` token defines the unique identifier of the curve object"""
+    """The ``tstamp`` token defines the unique identifier of the curve object"""
 
     locked: bool = False
-    """The `locked` token defines if the object may be moved or not"""
+    """The ``locked`` token defines if the object may be moved or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> GrCurve:
         """Convert the given S-Expresstion into a GrCurve object
 
         Args:
-            exp (list): Part of parsed S-Expression `(gr_curve ...)`
+            - exp (list): Part of parsed S-Expression ``(gr_curve ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not gr_curve
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not gr_curve
 
         Returns:
-            GrCurve: Object of the class initialized with the given S-Expression
+            - GrCurve: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -613,14 +616,14 @@ class GrCurve():
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
         """Generate the S-Expression representing this object. When no coordinates are set
-           in the curve, the resulting S-Expression will be left empty.
+        in the curve, the resulting S-Expression will be left empty.
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

@@ -17,6 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List
 from os import path
+import re
 
 from kiutils.items.common import Effects, Position, Property, Font
 from kiutils.items.syitems import *
@@ -189,10 +190,55 @@ class Symbol():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbols
     """
 
-    id: str = ""
     """Each symbol must have a unique "LIBRARY_ID" for each top level symbol in the library or a unique
     "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers are only valid it top
     level symbols and unit identifiers are on valid as unit symbols inside a parent symbol."""
+    @property
+    def id(self):
+        unit_style_ids = f"_{self.unitId}_{self.styleId}" if (self.unitId is not None and self.styleId is not None) else ""
+        if self.libraryNickname:
+            return f'{self.libraryNickname}:{self.entryName}{unit_style_ids}'
+        else:
+            return f'{self.entryName}{unit_style_ids}'
+
+    @id.setter
+    def id(self, symbol_id):
+        # Split library id into nickname, entry name, unit id and style id (if any)
+        parse_symbol_id = re.match(r"^(.+?):(.+?)_(\d+?)_(\d+?)$", symbol_id)
+        if parse_symbol_id:
+            self.libraryNickname = parse_symbol_id.group(1)
+            self.entryName = parse_symbol_id.group(2)
+            self.unitId = int(parse_symbol_id.group(3))
+            self.styleId = int(parse_symbol_id.group(4))
+        else:
+            parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
+            if parse_symbol_id:
+                self.libraryNickname = parse_symbol_id.group(1)
+                entryName_t = parse_symbol_id.group(2)
+            else:
+                entryName_t = symbol_id
+
+            parse_symbol_id = re.match(r"^(.+?)_(\d+?)_(\d+?)$", entryName_t)
+            if parse_symbol_id:
+                self.entryName = parse_symbol_id.group(1)
+                self.unitId = int(parse_symbol_id.group(2))
+                self.styleId = int(parse_symbol_id.group(3))
+            else:
+                if self.libraryNickname:
+                    self.entryName = entryName_t
+                else:
+                    self.entryName = symbol_id
+
+        # Update units id to match parent id
+        for unit in self.units:
+            unit.entryName = self.entryName
+
+    libraryNickname: Optional[str] = None
+    entryName: str = None
+    """ The schematic symbol library and printed circuit board footprint library file formats use library identifiers.
+    Library identifiers are defined as a quoted string using the "LIBRARY_NICKNAME:ENTRY_NAME" format where
+    "LIBRARY_NICKNAME" is the nickname of the library in the symbol or footprint library table and
+    "ENTRY_NAME" is the name of the symbol or footprint in the library separated by a colon. """
 
     extends: Optional[str] = None
     """The optional ``extends`` token attribute defines the "LIBRARY_ID" of another symbol inside the
@@ -243,9 +289,15 @@ class Symbol():
     units: List = field(default_factory=list)
     """The ``units`` can be one or more child symbol tokens embedded in a parent symbol"""
 
+    unitId: Optional[int] = None
+    """Unit identifier: an integer that identifies which unit the symbol represents"""
+
+    styleId: Optional[int] = None
+    """Style identifier: indicates which body style the unit represents"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Symbol:
-        """Convert the given S-Expresstion into a Symbol object
+        """Convert the given S-Expression into a Symbol object
 
         Args:
             - exp (list): Part of parsed S-Expression ``(symbol ...)``

@@ -25,7 +25,7 @@ class Tests_Schematic(unittest.TestCase):
         return super().setUp()
 
     def test_addPropertyToSchematicSymbol(self):
-        """Adds a new property to an already existing symbol in the schematic and verifies the 
+        """Adds a new property to an already existing symbol in the schematic and verifies the
         correct initial values for the Property() class."""
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_addPropertyToSchematicSymbol')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
@@ -64,4 +64,13 @@ class Tests_Schematic(unittest.TestCase):
         connections, images, etc)"""
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_hierarchicalSchematicWithAllPrimitives')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_renameSymbolIdTokenInSchematic(self):
+        """Tests if renaming schematic symbols as well as normal symbols using their ID token works
+        as expected. Checks that the ``Value`` property does not change."""
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_renameSymbolIdTokenInSchematic')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        schematic.libSymbols[0].id = "RenamedSwitch:SW_Coded_New"
+        schematic.schematicSymbols[0].libraryIdentifier = "SwitchRenamed:SW_Coded_2"
         self.assertTrue(to_file_and_compare(schematic, self.testData))

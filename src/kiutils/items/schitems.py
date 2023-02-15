@@ -770,8 +770,8 @@ class SchematicSymbol():
     """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
        with the global label have been place automatically"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = ""
+    """The optional `uuid` defines the universally unique identifier"""
 
     properties: List[Property] = field(default_factory=list)
     """The ``properties`` section defines a list of symbol properties of the schematic symbol"""
@@ -841,7 +841,8 @@ class SchematicSymbol():
 
         expression =  f'{indents}(symbol (lib_id "{dequote(self.libraryIdentifier)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
         expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:
             expression += property.to_sexpr(indent+2)
         for number, uuid in self.pins.items():

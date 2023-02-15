@@ -228,13 +228,14 @@ class DesignRules():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str) -> DesignRules:
+    def from_file(cls, filepath: str, encoding: Optional[str] = None) -> DesignRules:
         """Load a custom design rules set directly from a KiCad design rules file (`.kicad_dru`) and
         sets the ``self.filePath`` attribute to the given file path.
 
         Args:
             - filepath (str): Path or path-like object that points to the file
-
+            - encoding (str, optional): Encoding of the input file. Defaults to None (platform 
+                                        dependent encoding).
         Raises:
             - Exception: If the given path is not a file
 
@@ -244,7 +245,7 @@ class DesignRules():
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
 
-        with open(filepath, 'r') as infile:
+        with open(filepath, 'r', encoding=encoding) as infile:
             # This dirty fix adds opening and closing brackets `(..)` to the read input to enable
             # the S-Expression parser to work for the DRU-format as well.
             data = f'({infile.read()})'
@@ -261,12 +262,14 @@ class DesignRules():
         """
         return cls(version=1)
 
-    def to_file(self, filepath = None):
+    def to_file(self, filepath = None, encoding: Optional[str] = None):
         """Save the object to a file in S-Expression format
 
         Args:
             - filepath (str, optional): Path-like string to the file. Defaults to None. If not set,
                                         the attribute ``self.filePath`` will be used instead.
+            - encoding (str, optional): Encoding of the output file. Defaults to None (platform 
+                                        dependent encoding).
 
         Raises:
             - Exception: If no file path is given via the argument or via `self.filePath`
@@ -276,7 +279,7 @@ class DesignRules():
                 raise Exception("File path not set")
             filepath = self.filePath
 
-        with open(filepath, 'w') as outfile:
+        with open(filepath, 'w', encoding=encoding) as outfile:
             outfile.write(self.to_sexpr())
 
     def to_sexpr(self, indent=0, newline=False):

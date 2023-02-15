@@ -1,0 +1,25 @@
+(kicad_sch (version 20211123) (generator eeschema)
+
+  (uuid e63e39d7-6ac0-4ffd-8aa3-1841a4541b55)
+
+  (paper "User" 431.8 279.4)
+
+  (lib_symbols
+    (symbol "Switch:SW_Coded"
+      (property "Value" "SW_Coded" (id 1) (at -6.35 -7.62 0)
+        (effects (font (size 1.27 1.27)) (justify left))
+      )
+      (symbol "SW_Coded_0_1"
+      )
+      (symbol "SW_Coded_1_1"
+      )
+    )
+  )
+
+  (symbol (lib_id "Switch:SW_Coded") (at 111.76 163.83 0)
+    (in_bom no) (on_board no)
+    (property "Value" "SW_Coded" (id 1) (at 103.505 165.7349 0)
+      (effects (font (size 1.27 1.27)) (justify right))
+    )
+  )
+)

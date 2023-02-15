@@ -31,78 +31,78 @@ from kiutils.misc.config import KIUTILS_CREATE_NEW_VERSION_STR, KIUTILS_CREATE_N
 
 @dataclass
 class Board():
-    """The `board` token defines a KiCad layout according to the board file format used in
-    `.kicad_pcb` files.
+    """The ``board`` token defines a KiCad layout according to the board file format used in
+    ``.kicad_pcb`` files.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/
     """
     version: str = ""
-    """The `version` token defines the board version using the YYYYMMDD date format"""
+    """The ``version`` token defines the board version using the YYYYMMDD date format"""
 
     generator: str = ""
-    """The `generator` token defines the program used to write the file"""
+    """The ``generator`` token defines the program used to write the file"""
 
     general: GeneralSettings = field(default_factory=lambda: GeneralSettings())
-    """The `general` token defines general information about the board"""
+    """The ``general`` token defines general information about the board"""
 
     paper: PageSettings = field(default_factory=lambda: PageSettings())
-    """The `paper` token defines informations about the page itself"""
+    """The ``paper`` token defines informations about the page itself"""
 
     titleBlock: Optional[TitleBlock] = None
-    """The `titleBlock` token defines author, date, revision, company and comments of the board"""
+    """The ``titleBlock`` token defines author, date, revision, company and comments of the board"""
 
     layers: List[LayerToken] = field(default_factory=list)
-    """The `layers` token defines all of the layers used by the board"""
+    """The ``layers`` token defines all of the layers used by the board"""
 
     setup: SetupData = field(default_factory=lambda: SetupData())
-    """The `setup` token is used to store the current settings used by the board"""
+    """The ``setup`` token is used to store the current settings used by the board"""
 
     properties: Dict[str, str] = field(default_factory=dict)
-    """The `properties` token holds a list of key-value properties of the board as a dictionary"""
+    """The ``properties`` token holds a list of key-value properties of the board as a dictionary"""
 
     nets: List[Net] = field(default_factory=list)
-    """The `nets` token defines a list of nets used in the layout"""
+    """The ``nets`` token defines a list of nets used in the layout"""
 
     footprints: List[Footprint] = field(default_factory=list)
-    """The `footprints` token defines a list of footprints used in the layout"""
+    """The ``footprints`` token defines a list of footprints used in the layout"""
 
     graphicalItems: List = field(default_factory=list) # as in gritems.py
-    """The `graphicalItems` token defines a list of graphical items (as listed in `gritems.py`) used
+    """The ``graphicalItems`` token defines a list of graphical items (as listed in `gritems.py`) used
     in the layout"""
 
     traceItems: List = field(default_factory=list)
-    """The `traceItems` token defines a list of segments, arcs and vias used in the layout"""
+    """The ``traceItems`` token defines a list of segments, arcs and vias used in the layout"""
 
     zones: List[Zone] = field(default_factory=list)
-    """The `zones` token defines a list of zones used in the layout"""
+    """The ``zones`` token defines a list of zones used in the layout"""
 
     dimensions: List[Dimension] = field(default_factory=list)
-    """The `dimensions` token defines a list of dimensions on the PCB"""
+    """The ``dimensions`` token defines a list of dimensions on the PCB"""
 
     targets: List[Target] = field(default_factory=list)
-    """The `targets` token defines a list of target markers on the PCB"""
+    """The ``targets`` token defines a list of target markers on the PCB"""
 
     groups: List[Group] = field(default_factory=list)
-    """The `groups` token defines a list of groups used in the layout"""
+    """The ``groups`` token defines a list of groups used in the layout"""
 
     filePath: Optional[str] = None
-    """The `filePath` token defines the path-like string to the board file. Automatically set when
-    `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
+    """The ``filePath`` token defines the path-like string to the board file. Automatically set when
+    ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Board:
         """Convert the given S-Expresstion into a Board object
 
         Args:
-            exp (list): Part of parsed S-Expression `(kicad_pcb ...)`
+            - exp (list): Part of parsed S-Expression ``(kicad_pcb ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not kicad_pcb
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not kicad_pcb
 
         Returns:
-            Board: Object of the class initialized with the given S-Expression
+            - Board: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -143,18 +143,18 @@ class Board():
         return object
 
     @classmethod
-    def from_file(cls, filepath: str):
+    def from_file(cls, filepath: str) -> Board:
         """Load a board directly from a KiCad board file (`.kicad_pcb`) and sets the
-        `self.filePath` attribute to the given file path.
+        ``self.filePath`` attribute to the given file path.
 
         Args:
-            filepath (str): Path or path-like object that points to the file
+            - filepath (str): Path or path-like object that points to the file
 
         Raises:
-            Exception: If the given path is not a file
+            - Exception: If the given path is not a file
 
         Returns:
-            Footprint: Object of the Schematic class initialized with the given KiCad schematic
+            - Footprint: Object of the Schematic class initialized with the given KiCad schematic
         """
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
@@ -169,7 +169,7 @@ class Board():
         """Creates a new empty board with its attributes set as KiCad would create it
 
         Returns:
-            Board: Empty board
+            - Board: Empty board
         """
         board = cls(
             version = KIUTILS_CREATE_NEW_VERSION_STR,
@@ -218,11 +218,11 @@ class Board():
         """Save the object to a file in S-Expression format
 
         Args:
-            filepath (str, optional): Path-like string to the file. Defaults to None. If not set, the
-            attribute `self.filePath` will be used instead
+            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+                                        the attribute ``self.filePath`` will be used instead.
 
         Raises:
-            Exception: If no file path is given via the argument or via `self.filePath`
+            - Exception: If no file path is given via the argument or via `self.filePath`
         """
         if filepath is None:
             if self.filePath is None:
@@ -236,11 +236,11 @@ class Board():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

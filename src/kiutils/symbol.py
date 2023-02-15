@@ -27,29 +27,29 @@ from kiutils.utils.strings import dequote
 @dataclass
 class SymbolAlternativePin():
     pinName: str = ""
-    """The `pinName` token defines the name of the alternative pin function"""
+    """The ``pinName`` token defines the name of the alternative pin function"""
 
     electricalType: str = "input"
-    """The `electricalType` defines the pin electrical connection. See symbol documentation for
+    """The ``electricalType`` defines the pin electrical connection. See symbol documentation for
     valid pin electrical connection types and descriptions."""
 
     graphicalStyle: str = "line"
-    """The `graphicalStyle` defines the graphical style used to draw the pin. See symbol
+    """The ``graphicalStyle`` defines the graphical style used to draw the pin. See symbol
     documentation for valid pin graphical styles and descriptions."""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SymbolAlternativePin:
         """Convert the given S-Expresstion into a SymbolAlternativePin object
 
         Args:
-            exp (list): Part of parsed S-Expression `(alternate ...)`
+            - exp (list): Part of parsed S-Expression ``(alternate ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not alternate
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not alternate
 
         Returns:
-            SymbolAlternativePin: Object of the class initialized with the given S-Expression
+            - SymbolAlternativePin: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -67,11 +67,11 @@ class SymbolAlternativePin():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 8.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 8.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -80,38 +80,38 @@ class SymbolAlternativePin():
 
 @dataclass
 class SymbolPin():
-    """The `pin` token defines a pin in a symbol definition.
+    """The ``pin`` token defines a pin in a symbol definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_pin
     """
 
     electricalType: str = "input"
-    """The `electricalType` defines the pin electrical connection. See documentation below for
+    """The ``electricalType`` defines the pin electrical connection. See documentation below for
     valid pin electrical connection types and descriptions."""
 
     graphicalStyle: str = "line"
-    """The `graphicalStyle` defines the graphical style used to draw the pin. See documentation
+    """The ``graphicalStyle`` defines the graphical style used to draw the pin. See documentation
     below for valid pin graphical styles and descriptions."""
 
     position: Position = field(default_factory=lambda: Position())
-    """The `position` defines the X and Y coordinates and rotation angle of the connection point
+    """The ``position`` defines the X and Y coordinates and rotation angle of the connection point
     of the pin relative to the symbol origin position"""
 
     length: float = 0.254
-    """The `length` token attribute defines the LENGTH of the pin"""
+    """The ``length`` token attribute defines the LENGTH of the pin"""
 
     name: str = ""
-    """The `name` token defines a string containing the name of the pin"""
+    """The ``name`` token defines a string containing the name of the pin"""
 
     nameEffects: Effects = field(default_factory=lambda: Effects())
-    """The `nameEffects` token define how the pin's name is displayed"""
+    """The ``nameEffects`` token define how the pin's name is displayed"""
 
     number: str = "0"
-    """The `number` token defines a string containing the NUMBER of the pin"""
+    """The ``number`` token defines a string containing the NUMBER of the pin"""
 
     numberEffects: Effects = field(default_factory=lambda: Effects())
-    """The `nameEffects` token define how the pin's number is displayed"""
+    """The ``nameEffects`` token define how the pin's number is displayed"""
 
     hide: bool = False      # Missing in documentation
     """The 'hide' token defines if the pin should be hidden"""
@@ -120,18 +120,18 @@ class SymbolPin():
     """The 'alternate' token defines one or more alternative definitions for the symbol pin"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SymbolPin:
         """Convert the given S-Expresstion into a SymbolPin object
 
         Args:
-            exp (list): Part of parsed S-Expression `(pin ...)`
+            - exp (list): Part of parsed S-Expression ``(pin ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not pin
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not pin
 
         Returns:
-            SymbolPin: Object of the class initialized with the given S-Expression
+            - SymbolPin: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -161,11 +161,11 @@ class SymbolPin():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 4.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -183,8 +183,8 @@ class SymbolPin():
 
 @dataclass
 class Symbol():
-    """The `symbol` token defines a symbol or sub-unit of a parent symbol. There can be zero or more
-       `symbol` tokens in a symbol library file.
+    """The ``symbol`` token defines a symbol or sub-unit of a parent symbol. There can be zero or more
+       ``symbol`` tokens in a symbol library file.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbols
@@ -241,53 +241,53 @@ class Symbol():
     "ENTRY_NAME" is the name of the symbol or footprint in the library separated by a colon. """
 
     extends: Optional[str] = None
-    """The optional `extends` token attribute defines the "LIBRARY_ID" of another symbol inside the
+    """The optional ``extends`` token attribute defines the "LIBRARY_ID" of another symbol inside the
     current library from which to derive a new symbol. Extended symbols currently can only have
     different symbol properties than their parent symbol."""
 
     hidePinNumbers: bool = False
-    """The `pin_numbers` token defines the visibility setting of the symbol pin numbers for
+    """The ``pin_numbers`` token defines the visibility setting of the symbol pin numbers for
     the entire symbol. If set to False, the all of the pin numbers in the symbol are visible."""
 
     pinNames: bool = False
-    """The optional `pinNames` token defines the attributes for all of the pin names of the symbol.
-    If the `pinNames` token is not defined, all symbol pins are shown with the default offset."""
+    """The optional ``pinNames`` token defines the attributes for all of the pin names of the symbol.
+    If the ``pinNames`` token is not defined, all symbol pins are shown with the default offset."""
 
     pinNamesHide: bool = False
-    """The optional `pinNamesOffset` token defines the pin name of all pins should be hidden"""
+    """The optional ``pinNamesOffset`` token defines the pin name of all pins should be hidden"""
 
     pinNamesOffset: Optional[float] = None
-    """The optional `pinNamesOffset` token defines the pin name offset for all pin names of the
+    """The optional ``pinNamesOffset`` token defines the pin name offset for all pin names of the
     symbol. If not defined, the pin name offset is 0.508mm (0.020")"""
 
     inBom: Optional[bool] = None
-    """The optional `inBom` token, defines if a symbol is to be include in the bill of material
+    """The optional ``inBom`` token, defines if a symbol is to be include in the bill of material
     output. If undefined, the token will not be generated in `self.to_sexpr()`."""
 
     onBoard: Optional[bool] = None
-    """The `onBoard` token, defines if a symbol is to be exported from the schematic to the printed
+    """The ``onBoard`` token, defines if a symbol is to be exported from the schematic to the printed
     circuit board. If undefined, the token will not be generated in `self.to_sexpr()`."""
 
     # TODO: Describe this token
     isPower: bool = False           # Missing in documentation, added when "Als Spannungssymbol" is checked
-    """The `isPower` token's documentation was not done yet .."""
+    """The ``isPower`` token's documentation was not done yet .."""
 
     properties: List[Property] = field(default_factory=list)
-    """The `properties` is a list of properties that define the symbol. The following properties are
+    """The ``properties`` is a list of properties that define the symbol. The following properties are
     mandatory when defining a parent symbol: "Reference", "Value", "Footprint", and "Datasheet".
     All other properties are optional. Unit symbols cannot have any properties."""
 
     graphicItems: List = field(default_factory=list)
-    """The `graphicItems` section is list of graphical arcs, circles, curves, lines, polygons, rectangles
+    """The ``graphicItems`` section is list of graphical arcs, circles, curves, lines, polygons, rectangles
     and text that define the symbol drawing. This section can be empty if the symbol has no graphical
     items."""
 
     pins: List[SymbolPin] = field(default_factory=list)
-    """The `pins` section is a list of pins that are used by the symbol. This section can be empty if
+    """The ``pins`` section is a list of pins that are used by the symbol. This section can be empty if
     the symbol does not have any pins."""
 
     units: List = field(default_factory=list)
-    """The `units` can be one or more child symbol tokens embedded in a parent symbol"""
+    """The ``units`` can be one or more child symbol tokens embedded in a parent symbol"""
 
     unitId: Optional[int] = None
     """Unit identifier: an integer that identifies which unit the symbol represents"""
@@ -296,18 +296,18 @@ class Symbol():
     """Style identifier: indicates which body style the unit represents"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Symbol:
         """Convert the given S-Expression into a Symbol object
 
         Args:
-            exp (list): Part of parsed S-Expression `(symbol ...)`
+            - exp (list): Part of parsed S-Expression ``(symbol ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not symbol
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not symbol
 
         Returns:
-            Symbol: Object of the class initialized with the given S-Expression
+            - Symbol: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -354,12 +354,12 @@ class Symbol():
         Args:
             - id (str): ID token of the symbol
             - reference (str): Reference designator
-            - value (str): Value of the `value` property
-            - footprint (str, optional): Value of the `footprint` property. Defaults to "".
-            - datasheet (str, optional): Value of the `datasheet` property. Defaults to "".
+            - value (str): Value of the ``value`` property
+            - footprint (str): Value of the ``footprint`` property. Defaults to "" (empty string).
+            - datasheet (str): Value of the ``datasheet`` property. Defaults to "" (empty string).
 
         Returns:
-            Symbol: New symbol initialized with default values
+            - Symbol: New symbol initialized with default values
         """
         symbol = cls()
         symbol.inBom = True
@@ -383,11 +383,11 @@ class Symbol():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -420,38 +420,38 @@ class Symbol():
 
 @dataclass
 class SymbolLib():
-    """A symbol library defines the common format of `.kicad_sym` files. A symbol library may contain
+    """A symbol library defines the common format of ``.kicad_sym`` files. A symbol library may contain
     zero or more symbols.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-symbol-lib/
     """
     version: Optional[str] = None
-    """The `version` token attribute defines the symbol library version using the YYYYMMDD date format"""
+    """The ``version`` token attribute defines the symbol library version using the YYYYMMDD date format"""
 
     generator: Optional[str] = None
-    """The `generator` token attribute defines the program used to write the file"""
+    """The ``generator`` token attribute defines the program used to write the file"""
 
     symbols: List[Symbol] = field(default_factory=list)
-    """The `symbols` token defines a list of zero or more symbols that are part of the symbol library"""
+    """The ``symbols`` token defines a list of zero or more symbols that are part of the symbol library"""
 
     filePath: Optional[str] = None
-    """The `filePath` token defines the path-like string to the library file. Automatically set when
-    `self.from_file()` is used. Allows the use of `self.to_file()` without parameters."""
+    """The ``filePath`` token defines the path-like string to the library file. Automatically set when
+    ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
 
     @classmethod
-    def from_file(cls, filepath: str):
+    def from_file(cls, filepath: str) -> SymbolLib:
         """Load a symbol library directly from a KiCad footprint file (`.kicad_sym`) and sets the
-        `self.filePath` attribute to the given file path.
+        ``self.filePath`` attribute to the given file path.
 
         Args:
-            filepath (str): Path or path-like object that points to the file
+            - filepath (str): Path or path-like object that points to the file
 
         Raises:
-            Exception: If the given path is not a file
+            - Exception: If the given path is not a file
 
         Returns:
-            Footprint: Object of the SymbolLib class initialized with the given KiCad footprint
+            - SymbolLib: Object of the SymbolLib class initialized with the given KiCad symbol library
         """
         if not path.isfile(filepath):
             raise Exception("Given path is not a file!")
@@ -462,18 +462,18 @@ class SymbolLib():
             return item
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> SymbolLib:
         """Convert the given S-Expresstion into a SymbolLib object
 
         Args:
-            exp (list): Part of parsed S-Expression `(kicad_symbol_lib ...)`
+            - exp (list): Part of parsed S-Expression ``(kicad_symbol_lib ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not kicad_symbol_lib
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not kicad_symbol_lib
 
         Returns:
-            SymbolLib: Object of the class initialized with the given S-Expression
+            - SymbolLib: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -493,11 +493,11 @@ class SymbolLib():
         """Save the object to a file in S-Expression format
 
         Args:
-            filepath (str, optional): Path-like string to the file. Defaults to None. If not set, the
-            attribute `self.filePath` will be used instead
+            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+                                        the attribute ``self.filePath`` will be used instead.
 
         Raises:
-            Exception: If no file path is given via the argument or via `self.filePath`
+            - Exception: If no file path is given via the argument or via `self.filePath`
         """
         if filepath is None:
             if self.filePath is None:
@@ -511,11 +511,11 @@ class SymbolLib():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

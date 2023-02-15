@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 # -- Project information -----------------------------------------------------
 
 project = 'kiutils'
-copyright = '2022, Marvin Mager'
+copyright = '2023, Marvin Mager'
 author = 'Marvin Mager'
 
 

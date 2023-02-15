@@ -14,6 +14,8 @@ Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_common_syntax
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
@@ -21,40 +23,40 @@ from kiutils.utils.strings import dequote
 
 @dataclass
 class Position():
-    """The `position` token defines the positional coordinates and rotation of an object.
+    """The ``position`` token defines the positional coordinates and rotation of an object.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_position_identifier
     """
 
     X: float = 0.0
-    """The `X` attribute defines the horizontal position of the object"""
+    """The ``X`` attribute defines the horizontal position of the object"""
 
     Y: float = 0.0
-    """The `Y` attribute defines the vertical position of the object"""
+    """The ``Y`` attribute defines the vertical position of the object"""
 
     angle: Optional[float] = None
-    """The optional `angle` attribute defines the rotational angle of the object. Not all
+    """The optional ``angle`` attribute defines the rotational angle of the object. Not all
     objects have rotational position definitions. Symbol text angles are stored in tenths
     of a degree. All other angles are stored in degrees."""
 
     # TODO: What is this? Documentation does not tell ..
     unlocked: bool = False
-    """The `unlocked` token's description has to be defined yet .."""
+    """The ``unlocked`` token's description has to be defined yet .."""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Position:
         """Convert the given S-Expresstion into a Position object
 
         Args:
-            exp (list): Part of parsed S-Expression `(xxx ...)`
+            - exp (list): Part of parsed S-Expression ``(xxx ...)``
 
         Raises:
-            Exception: When the given expression is not of type `list` or the list is less than
-            3 items long
+            - Exception: When the given expression is not of type ``list`` or the list is less than
+                         3 items long
 
         Returns:
-            Position: Object of the class initialized with the given S-Expression
+            - Position: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) < 3:
             raise Exception("Expression does not have the correct type")
@@ -72,38 +74,37 @@ class Position():
 
         return object
 
-    def to_sexpr():
-        """This object does not have a direct S-Expression representation.
-        """
+    def to_sexpr(self) -> str:
+        """This object does not have a direct S-Expression representation."""
         raise NotImplementedError("This object does not have a direct S-Expression representation")
 
 
 @dataclass
 class Coordinate():
-    """The `coordinate` token defines a three-dimentional position"""
+    """The ``coordinate`` token defines a three-dimentional position"""
 
     X: float = 0.0
-    """The `X` token defines the position of the object on the x-axis"""
+    """The ``X`` token defines the position of the object on the x-axis"""
 
     Y: float = 0.0
-    """The `Y` token defines the position of the object on the y-axis"""
+    """The ``Y`` token defines the position of the object on the y-axis"""
 
     Z: float = 0.0
-    """The `Z` token defines the position of the object on the z-axis"""
+    """The ``Z`` token defines the position of the object on the z-axis"""
 
     @classmethod
-    def from_sexpr(cls, exp: str):
+    def from_sexpr(cls, exp: list) -> Coordinate:
         """Convert the given S-Expresstion into a Coordinate object
 
         Args:
-            exp (list): Part of parsed S-Expression `(xyz ...)`
+            - exp (list): Part of parsed S-Expression ``(xyz ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list or the list is not 4 items long
-            Exception: When the first item of the list is not xyz
+            - Exception: When given parameter's type is not a list or the list is not 4 items long
+            - Exception: When the first item of the list is not xyz
 
         Returns:
-            Coordinate: Object of the class initialized with the given S-Expression
+            - Coordinate: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) != 4:
             raise Exception("Expression does not have the correct type")
@@ -121,11 +122,11 @@ class Coordinate():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -134,37 +135,37 @@ class Coordinate():
 
 @dataclass
 class ColorRGBA():
-    """The `color` token defines a RGBA color"""
+    """The ``color`` token defines a RGBA color"""
 
     R: int = 0
-    """The `R` token defines the red channel of the color"""
+    """The ``R`` token defines the red channel of the color"""
 
     G: int = 0
-    """The `G` token defines the green channel of the color"""
+    """The ``G`` token defines the green channel of the color"""
 
     B: int = 0
-    """The `B` token defines the blue channel of the color"""
+    """The ``B`` token defines the blue channel of the color"""
 
     A: int = 0
-    """The `A` token defines the alpha channel of the color"""
+    """The ``A`` token defines the alpha channel of the color"""
 
     precision: Optional[int] = None
-    """Wether the output of `to_sexpr()` should have a set number of precision after the decimal
-    point of the `self.A` attribute"""
+    """Wether the output of ``to_sexpr()`` should have a set number of precision after the decimal
+    point of the ``self.A`` attribute"""
 
     @classmethod
-    def from_sexpr(cls, exp: list, precision: Optional[int] = None):
+    def from_sexpr(cls, exp: list) -> ColorRGBA:
         """Convert the given S-Expresstion into a ColorRGBA object
 
         Args:
-            exp (list): Part of parsed S-Expression `(color ...)`
+            - exp (list): Part of parsed S-Expression ``(color ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list or the list is not 5 items long
-            Exception: When the first item of the list is not color
+            - Exception: When given parameter's type is not a list or the list is not 5 items long
+            - Exception: When the first item of the list is not color
 
         Returns:
-            ColorRGBA: Object of the class initialized with the given S-Expression
+            - ColorRGBA: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) != 5:
             raise Exception("Expression does not have the correct type")
@@ -183,11 +184,11 @@ class ColorRGBA():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -201,36 +202,36 @@ class ColorRGBA():
 
 @dataclass
 class Stroke():
-    """The `stroke` token defines how the outlines of graphical objects are drawn.
+    """The ``stroke`` token defines how the outlines of graphical objects are drawn.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_stroke_definition
     """
 
     width: float = 0.0
-    """The `width` token attribute defines the line width of the graphic object"""
+    """The ``width`` token attribute defines the line width of the graphic object"""
 
     type: str = "dash"
-    """The `type` token attribute defines the line style of the graphic object. Valid stroke line styles are:
-    - `dash`, `dash_dot`, `dash_dot_dot` (version 7), `dot`, `default`, `solid`
+    """The ``type`` token attribute defines the line style of the graphic object. Valid stroke line styles are:
+    - ``dash``, ``dash_dot``, ``dash_dot_dot`` (version 7), ``dot``, ``default``, ``solid``
     """
 
     color: ColorRGBA = field(default_factory=lambda: ColorRGBA())
-    """The `color` token attributes define the line red, green, blue, and alpha color settings"""
+    """The ``color`` token attributes define the line red, green, blue, and alpha color settings"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Stroke:
         """Convert the given S-Expresstion into a Stroke object
 
         Args:
-            exp (list): Part of parsed S-Expression `(stroke ...)`
+            - exp (list): Part of parsed S-Expression ``(stroke ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list or the list is not 4 items long
-            Exception: When the first item of the list is not stroke
+            - Exception: When given parameter's type is not a list or the list is not 4 items long
+            - Exception: When the first item of the list is not stroke
 
         Returns:
-            Stroke: Object of the class initialized with the given S-Expression
+            - Stroke: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list) or len(exp) != 4:
             raise Exception("Expression does not have the correct type")
@@ -251,11 +252,11 @@ class Stroke():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -266,7 +267,7 @@ class Stroke():
 
 @dataclass
 class Font():
-    """The `font` token attributes define how text is shown.
+    """The ``font`` token attributes define how text is shown.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_text_effects
@@ -295,18 +296,18 @@ class Font():
     line-spacing. (Not yet supported)"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Font:
         """Convert the given S-Expresstion into a Font object
 
         Args:
-            exp (list): Part of parsed S-Expression `(font ...)`
+            - exp (list): Part of parsed S-Expression ``(font ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not font
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not font
 
         Returns:
-            Font: Object of the class initialized with the given S-Expression
+            - Font: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -332,11 +333,11 @@ class Font():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -353,34 +354,34 @@ class Font():
 
 @dataclass
 class Justify():
-    """The `justify` token defines the justification of a text object
+    """The ``justify`` token defines the justification of a text object
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_text_effects
     """
 
     horizontally: Optional[str] = None
-    """The `horizontally` token sets the horizontal justification. Valid values are `right` or `left`"""
+    """The ``horizontally`` token sets the horizontal justification. Valid values are ``right`` or ``left``"""
 
     vertically: Optional[str] = None
-    """The `vertically` token sets the vertical justification. Valid values are `top` or `bottom`"""
+    """The ``vertically`` token sets the vertical justification. Valid values are ``top`` or ``bottom``"""
 
     mirror: bool = False
-    """The `mirror` token defines if the text is mirrored or not"""
+    """The ``mirror`` token defines if the text is mirrored or not"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
-        """Convert the given S-Expresstion into a Justification object
+    def from_sexpr(cls, exp: list) -> Justify:
+        """Convert the given S-Expresstion into a Justify object
 
         Args:
-            exp (list): Part of parsed S-Expression `(justify ...)`
+            - exp (list): Part of parsed S-Expression ``(justify ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not justify
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not justify
 
         Returns:
-            Justification: Object of the class initialized with the given S-Expression
+            - Justify: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -400,13 +401,13 @@ class Justify():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object or an empty string (depending on given indentation and 
-            newline settings) if no justification is given. This will cause the text to be 
-            horizontally and vertically aligend
+            - str: S-Expression of this object or an empty string (depending on given indentation 
+              and newline settings) if no justification is given. This will cause the text to be 
+              horizontally and vertically aligend
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -432,27 +433,27 @@ class Effects():
     """
 
     font: Font = field(default_factory=lambda: Font())
-    """The `font` token defines how the text is shown"""
+    """The ``font`` token defines how the text is shown"""
 
     justify: Justify = field(default_factory=lambda: Justify())
-    """The `justify` token defines the justification of the text"""
+    """The ``justify`` token defines the justification of the text"""
 
     hide: bool = False
-    """The optional `hide` token defines if the text is hidden"""
+    """The optional ``hide`` token defines if the text is hidden"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Effects:
         """Convert the given S-Expresstion into a Effects object
 
         Args:
-            exp (list): Part of parsed S-Expression `(effects ...)`
+            - exp (list): Part of parsed S-Expression ``(effects ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not effects
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not effects
 
         Returns:
-            Effects: Object of the class initialized with the given S-Expression
+            - Effects: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -473,11 +474,11 @@ class Effects():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -491,27 +492,27 @@ class Effects():
 
 @dataclass
 class Net():
-    """The `net` token defines the number and name of a net"""
+    """The ``net`` token defines the number and name of a net"""
 
     number: int = 0
-    """The `number` token defines the integer number of the net"""
+    """The ``number`` token defines the integer number of the net"""
 
     name: str = ""
-    """The `name` token defines the name of the net"""
+    """The ``name`` token defines the name of the net"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Net:
         """Convert the given S-Expresstion into a Net object
 
         Args:
-            exp (list): Part of parsed S-Expression `(net ...)`
+            - exp (list): Part of parsed S-Expression ``(net ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not net
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not net
 
         Returns:
-            Net: Object of the class initialized with the given S-Expression
+            - Net: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -528,11 +529,11 @@ class Net():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 0.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to False.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 0.
+            - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -541,37 +542,37 @@ class Net():
 
 @dataclass
 class Group():
-    """The `group` token defines a group of items.
+    """The ``group`` token defines a group of items.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_group
     """
 
     name: str = ""
-    """The `name` attribute defines the name of the group"""
+    """The ``name`` attribute defines the name of the group"""
 
     locked: bool = False
-    """The `locked` token defines if the group may be moved or not"""
+    """The ``locked`` token defines if the group may be moved or not"""
 
     id: str = ""
-    """The `id` token attribute defines the unique identifier of the group"""
+    """The ``id`` token attribute defines the unique identifier of the group"""
 
     members: List[str] = field(default_factory=list)
-    """The `members` token attributes define a list of unique identifiers of the objects belonging to the group"""
+    """The ``members`` token attributes define a list of unique identifiers of the objects belonging to the group"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Group:
         """Convert the given S-Expresstion into a Group object
 
         Args:
-            exp (list): Part of parsed S-Expression `(group ...)`
+            - exp (list): Part of parsed S-Expression ``(group ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not group
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not group
 
         Returns:
-            Group: Object of the class initialized with the given S-Expression
+            - Group: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -595,11 +596,11 @@ class Group():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -616,39 +617,39 @@ class Group():
 
 @dataclass
 class PageSettings():
-    """The `paper` token defines the drawing page size and orientation.
+    """The ``paper`` token defines the drawing page size and orientation.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_page_settings
     """
     paperSize: str = "A4"
-    """The `paperSize` token defines the size of the paper. Valid sizes are `A0`, `A1`, `A2`,
-    `A3`, `A4`, `A5`, `A`, `B`, `C`, `D` and `E`. When using user-defines page sizes, set this
-    to `User`"""
+    """The ``paperSize`` token defines the size of the paper. Valid sizes are `A0`, `A1`, `A2`,
+    `A3`, `A4`, `A5`, ``A``, ``B``, ``C``, ``D`` and ``E``. When using user-defines page sizes, set 
+    this to ``User``"""
 
     width: Optional[float] = None
-    """The `width` token sets the width of a user-defines page size"""
+    """The ``width`` token sets the width of a user-defines page size"""
 
     height: Optional[float] = None
-    """The `height` token sets the height of a user-defines page size"""
+    """The ``height`` token sets the height of a user-defines page size"""
 
     portrait: bool = False
-    """The `portrait` token defines if the page is in portrait or landscape mode"""
+    """The ``portrait`` token defines if the page is in portrait or landscape mode"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> PageSettings:
         """Convert the given S-Expresstion into a PageSettings object
 
         Args:
-            exp (list): Part of parsed S-Expression `(paper ...)`
+            - exp (list): Part of parsed S-Expression ``(paper ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not paper
-            Exception: When the paper type is set to `User` and the list's length is not 4
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not paper
+            - Exception: When the paper type is set to ``User`` and the list's length is not 4
 
         Returns:
-            PageSettings: Object of the class initialized with the given S-Expression
+            - PageSettings: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -674,14 +675,14 @@ class PageSettings():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Raises:
-            Exception: When paper size is set to `User` and width or height is not specified
+            - Exception: When paper size is set to ``User`` and width or height is not specified
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -697,41 +698,41 @@ class PageSettings():
 
 @dataclass
 class TitleBlock():
-    """The `title_block` token defines the contents of the title block.
+    """The ``title_block`` token defines the contents of the title block.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/#_title_block
     """
 
     title: Optional[str] = None
-    """The optional `title` token attribute is a quoted string that defines the document title"""
+    """The optional ``title`` token attribute is a quoted string that defines the document title"""
 
     date: Optional[str] = None
-    """The optional `date` token attribute is a quoted string that defines the document date using the YYYY-MM-DD format"""
+    """The optional ``date`` token attribute is a quoted string that defines the document date using the YYYY-MM-DD format"""
 
     revision: Optional[str] = None
-    """The optional `revision` token attribute is a quoted string that defines the document revision"""
+    """The optional ``revision`` token attribute is a quoted string that defines the document revision"""
 
     company: Optional[str] = None
-    """The optional `company` token attribute is a quoted string that defines the document company name"""
+    """The optional ``company`` token attribute is a quoted string that defines the document company name"""
 
     comments: Dict[int, str] = field(default_factory=dict)
-    """The `comments` token attributes define a dictionary of document comments where the key is
+    """The ``comments`` token attributes define a dictionary of document comments where the key is
     a number from 1 to 9 and the value is a comment string"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> TitleBlock:
         """Convert the given S-Expresstion into a TitleBlock object
 
         Args:
-            exp (list): Part of parsed S-Expression `(title_block ...)`
+            - exp (list): Part of parsed S-Expression ``(title_block ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not title_block
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not title_block
 
         Returns:
-            TitleBlock: Object of the class initialized with the given S-Expression
+            - TitleBlock: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -752,11 +753,11 @@ class TitleBlock():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 2.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
@@ -781,41 +782,41 @@ class TitleBlock():
 
 @dataclass
 class Property():
-    """The `property` token defines a symbol property when used inside a `symbol` definition.
+    """The ``property`` token defines a symbol property when used inside a ``symbol`` definition.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_property
     """
 
     key: str = ""
-    """The `key` string defines the name of the property and must be unique"""
+    """The ``key`` string defines the name of the property and must be unique"""
 
     value: str = ""
-    """The `value` string defines the value of the property"""
+    """The ``value`` string defines the value of the property"""
 
     id: int = 0
     """The id token defines an integer ID for the property and must be unique"""
 
     position: Position = field(default_factory=lambda: Position(angle=0))
-    """The `position` defines the X and Y coordinates as well as the rotation angle of the property.
+    """The ``position`` defines the X and Y coordinates as well as the rotation angle of the property.
     All three items will initially be set to zero."""
 
     effects: Optional[Effects] = None
-    """The `effects` section defines how the text is displayed"""
+    """The ``effects`` section defines how the text is displayed"""
 
     @classmethod
-    def from_sexpr(cls, exp: list):
+    def from_sexpr(cls, exp: list) -> Property:
         """Convert the given S-Expresstion into a Property object
 
         Args:
-            exp (list): Part of parsed S-Expression `(property ...)`
+            - exp (list): Part of parsed S-Expression ``(property ...)``
 
         Raises:
-            Exception: When given parameter's type is not a list
-            Exception: When the first item of the list is not property
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not property
 
         Returns:
-            Property: Object of the class initialized with the given S-Expression
+            - Property: Object of the class initialized with the given S-Expression
         """
         if not isinstance(exp, list):
             raise Exception("Expression does not have the correct type")
@@ -836,11 +837,11 @@ class Property():
         """Generate the S-Expression representing this object
 
         Args:
-            indent (int, optional): Number of whitespaces used to indent the output. Defaults to 4.
-            newline (bool, optional): Adds a newline to the end of the output. Defaults to True.
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
 
         Returns:
-            str: S-Expression of this object
+            - str: S-Expression of this object
         """
         indents = ' '*indent
         endline = '\n' if newline else ''

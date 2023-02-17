@@ -39,6 +39,9 @@ class Library():
     description: str = ""
     """The ``description`` token (..) TBD"""
 
+    active: bool = True
+    """The ``active`` token sets if the library is loaded by KiCad"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Library:
         """Convert the given S-Expresstion into a Library object
@@ -66,6 +69,7 @@ class Library():
             if item[0] == 'uri': object.uri = item[1]
             if item[0] == 'options': object.options = item[1]
             if item[0] == 'descr': object.description = item[1]
+            if item[0] == 'disabled': object.active = False
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -81,7 +85,19 @@ class Library():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        return f'{indents}(lib (name "{dequote(self.name)}")(type "{dequote(self.type)}")(uri "{dequote(self.uri)}")(options "{dequote(self.options)}")(descr "{dequote(self.description)}")){endline}'
+        expression = f'{indents}(lib '
+        expression += f'(name "{dequote(self.name)}")'
+        expression += f'(type "{dequote(self.type)}")'
+        expression += f'(uri "{dequote(self.uri)}")'
+        expression += f'(options "{dequote(self.options)}")'
+        expression += f'(descr "{dequote(self.description)}")'
+
+        if not self.active:
+            expression += '(disabled)'
+
+        expression += f'){endline}'
+
+        return expression
 
 @dataclass
 class LibTable():

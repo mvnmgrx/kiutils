@@ -43,7 +43,8 @@ class Tests_LibTable(unittest.TestCase):
             type = "KiCad",
             uri = '${KIPRJMOD}/my/library.pretty',
             options = 'Some options with "quoted strings"',
-            description = 'Some description with "quoted strings"'
+            description = 'Some description with "quoted strings"',
+            active = False
         ))
         self.assertTrue(to_file_and_compare(libtable, self.testData))
 

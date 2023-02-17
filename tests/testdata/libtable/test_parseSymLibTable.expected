@@ -1,4 +1,4 @@
 (sym_lib_table
-  (lib (name "vn-mcu-own")(type "KiCad")(uri "${KIPRJMOD}/vn-mcu-ownlibs/vn-mcu-own.kicad_sym")(options "")(descr ""))
+  (lib (name "vn-mcu-own")(type "KiCad")(uri "${KIPRJMOD}/vn-mcu-ownlibs/vn-mcu-own.kicad_sym")(options "")(descr "")(disabled))
   (lib (name "vn-mcu-symbols")(type "KiCad")(uri "${KIPRJMOD}/vn-mcu-librarys/vn-mcu-symbols.kicad_sym")(options "")(descr ""))
 )

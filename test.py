@@ -8,6 +8,15 @@ License identifier:
 """
 import unittest
 
+import os
+import sys
+
+PROJECT_PATH = os.getcwd()
+SOURCE_PATH = os.path.join(
+    PROJECT_PATH, "src"
+)
+sys.path.append(SOURCE_PATH)
+
 from tests.test_board import *
 from tests.test_designrules import *
 from tests.test_footprint import *

@@ -67,10 +67,12 @@ class Tests_Schematic(unittest.TestCase):
         self.assertTrue(to_file_and_compare(schematic, self.testData))
 
     def test_renameSymbolIdTokenInSchematic(self):
-        """Tests if renaming schematic symbols as well as normal symbols using their ID token works
-        as expected. Checks that the ``Value`` property does not change."""
+        """Tests if renaming (setting and unsetting) schematic symbols as well as normal symbols 
+        using their ID token works as expected. Checks that the ``Value`` property does not change."""
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_renameSymbolIdTokenInSchematic')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         schematic.libSymbols[0].id = "RenamedSwitch:SW_Coded_New"
+        schematic.libSymbols[1].id = "Unset_Lib_Id"
         schematic.schematicSymbols[0].libId = "SwitchRenamed:SW_Coded_2"
+        schematic.schematicSymbols[1].libId = "Unset_Lib_Id"
         self.assertTrue(to_file_and_compare(schematic, self.testData))

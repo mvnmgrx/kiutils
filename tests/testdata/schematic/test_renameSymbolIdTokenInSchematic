@@ -14,11 +14,27 @@
       (symbol "SW_Coded_1_1"
       )
     )
+    (symbol "SomeLibNickName:Unset_Lib_Id"
+      (property "Value" "SW_Coded" (id 1) (at -6.35 -7.62 0)
+        (effects (font (size 1.27 1.27)) (justify left))
+      )
+      (symbol "SW_Coded_New_0_1"
+      )
+      (symbol "SW_Coded_New_1_1"
+      )
+    )
   )
 
   (symbol (lib_id "Switch:SW_Coded") (at 111.76 163.83 0)
     (in_bom no) (on_board no)
     (property "Value" "SW_Coded" (id 1) (at 103.505 165.7349 0)
+      (effects (font (size 1.27 1.27)) (justify right))
+    )
+  )
+
+  (symbol (lib_id "Switch:Some_Component") (at 111.76 163.83 0)
+    (in_bom no) (on_board no)
+    (property "Value" "Some_Component" (id 1) (at 103.505 165.7349 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
   )

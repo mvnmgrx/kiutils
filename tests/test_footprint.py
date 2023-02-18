@@ -55,7 +55,7 @@ class Tests_Footprint(unittest.TestCase):
         # Create footprint with correct type
         footprint = Footprint().create_new(
             type = 'smd',
-            library_link = 'empty-footprint-smd',
+            library_id = 'empty-footprint-smd',
             value = 'empty-footprint-smd'
         )
 
@@ -72,7 +72,7 @@ class Tests_Footprint(unittest.TestCase):
         # Create footprint with correct type
         footprint = Footprint().create_new(
             type = 'through_hole',
-            library_link = 'empty-footprint-through_hole',
+            library_id = 'empty-footprint-through_hole',
             value = 'empty-footprint-through_hole'
         )
 
@@ -89,7 +89,7 @@ class Tests_Footprint(unittest.TestCase):
         # Create footprint with correct type
         footprint = Footprint().create_new(
             type = 'other',
-            library_link = 'empty-footprint-other',
+            library_id = 'empty-footprint-other',
             value = 'empty-footprint-other'
         )
         # Set timestamps to be the same as in the expected test output

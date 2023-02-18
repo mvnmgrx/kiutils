@@ -15,8 +15,8 @@ Documentation taken from:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 import re
+from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
 from kiutils.items.common import Position, ColorRGBA, Stroke, Effects, Property
@@ -748,19 +748,11 @@ class SchematicSymbol():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_symbol_section
     """
 
-    libraryNickname: Optional[str] = None
-    """The optional ``libraryNickname`` token defines which symbol library this symbol belongs to
-    and is a part of the ``id`` token"""
-    
-    entryName: str = None
-    """The ``entryName`` token defines the actual name of the symbol and is a part of the ``id`` 
-    token"""
-
     @property
     def libId(self) -> str:
         """The ``lib_id`` token defines which symbol in the library symbol section of the schematic
-        this schematic symbol references. In ``kiutils``, the ``lib_id`` token is a combination of 
-        both the ``libraryNickname`` and ``entryName`` token. Setting the ``lib_id`` token will 
+        this schematic symbol references. In ``kiutils``, the ``lib_id`` token is a combination of
+        both the ``libraryNickname`` and ``entryName`` token. Setting the ``lib_id`` token will
         update those tokens accordingly.
 
         Returns:
@@ -774,7 +766,7 @@ class SchematicSymbol():
 
     @libId.setter
     def libId(self, symbol_id: str):
-        """Sets the ``lib_id`` token and parses its contents into the ``libraryNickname`` and 
+        """Sets the ``lib_id`` token and parses its contents into the ``libraryNickname`` and
         ``entryName`` token.
 
         Args:
@@ -789,11 +781,19 @@ class SchematicSymbol():
             self.libraryNickname = None
             self.entryName = symbol_id
 
+    libraryNickname: Optional[str] = None
+    """The optional ``libraryNickname`` token defines which symbol library this symbol belongs to
+    and is a part of the ``id`` token"""
+
+    entryName: str = None
+    """The ``entryName`` token defines the actual name of the symbol and is a part of the ``id``
+    token"""
+
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` defines the X and Y coordinates and angle of rotation of the symbol"""
 
     unit: Optional[int] = None
-    """The optional ``unit`` token attribute defines which unit in the symbol library definition 
+    """The optional ``unit`` token attribute defines which unit in the symbol library definition
     that the schematic symbol represents"""
 
     inBom: bool = False
@@ -819,8 +819,8 @@ class SchematicSymbol():
     uuid's as values"""
 
     mirror: Optional[str] = None
-    """The ``mirror`` token defines if the symbol is mirrored in the schematic. Accepted values: 
-    ``x`` or ``y``. When mirroring around the x and y axis at the same time use some additional 
+    """The ``mirror`` token defines if the symbol is mirrored in the schematic. Accepted values:
+    ``x`` or ``y``. When mirroring around the x and y axis at the same time use some additional
     rotation to get the correct orientation of the symbol."""
 
     @classmethod

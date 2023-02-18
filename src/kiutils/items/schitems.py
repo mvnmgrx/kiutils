@@ -16,6 +16,7 @@ Documentation taken from:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import re
 from typing import Optional, List, Dict
 
 from kiutils.items.common import Position, ColorRGBA, Stroke, Effects, Property
@@ -741,34 +742,70 @@ class HierarchicalLabel():
 @dataclass
 class SchematicSymbol():
     """The ``symbol`` token in the symbol section of the schematic defines an instance of a symbol
-       from the library symbol section of the schematic
+    from the library symbol section of the schematic
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_symbol_section
     """
 
-    libraryIdentifier: str = ""
-    """The ``libraryIdentifier`` defines which symbol in the library symbol section of the schematic
-       that this schematic symbol references"""
+    libraryNickname: Optional[str] = None
+    """The optional ``libraryNickname`` token defines which symbol library this symbol belongs to
+    and is a part of the ``id`` token"""
+    
+    entryName: str = None
+    """The ``entryName`` token defines the actual name of the symbol and is a part of the ``id`` 
+    token"""
+
+    @property
+    def libId(self) -> str:
+        """The ``lib_id`` token defines which symbol in the library symbol section of the schematic
+        this schematic symbol references. It is combined from both the ``libraryNickname`` and 
+        ``entryName``.
+
+        Returns:
+            - Symbol id in the following format: ``<libraryNickname>:<entryName>`` or ``<entryName>``,
+              if ``libraryNickname`` token is not set.
+        """
+        if self.libraryNickname:
+            return f'{self.libraryNickname}:{self.entryName}'
+        else:
+            return f'{self.entryName}'
+
+    @libId.setter
+    def libId(self, symbol_id: str):
+        """Sets the ``lib_id`` token and parses its contents into the ``libraryNickname`` and 
+        ``entryName`` token.
+
+        Args:
+            - symbol_id (str): The symbol id in the following format: ``<libraryNickname>:<entryName>``
+              or only ``<entryName>``
+        """
+        parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
+        if parse_symbol_id:
+            self.libraryNickname = parse_symbol_id.group(1)
+            self.entryName = parse_symbol_id.group(2)
+        else:
+            self.libraryNickname = None
+            self.entryName = symbol_id
 
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` defines the X and Y coordinates and angle of rotation of the symbol"""
 
     unit: Optional[int] = None
-    """The optional ``unit`` token attribute defines which unit in the symbol library definition that the
-       schematic symbol represents"""
+    """The optional ``unit`` token attribute defines which unit in the symbol library definition 
+    that the schematic symbol represents"""
 
     inBom: bool = False
     """The ``in_bom`` token attribute determines whether the schematic symbol appears in any bill
-       of materials output"""
+    of materials output"""
 
     onBoard: bool = False
-    """The on_board token attribute determines if the footprint associated with the symbol is
-       exported to the board via the netlist"""
+    """The ``on_board`` token attribute determines if the footprint associated with the symbol is
+    exported to the board via the netlist"""
 
     fieldsAutoplaced: bool = False
     """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
-       with the global label have been place automatically"""
+    with the global label have been place automatically"""
 
     uuid: Optional[str] = ""
     """The optional `uuid` defines the universally unique identifier"""
@@ -778,12 +815,12 @@ class SchematicSymbol():
 
     pins: Dict[str, str] = field(default_factory=dict)
     """The ``pins`` token defines a dictionary with pin numbers in form of strings as keys and
-       uuid's as values"""
+    uuid's as values"""
 
     mirror: Optional[str] = None
-    """The ``mirror`` token defines if the symbol is mirrored in the schematic. Accepted values: ``x`` or ``y``.
-    When mirroring around the x and y axis at the same time use some additional rotation to get the correct
-    orientation of the symbol."""
+    """The ``mirror`` token defines if the symbol is mirrored in the schematic. Accepted values: 
+    ``x`` or ``y``. When mirroring around the x and y axis at the same time use some additional 
+    rotation to get the correct orientation of the symbol."""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> SchematicSymbol:
@@ -808,7 +845,7 @@ class SchematicSymbol():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
-            if item[0] == 'lib_id': object.libraryIdentifier = item[1]
+            if item[0] == 'lib_id': object.libId = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'unit': object.unit = item[1]
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
@@ -839,7 +876,7 @@ class SchematicSymbol():
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
         unit = f' (unit {self.unit})' if self.unit is not None else ''
 
-        expression =  f'{indents}(symbol (lib_id "{dequote(self.libraryIdentifier)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
+        expression =  f'{indents}(symbol (lib_id "{dequote(self.libId)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
         expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'
         if self.uuid:
             expression += f'{indents}  (uuid {self.uuid})\n'
@@ -849,6 +886,13 @@ class SchematicSymbol():
             expression += f'{indents}  (pin "{dequote(number)}" (uuid {uuid}))\n'
         expression += f'{indents}){endline}'
         return expression
+
+
+test = SchematicSymbol()
+
+test.id = "2"
+ftest = test.id
+
 
 @dataclass
 class HierarchicalPin():

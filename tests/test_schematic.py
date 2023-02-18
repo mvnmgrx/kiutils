@@ -72,5 +72,5 @@ class Tests_Schematic(unittest.TestCase):
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_renameSymbolIdTokenInSchematic')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         schematic.libSymbols[0].id = "RenamedSwitch:SW_Coded_New"
-        schematic.schematicSymbols[0].libraryIdentifier = "SwitchRenamed:SW_Coded_2"
+        schematic.schematicSymbols[0].libId = "SwitchRenamed:SW_Coded_2"
         self.assertTrue(to_file_and_compare(schematic, self.testData))

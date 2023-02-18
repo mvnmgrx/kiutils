@@ -789,6 +789,11 @@ class SchematicSymbol():
     """The ``entryName`` token defines the actual name of the symbol and is a part of the ``id``
     token"""
 
+    libName: Optional[str] = None
+    """The optional ``lib_name`` token is only set when the symbol was edited in the schematic.  
+    It may be set to ``<entryName>_X`` where X is a unique number that specifies which variation 
+    this symbol is of its original."""
+
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` defines the X and Y coordinates and angle of rotation of the symbol"""
 
@@ -847,6 +852,7 @@ class SchematicSymbol():
         for item in exp[1:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
             if item[0] == 'lib_id': object.libId = item[1]
+            if item[0] == 'lib_name': object.libName = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'unit': object.unit = item[1]
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
@@ -876,8 +882,9 @@ class SchematicSymbol():
         onBoard = 'yes' if self.onBoard else 'no'
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
         unit = f' (unit {self.unit})' if self.unit is not None else ''
+        lib_name = f' (lib_name {self.libName})' if self.libName is not None else ''
 
-        expression =  f'{indents}(symbol (lib_id "{dequote(self.libId)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
+        expression =  f'{indents}(symbol{lib_name} (lib_id "{dequote(self.libId)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
         expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'
         if self.uuid:
             expression += f'{indents}  (uuid {self.uuid})\n'

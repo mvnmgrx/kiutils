@@ -426,7 +426,7 @@ class SymbolLib():
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-symbol-lib/
     """
-    version: Optional[str] = None
+    version: str = "20211014"
     """The ``version`` token attribute defines the symbol library version using the YYYYMMDD date format"""
 
     generator: Optional[str] = None

@@ -759,8 +759,9 @@ class SchematicSymbol():
     @property
     def libId(self) -> str:
         """The ``lib_id`` token defines which symbol in the library symbol section of the schematic
-        this schematic symbol references. It is combined from both the ``libraryNickname`` and 
-        ``entryName``.
+        this schematic symbol references. In ``kiutils``, the ``lib_id`` token is a combination of 
+        both the ``libraryNickname`` and ``entryName`` token. Setting the ``lib_id`` token will 
+        update those tokens accordingly.
 
         Returns:
             - Symbol id in the following format: ``<libraryNickname>:<entryName>`` or ``<entryName>``,

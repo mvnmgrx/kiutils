@@ -184,7 +184,7 @@ class SymbolPin():
 @dataclass
 class Symbol():
     """The ``symbol`` token defines a symbol or sub-unit of a parent symbol. There can be zero or more
-       ``symbol`` tokens in a symbol library file.
+    ``symbol`` tokens in a symbol library file.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbols
@@ -194,15 +194,15 @@ class Symbol():
     "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers are only valid it top
     level symbols and unit identifiers are on valid as unit symbols inside a parent symbol."""
     @property
-    def id(self):
+    def libId(self):
         unit_style_ids = f"_{self.unitId}_{self.styleId}" if (self.unitId is not None and self.styleId is not None) else ""
         if self.libraryNickname:
             return f'{self.libraryNickname}:{self.entryName}{unit_style_ids}'
         else:
             return f'{self.entryName}{unit_style_ids}'
 
-    @id.setter
-    def id(self, symbol_id):
+    @libId.setter
+    def libId(self, symbol_id):
         # Split library id into nickname, entry name, unit id and style id (if any)
         parse_symbol_id = re.match(r"^(.+?):(.+?)_(\d+?)_(\d+?)$", symbol_id)
         if parse_symbol_id:
@@ -286,7 +286,7 @@ class Symbol():
     """The ``pins`` section is a list of pins that are used by the symbol. This section can be empty if
     the symbol does not have any pins."""
 
-    units: List = field(default_factory=list)
+    units: List[Symbol] = field(default_factory=list)
     """The ``units`` can be one or more child symbol tokens embedded in a parent symbol"""
 
     unitId: Optional[int] = None
@@ -316,7 +316,7 @@ class Symbol():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
-        object.id = exp[1]
+        object.libId = exp[1]
         for item in exp[2:]:
             if item[0] == 'extends': object.extends = item[1]
             if item[0] == 'pin_numbers':
@@ -364,7 +364,7 @@ class Symbol():
         symbol = cls()
         symbol.inBom = True
         symbol.onBoard = True
-        symbol.id = id
+        symbol.libId = id
         symbol.properties.extend(
             [
                 Property(key = "Reference", value = reference, id = 0,
@@ -406,7 +406,7 @@ class Symbol():
         pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
         extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
 
-        expression =  f'{indents}(symbol "{dequote(self.id)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
+        expression =  f'{indents}(symbol "{dequote(self.libId)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
         for item in self.properties:
             expression += item.to_sexpr(indent+2)
         for item in self.graphicItems:

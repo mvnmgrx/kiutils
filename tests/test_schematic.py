@@ -71,8 +71,8 @@ class Tests_Schematic(unittest.TestCase):
         using their ID token works as expected. Checks that the ``Value`` property does not change."""
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_renameSymbolIdTokenInSchematic')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
-        schematic.libSymbols[0].id = "RenamedSwitch:SW_Coded_New"
-        schematic.libSymbols[1].id = "Unset_Lib_Id"
-        schematic.schematicSymbols[0].libId = "SwitchRenamed:SW_Coded_2"
-        schematic.schematicSymbols[1].libId = "Unset_Lib_Id"
+        schematic.libSymbols[0].libId = "RenamedSwitch:SW_Coded_New"        # Setting library nickname
+        schematic.libSymbols[1].libId = "Unset_Lib_Id"                      # Unsetting library nickname
+        schematic.schematicSymbols[0].libId = "SwitchRenamed:SW_Coded_2"    # Setting library nickname
+        schematic.schematicSymbols[1].libId = "Unset_Lib_Id"                # Unsetting library nickname
         self.assertTrue(to_file_and_compare(schematic, self.testData))

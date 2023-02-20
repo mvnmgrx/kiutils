@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import calendar
 import datetime
+import re
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 from os import path
@@ -643,9 +644,47 @@ class Footprint():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint
     """
 
-    libraryLink: str = ""
-    """The ``libraryLink`` attribute defines the link to footprint library of the footprint.
-    This only applies to footprints defined in the board file format."""
+    @property
+    def libId(self) -> str:
+        """The ``lib_id`` token defines the link to footprint library of the footprint.
+        This only applies to footprints defined in the board file format, in a regular footprint 
+        file this id defines the footprint's name. In ``kiutils``, the token is a combination of
+        both the ``libraryNickname`` and ``entryName`` token. Setting the ``lib_id`` token will
+        update those tokens accordingly.
+
+        Returns:
+            - Symbol id in the following format: ``<libraryNickname>:<entryName>`` or ``<entryName>``,
+              if ``libraryNickname`` token is not set.
+        """
+        if self.libraryNickname:
+            return f'{self.libraryNickname}:{self.entryName}'
+        else:
+            return f'{self.entryName}'
+
+    @libId.setter
+    def libId(self, symbol_id: str):
+        """Sets the ``lib_id`` token and parses its contents into the ``libraryNickname`` and
+        ``entryName`` token.
+
+        Args:
+            - symbol_id (str): The symbol id in the following format: ``<libraryNickname>:<entryName>``
+              or only ``<entryName>``
+        """
+        parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
+        if parse_symbol_id:
+            self.libraryNickname = parse_symbol_id.group(1)
+            self.entryName = parse_symbol_id.group(2)
+        else:
+            self.libraryNickname = None
+            self.entryName = symbol_id
+
+    libraryNickname: Optional[str] = None
+    """The optional ``libraryNickname`` token defines which symbol library this symbol belongs to
+    and is a part of the ``id`` token"""
+    
+    entryName: str = None
+    """The ``entryName`` token defines the actual name of the symbol and is a part of the ``id`` 
+    token"""
 
     version: Optional[str] = None
     """The ``version`` token attribute defines the symbol library version using the YYYYMMDD date format"""
@@ -779,7 +818,7 @@ class Footprint():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
-        object.libraryLink = exp[1]
+        object.libId = exp[1]
         for item in exp[2:]:
             if not isinstance(item, list):
                 if item == 'locked': object.locked = True
@@ -864,7 +903,7 @@ class Footprint():
             return cls.from_sexpr(fpData)
 
     @classmethod
-    def create_new(cls, library_link: str, value: str,
+    def create_new(cls, library_id: str, value: str,
                         type: str = 'other', reference: str = 'REF**') -> Footprint:
         """Creates a new empty footprint with its attributes set as KiCad would create it
 
@@ -883,10 +922,10 @@ class Footprint():
             raise Exception("Unsupported type was given")
 
         fp = cls(
-            libraryLink = library_link,
             version = KIUTILS_CREATE_NEW_VERSION_STR,
             generator = 'kiutils'
         )
+        fp.libId = library_id
 
         # Create text items that are created when adding a new footprint to a library
         fp.graphicItems.extend(
@@ -955,7 +994,7 @@ class Footprint():
         generator = f' (generator {self.generator})' if self.generator is not None else ''
         tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
 
-        expression =  f'{indents}(footprint "{dequote(self.libraryLink)}"{locked}{placed}{version}{generator}'
+        expression =  f'{indents}(footprint "{dequote(self.libId)}"{locked}{placed}{version}{generator}'
         if layerInFirstLine:
             expression += f' (layer "{dequote(self.layer)}")\n'
         else:

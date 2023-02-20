@@ -13,6 +13,7 @@ from os import path
 from tests.testfunctions import to_file_and_compare, prepare_test, cleanup_after_test, TEST_BASE
 from kiutils.symbol import SymbolLib, Symbol
 from kiutils.misc.config import KIUTILS_CREATE_NEW_VERSION_STR
+from kiutils.utils.sexpr import parse_sexp
 
 SYMBOL_BASE = path.join(TEST_BASE, 'symbol')
 
@@ -93,8 +94,22 @@ class Tests_Symbol(unittest.TestCase):
         correctly as well as the ``Value`` property stayed the same."""
         self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_renameParentIdUsingIdToken')
         symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
-        symbol = symbolLib.symbols[0]
-        symbol.id = 'ExampleLibrary:AD2023'
+        symbolLib.symbols[0].libId = 'ExampleLibrary:AD2023'    # Setting library nickname
+        symbolLib.symbols[1].libId = 'AD2023'                   # Unsetting library nickname
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))
+
+    def test_createNewTopLevelSymbolFromChild(self):
+        """Take a child symbol, rename its library id and make a new top-level symbol out of it. 
+        Tests if resetting both ``unitId`` and ``styleId`` works."""
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_createNewTopLevelSymbolFromChild')
+        symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
+
+        # Copy the symbol
+        childSymbol = Symbol.from_sexpr(parse_sexp(symbolLib.symbols[0].units[0].to_sexpr()))
+
+        # Rename it and save it as a new top-level symbol to the library
+        childSymbol.libId = "SomeNewName:AD2023"
+        symbolLib.symbols.append(childSymbol)
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
     def test_mergeLibraries(self):

@@ -76,3 +76,11 @@ class Tests_Board(unittest.TestCase):
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_createEmptyBoard')
         board = Board().create_new()
         self.assertTrue(to_file_and_compare(board, self.testData))
+
+    def test_footprintPadNewLines(self):
+        """Renames the libId token (setting and unsetting) of footprints on a board"""
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_renameFootprintIdToken')
+        board = Board().from_file(self.testData.pathToTestFile)
+        board.footprints[0].libId = "I_was_renamed:BUS_PCIexpress_x1"
+        board.footprints[1].libId = "I_was_added:BUS_PCIexpress_x1"
+        self.assertTrue(to_file_and_compare(board, self.testData))

@@ -184,61 +184,107 @@ class SymbolPin():
 @dataclass
 class Symbol():
     """The ``symbol`` token defines a symbol or sub-unit of a parent symbol. There can be zero or more
-       ``symbol`` tokens in a symbol library file.
+    ``symbol`` tokens in a symbol library file.
 
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbols
     """
 
-    """Each symbol must have a unique "LIBRARY_ID" for each top level symbol in the library or a unique
-    "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers are only valid it top
-    level symbols and unit identifiers are on valid as unit symbols inside a parent symbol."""
+    """Each symbol must have """
     @property
-    def id(self):
-        unit_style_ids = f"_{self.unitId}_{self.styleId}" if (self.unitId is not None and self.styleId is not None) else ""
+    def libId(self) -> str:
+        """The ``lib_id`` token defines a unique "LIBRARY_ID" for each top level symbol in the
+        library or a unique "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers
+        are only valid it top level symbols and unit identifiers are on valid as unit symbols inside
+        a parent symbol. 
+        
+        The following conventions apply:
+            - "LIBRARY_ID" (top-level symbol): ``[<libraryNickname>:]<entryName>`` (the library 
+              nickname part is optional here)
+            - "UNIT_ID" (child symbol): ``<entryName>_<unitId>_<styleId>``
+
+        In ``kiutils``, the ``lib_id`` token is a combination of ``libraryNickname``, ``entryName``,
+        ``unitId`` and ``styleId`` tokens. Setting the ``lib_id`` token will update all those tokens
+        accordingly.
+
+        Returns:
+            - If the ``libraryNickname`` is set: ``<libraryNickname>:<entryName>``
+            - If the ``libraryNickname`` is ``None``: ``<entryName>`` or ``<entryName>_<unitId>_<styleId>``,
+              depending if these tokens are set.
+        """
+        if (self.unitId is not None and self.styleId is not None):
+            unit_style_ids = f"_{self.unitId}_{self.styleId}"
+        else:
+            unit_style_ids = ""
+
         if self.libraryNickname:
-            return f'{self.libraryNickname}:{self.entryName}{unit_style_ids}'
+            return f'{self.libraryNickname}:{self.entryName}'
         else:
             return f'{self.entryName}{unit_style_ids}'
 
-    @id.setter
-    def id(self, symbol_id):
+    @libId.setter
+    def libId(self, symbol_id: str):
+        """Sets the ``lib_id`` token and parses its contents into the ``libraryNickname``,
+        ``entryName``, ``unitId`` and ``styleId`` token. 
+
+        See self.libId property description for more information.
+        
+        Args:
+            - symbol_id (str): The symbol id in the following format: ``<libraryNickname>:<entryName>``,
+              ``<entryName>_<unitId>_<styleId>`` or only ``<entryName>``, depending on if the symbol
+              is a top-level symbol or a child symbol
+
+        Raises:
+            - Exception: If the given ID is neither a top-level nor a child symbol
+        """
         # Split library id into nickname, entry name, unit id and style id (if any)
+        # Check if the given ID has the correct format
         parse_symbol_id = re.match(r"^(.+?):(.+?)_(\d+?)_(\d+?)$", symbol_id)
         if parse_symbol_id:
-            self.libraryNickname = parse_symbol_id.group(1)
-            self.entryName = parse_symbol_id.group(2)
-            self.unitId = int(parse_symbol_id.group(3))
-            self.styleId = int(parse_symbol_id.group(4))
+            raise Exception("Given ID is neither to a top-level nor to a child symbol")
         else:
+            # Try to parse the given ID
             parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
             if parse_symbol_id:
+                # The symbol is a top-level symbol with a library nickname
                 self.libraryNickname = parse_symbol_id.group(1)
-                entryName_t = parse_symbol_id.group(2)
+                self.entryName = parse_symbol_id.group(2)
+                self.unitId = None
+                self.styleId = None
             else:
-                entryName_t = symbol_id
-
-            parse_symbol_id = re.match(r"^(.+?)_(\d+?)_(\d+?)$", entryName_t)
-            if parse_symbol_id:
-                self.entryName = parse_symbol_id.group(1)
-                self.unitId = int(parse_symbol_id.group(2))
-                self.styleId = int(parse_symbol_id.group(3))
-            else:
-                if self.libraryNickname:
-                    self.entryName = entryName_t
+                parse_symbol_id = re.match(r"^(.+?)_(\d+?)_(\d+?)$", symbol_id)
+                if parse_symbol_id:
+                    # The symbol is a child symbol
+                    self.libraryNickname = None
+                    self.entryName = parse_symbol_id.group(1)
+                    self.unitId = int(parse_symbol_id.group(2))
+                    self.styleId = int(parse_symbol_id.group(3))
                 else:
+                    # The symbol is a top-level symbol without a library nickname
+                    self.libraryNickname = None
                     self.entryName = symbol_id
+                    self.unitId = None
+                    self.styleId = None
 
         # Update units id to match parent id
         for unit in self.units:
             unit.entryName = self.entryName
 
     libraryNickname: Optional[str] = None
+    """The optional ``libraryNickname`` token defines which symbol library this symbol belongs to
+    and is a part of the ``id`` token"""
+    
     entryName: str = None
-    """ The schematic symbol library and printed circuit board footprint library file formats use library identifiers.
-    Library identifiers are defined as a quoted string using the "LIBRARY_NICKNAME:ENTRY_NAME" format where
-    "LIBRARY_NICKNAME" is the nickname of the library in the symbol or footprint library table and
-    "ENTRY_NAME" is the name of the symbol or footprint in the library separated by a colon. """
+    """The ``entryName`` token defines the actual name of the symbol and is a part of the ``id`` 
+    token"""
+
+    unitId: Optional[int] = None
+    """The ``unitId`` token identifies which unit the symbol represents and is a part of 
+    the ``id`` token"""
+
+    styleId: Optional[int] = None
+    """The ``styleId`` token indicates which body style the unit represents and is a part of the 
+    ``id`` token"""
 
     extends: Optional[str] = None
     """The optional ``extends`` token attribute defines the "LIBRARY_ID" of another symbol inside the
@@ -286,14 +332,8 @@ class Symbol():
     """The ``pins`` section is a list of pins that are used by the symbol. This section can be empty if
     the symbol does not have any pins."""
 
-    units: List = field(default_factory=list)
+    units: List[Symbol] = field(default_factory=list)
     """The ``units`` can be one or more child symbol tokens embedded in a parent symbol"""
-
-    unitId: Optional[int] = None
-    """Unit identifier: an integer that identifies which unit the symbol represents"""
-
-    styleId: Optional[int] = None
-    """Style identifier: indicates which body style the unit represents"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Symbol:
@@ -316,7 +356,7 @@ class Symbol():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
-        object.id = exp[1]
+        object.libId = exp[1]
         for item in exp[2:]:
             if item[0] == 'extends': object.extends = item[1]
             if item[0] == 'pin_numbers':
@@ -347,7 +387,7 @@ class Symbol():
         return object
 
     @classmethod
-    def create_new(cls, id: str, reference: str, value: str, 
+    def create_new(cls, id: str, reference: str, value: str,
                         footprint: str = "", datasheet: str = "") -> Symbol:
         """Creates a new empty symbol as KiCad would create it
 
@@ -364,7 +404,7 @@ class Symbol():
         symbol = cls()
         symbol.inBom = True
         symbol.onBoard = True
-        symbol.id = id
+        symbol.libId = id
         symbol.properties.extend(
             [
                 Property(key = "Reference", value = reference, id = 0,
@@ -406,7 +446,7 @@ class Symbol():
         pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
         extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
 
-        expression =  f'{indents}(symbol "{dequote(self.id)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
+        expression =  f'{indents}(symbol "{dequote(self.libId)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
         for item in self.properties:
             expression += item.to_sexpr(indent+2)
         for item in self.graphicItems:
@@ -446,7 +486,7 @@ class SymbolLib():
 
         Args:
             - filepath (str): Path or path-like object that points to the file
-            - encoding (str, optional): Encoding of the input file. Defaults to None (platform 
+            - encoding (str, optional): Encoding of the input file. Defaults to None (platform
                                         dependent encoding).
 
         Raises:
@@ -495,9 +535,9 @@ class SymbolLib():
         """Save the object to a file in S-Expression format
 
         Args:
-            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set, 
+            - filepath (str, optional): Path-like string to the file. Defaults to None. If not set,
                                         the attribute ``self.filePath`` will be used instead.
-            - encoding (str, optional): Encoding of the output file. Defaults to None (platform 
+            - encoding (str, optional): Encoding of the output file. Defaults to None (platform
                                         dependent encoding).
 
         Raises:

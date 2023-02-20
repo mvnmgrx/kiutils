@@ -790,8 +790,8 @@ class SchematicSymbol():
     token"""
 
     libName: Optional[str] = None
-    """The optional ``lib_name`` token is only set when the symbol was edited in the schematic.  
-    It may be set to ``<entryName>_X`` where X is a unique number that specifies which variation 
+    """The optional ``lib_name`` token is only set when the symbol was edited in the schematic.
+    It may be set to ``<entryName>_X`` where X is a unique number that specifies which variation
     this symbol is of its original."""
 
     position: Position = field(default_factory=lambda: Position())
@@ -894,13 +894,6 @@ class SchematicSymbol():
             expression += f'{indents}  (pin "{dequote(number)}" (uuid {uuid}))\n'
         expression += f'{indents}){endline}'
         return expression
-
-
-test = SchematicSymbol()
-
-test.id = "2"
-ftest = test.id
-
 
 @dataclass
 class HierarchicalPin():

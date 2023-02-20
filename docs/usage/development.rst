@@ -1,19 +1,14 @@
 Development
 ===========
 
-To start developing, clone the repository and install ``kiutils`` from source while being in the
-repository root folder:
+To start developing, clone the repository:
 
 .. code-block:: text
 
    git clone https://github.com/mvnmgrx/kiutils.git
    cd kiutils
-   pip install -e .
 
-Doing it this way, changes in the source will be reflected to the current Python environment
-automatically. No need to reinstall after making changes.
-
-For generating test reports as well as the documentation, install development requirements:
+For generating test reports as well as the documentation, install the development requirements:
 
 .. code-block:: text
 
@@ -22,17 +17,15 @@ For generating test reports as well as the documentation, install development re
 Tests
 -----
 
-To run the test framework and generate an HTML report, start the test script:
+Unittests are used to test ``kiutils``. To run the test framework and generate an HTML report, start 
+the test script:
 
 .. code-block:: text
 
    python3 test.py
 
-To only run the unittests, use:
-
-.. code-block:: text
-
-   python3 -m unittest
+When adding a feature to ``kiutils``, be sure to provide unittests that explicitly test the 
+functionality you want to implement.
 
 Generate documentation
 ----------------------

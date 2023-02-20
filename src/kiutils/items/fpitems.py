@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Optional, List
+from copy import deepcopy
 
 from kiutils.items.common import Stroke, Position, Effects
 from kiutils.utils.strings import dequote
@@ -474,6 +475,7 @@ class FpArc():
         Raises:
             - Exception: When given parameter's type is not a list
             - Exception: When the first item of the list is not fp_arc
+            - Exception: When a legacy `angle` token and a modern `mid` token are both provided
 
         Returns:
             - FpArc: Object of the class initialized with the given S-Expression
@@ -485,14 +487,25 @@ class FpArc():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+
+        # HACK: Assumes both legacy and modern `fp_arc`s are possible in the same file.
+        #   Parsing method should be determined by footprint version number.
+        #   KiCad source has version <= "20210925" activate legacy fp_arc parsing.
+        #   Source: https://gitlab.com/kicad/code/kicad/-/blob/master/pcbnew/plugins/kicad/pcb_plugin.h#L136
+        start = None
+        mid = None
+        end = None
+        angle = None
+
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
                 else: continue
 
-            if item[0] == 'start': object.start = Position.from_sexpr(item)
-            if item[0] == 'mid': object.mid = Position.from_sexpr(item)
-            if item[0] == 'end': object.end = Position.from_sexpr(item)
+            if item[0] == 'start': start = Position.from_sexpr(item)
+            if item[0] == 'mid': mid = Position.from_sexpr(item)
+            if item[0] == 'end': end = Position.from_sexpr(item)
+            if item[0] == 'angle': angle = item[1]
             if item[0] == 'layer': object.layer = item[1]
             if item[0] == 'tstamp': object.tstamp = item[1]
             if item[0] == 'width':
@@ -501,6 +514,43 @@ class FpArc():
             if item[0] == 'stroke':
                 object.stroke = Stroke.from_sexpr(item)
                 object.width = None
+        
+        # FIXME: Legacy upgrade code has not been tested
+        if angle is not None and mid is not None:
+            raise Exception('Legacy `angle` token and modern `mid` token both provided for fp_arc')
+
+        if angle is not None:
+            # Legacy fp_arc is as follows:
+            #   (start x y): The position of the centre of the circle that is the basis
+            #       of the arc.
+            #   (end x y): The starting point of the arc. Both the radius of the arc
+            #       and the start angle are calculated from this point.
+            #   (angle a): The angular span that the arc covers, from the start angle, in
+            #       clock-wise direction. It is added to the start angle to find the end angle.
+            # Source: https://www.compuphase.com/electronics/LibraryFileFormats.pdf
+
+            centerOfCircle = start
+            startingPointOfArc = end
+
+            # Following code based off of KiCad source code:
+            #   https://gitlab.com/kicad/code/kicad/-/blob/master/pcbnew/fp_shape.cpp#L193
+            endOfArc = startingPointOfArc
+
+            # Get midpoint by rotating halfway
+            endOfArc.rotate_around_center(centerOfCircle, -1 * (angle / 2))
+            mid = deepcopy(endOfArc)
+            endOfArc.rotate_around_center(centerOfCircle, -1 * (angle / 2))
+
+            # Swap points on negative angle as that is what the KiCad source does
+            if angle < 0.0:
+                startingPointOfArc, endOfArc = endOfArc, startingPointOfArc
+
+            start = startingPointOfArc
+            end = endOfArc
+
+        object.start = start
+        object.mid = mid
+        object.end = end
 
         return object
 

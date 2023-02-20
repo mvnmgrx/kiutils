@@ -16,6 +16,8 @@ Documentation taken from:
 
 from __future__ import annotations
 
+import math
+
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
@@ -43,6 +45,31 @@ class Position():
     # TODO: What is this? Documentation does not tell ..
     unlocked: bool = False
     """The ``unlocked`` token's description has to be defined yet .."""
+
+    def rotate_around_center(self, center, angleDegrees):
+        """Rotate this point around a center point
+
+        Args:
+            - center (Position): position to rotate this point around
+            - angleDegrees (float): angle in degrees to rotate the point counterclockwise
+
+        References:
+            Implementation based on KiCad source code:
+            - https://gitlab.com/kicad/code/kicad/-/blob/master/libs/kimath/src/trigo.cpp#L183
+            - https://gitlab.com/kicad/code/kicad/-/blob/master/libs/kimath/src/trigo.cpp#L235
+        """
+
+        ox = self.X - center.X
+        oy = self.Y - center.Y
+
+        sinus = math.sin(math.radians(angleDegrees))
+        cosinus = math.cos(math.radians(angleDegrees))
+
+        ox = (oy * sinus) + (ox * cosinus)
+        oy = (oy * cosinus) - (ox * sinus)
+
+        self.X = ox + center.X
+        self.Y = oy + center.Y
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Position:

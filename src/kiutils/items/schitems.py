@@ -780,6 +780,10 @@ class SchematicSymbol():
     """The ``pins`` token defines a dictionary with pin numbers in form of strings as keys and
        uuid's as values"""
 
+    instances: Dict[str, List[SymbolProjectInstances]] = field(default_factory=dict)
+    """The instances token defines a list of symbol instances grouped by project.
+    Every symbol will have a least one instance."""
+
     mirror: Optional[str] = None
     """The ``mirror`` token defines if the symbol is mirrored in the schematic. Accepted values: ``x`` or ``y``.
     When mirroring around the x and y axis at the same time use some additional rotation to get the correct
@@ -816,8 +820,22 @@ class SchematicSymbol():
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
             if item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
+            if item[0] == 'instances': object.instances = cls.parse_project_instances(item)
             if item[0] == 'mirror': object.mirror = item[1]
         return object
+
+    @staticmethod
+    def parse_project_instances(exp: list) -> Dict[str, SymbolProjectInstance]:
+        out = {}
+        for project in exp[1:]:
+            if project[0] != "project":
+                raise Exception("Expression does not have the correct type")
+            name = project[1]
+            instances = []
+            for item in project[2:]:
+                instances.append(SymbolProjectInstance.from_sexpr(item))
+            out[name] = instances
+        return out
 
     def to_sexpr(self, indent=2, newline=True) -> str:
         """Generate the S-Expression representing this object
@@ -847,6 +865,71 @@ class SchematicSymbol():
             expression += property.to_sexpr(indent+2)
         for number, uuid in self.pins.items():
             expression += f'{indents}  (pin "{dequote(number)}" (uuid {uuid}))\n'
+        for project, instances in self.instances.items():
+            expression += f'{indents}  (instances\n'
+            expression += f'{indents}    (project "{dequote(project)}"\n'
+            for instance in instances:
+                expression += instance.to_sexpr(indent+6)
+            expression += f'{indents}    )\n'
+            expression += f'{indents}  )\n'
+        expression += f'{indents}){endline}'
+        return expression
+
+@dataclass
+class SymbolProjectInstance:
+    path: str = ""
+    """The path token attribute is the path to the sheet instance for the instance data"""
+
+    reference: str = ""
+    """The reference token attribute is a string that defines the reference designator for the symbol instance."""
+
+    unit: int = 1
+    """The unit token attribute is a integer ordinal that defines the symbol unit for the symbol instance.
+    For symbols that do not define multiple units, this will always be 1."""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) ->  SymbolProjectInstance:
+        """Convert the given S-Expresstion into a HierarchicalPin object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(pin ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not path
+
+        Returns:
+            - SymbolProjectInstance: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'path':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.path = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'reference': object.reference = item[1]
+            if item[0] == 'unit': object.unit = int(item[1])
+        return object
+
+    def to_sexpr(self, indent=4, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        expression =  f'{indents}(path "{dequote(self.path)}"\n'
+        expression += f'{indents}  (reference "{dequote(self.reference)}")\n'
+        expression += f'{indents}  (unit {self.unit})\n'
         expression += f'{indents}){endline}'
         return expression
 

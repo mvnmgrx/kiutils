@@ -534,7 +534,7 @@ class FpArc():
 
             # Following code based off of KiCad source code:
             #   https://gitlab.com/kicad/code/kicad/-/blob/master/pcbnew/fp_shape.cpp#L193
-            endOfArc = startingPointOfArc
+            endOfArc = deepcopy(startingPointOfArc)
 
             # Get midpoint by rotating halfway
             endOfArc.rotate_around_center(centerOfCircle, -1 * (angle / 2))

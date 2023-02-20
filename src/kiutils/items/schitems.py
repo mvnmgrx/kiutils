@@ -882,7 +882,7 @@ class SchematicSymbol():
         onBoard = 'yes' if self.onBoard else 'no'
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
         unit = f' (unit {self.unit})' if self.unit is not None else ''
-        lib_name = f' (lib_name {self.libName})' if self.libName is not None else ''
+        lib_name = f' (lib_name "{dequote(self.libName)}")' if self.libName is not None else ''
 
         expression =  f'{indents}(symbol{lib_name} (lib_id "{dequote(self.libId)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
         expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'

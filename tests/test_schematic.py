@@ -76,3 +76,11 @@ class Tests_Schematic(unittest.TestCase):
         schematic.schematicSymbols[0].libId = "SwitchRenamed:SW_Coded_2"    # Setting library nickname
         schematic.schematicSymbols[1].libId = "Unset_Lib_Id"                # Unsetting library nickname
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_setSymbolLibNameToken(self):
+        """Tests if setting and unsetting the lib_name token generates the correct S-Expression"""
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_setSymbolLibNameToken')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        schematic.schematicSymbols[0].libName = f"{schematic.schematicSymbols[0].entryName}_1"
+        schematic.schematicSymbols[1].libName = None
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

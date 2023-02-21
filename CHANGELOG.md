@@ -10,7 +10,7 @@
     for more information on this.
 - Changed: `Footprint.create_new()`'s parameter `library_link` renamed to `library_id` - (PR #54)
 - Changed: `SymbolLib.version` is now a non-optional token that defaults to the config entry
-           `KIUTILS_CREATE_NEW_VERSION_STR`
+           `KIUTILS_CREATE_NEW_VERSION_STR` - (PR #55)
 
 ### Non-breaking changes
 - Added: API for lib_name token in `SchematicSymbol` called `self.libName` - (PR #54)

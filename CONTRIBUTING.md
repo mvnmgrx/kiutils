@@ -35,7 +35,7 @@ source env/bin/activate
 
 ### Install dev dependencies
 `kiutils` requires some dependencies for running tests. Install them using `pip` in your virtual 
-enviroment using:
+environment using:
 
 ```bash
 pip install -r requirements_dev.txt
@@ -50,8 +50,8 @@ python test.py
 A test report is automatically generated that shows the passing/failing tests. If a test is failing, 
 the report will show you what went wrong.
 
-### Leaving virtual enviroment (venv module)
-When done, leaving the virtual enviroment is done using:
+### Leaving virtual environment (venv module)
+When done, leaving the virtual environment is done using:
 ```bash
 deactivate
 ```

@@ -1,5 +1,36 @@
 # kiutils - CHANGELOG
 
+## v1.3.0 - 21.02.2023
+### Breaking changes
+- Changed: The ID token API was consolidated - (PR #54)
+  - `SchematicSymbol`: `self.libraryIdentifier` renamed to `self.libId`
+  - `Symbol`: `self.id` renamed to `self.libId`
+  - `Footprint`: `self.libraryLink` renamed to `self.libId`
+  - Setting and getting `self.libId` will update some subtokens of these classes. Check the documentation
+    for more information on this.
+- Changed: `Footprint.create_new()`'s parameter `library_link` renamed to `library_id` - (PR #54)
+- Changed: `SymbolLib.version` is now a non-optional token that defaults to the config entry
+           `KIUTILS_CREATE_NEW_VERSION_STR`
+
+### Non-breaking changes
+- Added: API for lib_name token in `SchematicSymbol` called `self.libName` - (PR #54)
+- Added: Tokens `self.entryName` and `self.libraryNickname` for classes `Symbol`, `SchematicSymbol`
+         and `Footprint`. These tokens are part of the `libId` token and will be changed when setting 
+         it. - (PR #41)
+- Added Tokens `self.unitId` and `self.styleId` for `Symbol` class. These tokens are part of the 
+        `libId` token and will be changed when setting it. - (PR #41)
+- Added: All `from_file` and `to_file` methods got a new optional parameter `encoding` to change 
+         the default encoding when reading/writing files. - (PR #50)
+- Added: New `active` token in `LibTable` class - (PR #51)
+- Added: CONTRIBUTING.md - (PR #52)
+- Added: Missing `filePath` attribute in `DesignRules` class - (PR #45)
+- Fixed: Return type of `LibTable.create_new()` - (PR #45)
+- Fixed: `Position.to_sexpr()` having no parameters - (PR #45)
+- Changed: Most parts of the docu were refactored - (PR #45)
+- Removed: Unused `size` token in class `Connection()` - (PR #45)
+- Removed: Unused `stroke` token in class `Image()` - (PR #45)
+- Removed: Some tokens that were defined twice - (PR #45)
+
 ## v1.2.1 - 21.11.2022
 - Fixed: Broken package config did not included every source file while building the module - (PR #38) 
 

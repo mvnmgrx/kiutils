@@ -1046,8 +1046,8 @@ class HierarchicalSheet():
                 object.fill.precision = 4
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'property':
-                if item[1] == 'Sheet name': object.sheetName = Property().from_sexpr(item)
-                if item[1] == 'Sheet file': object.fileName = Property().from_sexpr(item)
+                if item[1] == 'Sheet name' or item[1] == 'Sheetname': object.sheetName = Property().from_sexpr(item)
+                if item[1] == 'Sheet file' or item[1] == 'Sheetfile': object.fileName = Property().from_sexpr(item)
             if item[0] == 'pin': object.pins.append(HierarchicalPin().from_sexpr(item))
         return object
 

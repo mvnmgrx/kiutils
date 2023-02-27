@@ -211,13 +211,14 @@ class Stroke():
     width: float = 0.0
     """The ``width`` token attribute defines the line width of the graphic object"""
 
-    type: str = "dash"
+    type: str = "default"
     """The ``type`` token attribute defines the line style of the graphic object. Valid stroke line styles are:
     - ``dash``, ``dash_dot``, ``dash_dot_dot`` (version 7), ``dot``, ``default``, ``solid``
     """
 
-    color: ColorRGBA = field(default_factory=lambda: ColorRGBA())
-    """The ``color`` token attributes define the line red, green, blue, and alpha color settings"""
+    color: Optional[ColorRGBA] = None
+    """The ``color`` token attributes define the line red, green, blue, and alpha color settings. 
+    Defaults to ``None`` and was made optional since KiCad 7."""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Stroke:
@@ -260,7 +261,8 @@ class Stroke():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        expression = f'{indents}(stroke (width {self.width}) (type {self.type}) {self.color.to_sexpr()}){endline}'
+        color = f' {self.color.to_sexpr()}' if self.color is not None else ''
+        expression = f'{indents}(stroke (width {self.width}) (type {self.type}){color}){endline}'
         return expression
 
 

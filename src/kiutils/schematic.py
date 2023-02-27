@@ -40,7 +40,7 @@ class Schematic():
     """The ``generator`` token attribute defines the program used to write the file"""
 
     uuid: Optional[str] = None
-    """The ``uuid`` defines the universally unique identifier"""
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     paper: PageSettings = field(default_factory=lambda: PageSettings())
     """The ``paper`` token defines the drawing page size and orientation"""

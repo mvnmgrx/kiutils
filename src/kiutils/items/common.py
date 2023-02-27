@@ -233,7 +233,7 @@ class Stroke():
         Returns:
             - Stroke: Object of the class initialized with the given S-Expression
         """
-        if not isinstance(exp, list) or len(exp) != 4:
+        if not isinstance(exp, list) or len(exp) < 3 or len(exp) > 4:
             raise Exception("Expression does not have the correct type")
 
         if exp[0] != 'stroke':

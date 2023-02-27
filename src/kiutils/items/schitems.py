@@ -41,8 +41,8 @@ class Junction():
     """The ``color`` token attributes define the Red, Green, Blue, and Alpha transparency of
        the junction. If all four attributes are 0, the default junction color is used."""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Junction:
@@ -84,10 +84,8 @@ class Junction():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-
-        expression =  f'{indents}(junction (at {self.position.X} {self.position.Y}) (diameter {self.diameter}) {self.color.to_sexpr()}\n'
-        expression += f'{indents}  (uuid {self.uuid})\n'
-        expression += f'{indents}){endline}'
+        uuid = f'\n{indents}  (uuid {self.uuid})\n' if self.uuid is not None else ''
+        expression =  f'{indents}(junction (at {self.position.X} {self.position.Y}) (diameter {self.diameter}) {self.color.to_sexpr()}{uuid}{indents}){endline}'
         return expression
 
 @dataclass
@@ -101,8 +99,8 @@ class NoConnect():
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` defines the X and Y coordinates of the no connect"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> NoConnect:
@@ -142,8 +140,9 @@ class NoConnect():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
 
-        return f'{indents}(no_connect (at {self.position.X} {self.position.Y}) (uuid {self.uuid})){endline}'
+        return f'{indents}(no_connect (at {self.position.X} {self.position.Y}){uuid}){endline}'
 
 @dataclass
 class BusEntry():
@@ -156,8 +155,8 @@ class BusEntry():
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` defines the X and Y coordinates of the bus entry"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     size: Position = field(default_factory=lambda: Position())         # Re-using Position class here
     """The ``size`` token attributes define the X and Y distance of the end point from
@@ -209,7 +208,8 @@ class BusEntry():
 
         expression =  f'{indents}(bus_entry (at {self.position.X} {self.position.Y}) (size {self.size.X} {self.size.Y})\n'
         expression += self.stroke.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -231,8 +231,8 @@ class Connection():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the connection is drawn"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Connection:
@@ -283,7 +283,8 @@ class Connection():
 
         expression =  f'{indents}({self.type} (pts{points})\n'
         expression += self.stroke.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -305,8 +306,8 @@ class Image():
     """The ``data`` token attribute defines the image data in the portable network graphics
        format (PNG) encoded with MIME type base64 as a list of strings"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Image:
@@ -354,7 +355,8 @@ class Image():
         scale = f' (scale {self.scale})' if self.scale is not None else ''
 
         expression =  f'{indents}(image (at {self.position.X} {self.position.Y}){scale}\n'
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}  (data\n'
         for b64part in self.data:
             expression += f'{indents}    {b64part}\n'
@@ -377,8 +379,8 @@ class PolyLine():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the graphical line is drawn"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> PolyLine:
@@ -428,7 +430,8 @@ class PolyLine():
 
         expression =  f'{indents}(polyline (pts{points})\n'
         expression += self.stroke.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -449,8 +452,8 @@ class Text():
     effects: Effects = field(default_factory=lambda: Effects())
     """The ``effects`` token defines how the text is drawn"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Text:
@@ -504,7 +507,8 @@ class Text():
             expression += ' '
         expression += f'(at {self.position.X} {self.position.Y}{posA})\n'
         expression += self.effects.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -525,8 +529,8 @@ class LocalLabel():
     effects: Effects = field(default_factory=lambda: Effects())
     """The ``effects`` token defines how the label is drawn"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> LocalLabel:
@@ -573,7 +577,8 @@ class LocalLabel():
 
         expression =  f'{indents}(label "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA})\n'
         expression += self.effects.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -602,8 +607,8 @@ class GlobalLabel():
     effects: Effects = field(default_factory=lambda: Effects())
     """The ``effects`` token defines how the label is drawn"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     properties: List[Property] = field(default_factory=list)
     """	The ``properties`` token defines a list of properties of the global label. Currently, the
@@ -658,7 +663,8 @@ class GlobalLabel():
 
         expression =  f'{indents}(global_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fa}\n'
         expression += self.effects.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:
             expression += property.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
@@ -686,8 +692,8 @@ class HierarchicalLabel():
     effects: Effects = field(default_factory=lambda: Effects())
     """The ``effects`` token defines how the label is drawn"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> HierarchicalLabel:
@@ -735,7 +741,8 @@ class HierarchicalLabel():
 
         expression =  f'{indents}(hierarchical_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA})\n'
         expression += self.effects.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -918,8 +925,8 @@ class HierarchicalPin():
     effects: Effects = field(default_factory=lambda: Effects())
     """The ``effects`` section defines how the pin name text is drawn"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> HierarchicalPin:
@@ -967,7 +974,8 @@ class HierarchicalPin():
 
         expression =  f'{indents}(pin "{dequote(self.name)}" {self.connectionType} (at {self.position.X} {self.position.Y}{posA})\n'
         expression += self.effects.to_sexpr(indent+2)
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -998,8 +1006,8 @@ class HierarchicalSheet():
     fill: ColorRGBA = field(default_factory=lambda: ColorRGBA())
     """The fill defines the color how the sheet is filled"""
 
-    uuid: str = ""
-    """The ``uuid`` defines the universally unique identifier"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     sheetName: Property = field(default_factory=lambda: Property(key="Sheet name"))
     """The ``sheetName`` is a property that defines the name of the sheet. The property's
@@ -1069,7 +1077,8 @@ class HierarchicalSheet():
         expression =  f'{indents}(sheet (at {self.position.X} {self.position.Y}) (size {self.width} {self.height}){fa}\n'
         expression += self.stroke.to_sexpr(indent+2)
         expression += f'{indents}  (fill {self.fill.to_sexpr()})\n'
-        expression += f'{indents}  (uuid {self.uuid})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += self.sheetName.to_sexpr(indent+2)
         expression += self.fileName.to_sexpr(indent+2)
         for pin in self.pins:

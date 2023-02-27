@@ -84,3 +84,14 @@ class Tests_Schematic(unittest.TestCase):
         schematic.schematicSymbols[0].libName = f"{schematic.schematicSymbols[0].entryName}_1"
         schematic.schematicSymbols[1].libName = None
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_parseStrokeTokens(self):
+        """Tests the correct parsing of the Stroke token (with and without the color token)
+         
+        See:
+            https://github.com/mvnmgrx/kiutils/pull/57
+        """
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_parseStrokeTokens')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

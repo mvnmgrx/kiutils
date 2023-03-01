@@ -234,8 +234,8 @@ class Stroke():
         Returns:
             - Stroke: Object of the class initialized with the given S-Expression
         """
-        if not isinstance(exp, list) or len(exp) < 3 or len(exp) > 4:
-            raise Exception("Expression does not have the correct type")
+        if not isinstance(exp, list) or len(exp) < 1:
+            raise Exception(f"Expression does not have the correct type {exp}")
 
         if exp[0] != 'stroke':
             raise Exception("Expression does not have the correct type")
@@ -829,10 +829,14 @@ class Property():
         object = cls()
         object.key = exp[1]
         object.value = exp[2]
-        for item in exp[3:]:
-            if item[0] == 'id': object.id = item[1]
-            if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+        try:
+            for item in exp[3:]:
+                if item[0] == 'id': object.id = item[1]
+                if item[0] == 'at': object.position = Position().from_sexpr(item)
+                if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+        except Exception as e:
+            print(f"Error parsing {exp}")
+            raise(e)
         return object
 
     def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:

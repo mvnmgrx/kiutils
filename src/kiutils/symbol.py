@@ -151,10 +151,12 @@ class SymbolPin():
             if item[0] == 'length': object.length = item[1]
             if item[0] == 'name':
                 object.name = item[1]
-                object.nameEffects = Effects().from_sexpr(item[2])
+                if len(item) > 2:
+                    object.nameEffects = Effects().from_sexpr(item[2])
             if item[0] == 'number':
                 object.number = item[1]
-                object.numberEffects = Effects().from_sexpr(item[2])
+                if len(item) > 2:
+                    object.numberEffects = Effects().from_sexpr(item[2])
             if item[0] == 'alternate': object.alternatePins.append(SymbolAlternativePin().from_sexpr(item))
         return object
 

@@ -96,3 +96,17 @@ class Tests_Footprint(unittest.TestCase):
         footprint.tedit = '6328916A'
 
         self.assertTrue(to_file_and_compare(footprint, self.testData))
+
+class Tests_Footprint_Since_V7(unittest.TestCase):
+    """Test cases for Footprints since KiCad 7"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+
+    def test_textBoxAllVariants(self):
+        """Tests all variants of the ``text_box`` token for text boxes in footprints"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_textBoxAllVariants')
+        footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))

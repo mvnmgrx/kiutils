@@ -68,11 +68,11 @@ class Tests_Symbol(unittest.TestCase):
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
     def test_createNewSymbolInEmptyLibrary(self):
-        """Tests the ``create_new()`` function to create an empty symbol that is added to a 
+        """Tests the ``create_new()`` function to create an empty symbol that is added to a
         symbol library"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_createNewSymbolInEmptyLibrary')
-        
+
         # Create an empty symbol library
         symbolLib = SymbolLib(
             version = KIUTILS_CREATE_NEW_VERSION_STR,
@@ -99,7 +99,7 @@ class Tests_Symbol(unittest.TestCase):
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))
 
     def test_createNewTopLevelSymbolFromChild(self):
-        """Take a child symbol, rename its library id and make a new top-level symbol out of it. 
+        """Take a child symbol, rename its library id and make a new top-level symbol out of it.
         Tests if resetting both ``unitId`` and ``styleId`` works."""
         self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_createNewTopLevelSymbolFromChild')
         symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
@@ -122,13 +122,48 @@ class Tests_Symbol(unittest.TestCase):
         self.assertTrue(to_file_and_compare(symbolLib1, self.testData))
 
     def test_symbolIdParser(self):
-        """Tests edge cases of parsing the symbol ID token and checks if the ID was split into 
+        """Tests edge cases of parsing the symbol ID token and checks if the ID was split into
         its parts correctly
-        
+
         Related issues:
             - [Pull request 73](https://github.com/mvnmgrx/kiutils/pull/73)
         """
         self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_symbolIdParser')
         self.testData.compareToTestFile = True
+        symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))
+
+class Tests_Symbol_Since_V7(unittest.TestCase):
+    """Test cases for Symbols since KiCad 7"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+
+    def test_textBoxAllVariants(self):
+        """Tests all variants of the ``text_box`` token for text boxes in symbols"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'since_v7', 'test_textBoxAllVariants')
+        symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))
+
+    def test_rectangleAllVariants(self):
+        """Tests all variants of the ``rectangle`` token for rectangles in symbols"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'since_v7', 'test_rectangleAllVariants')
+        symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))
+
+    def test_circleAllVariants(self):
+        """Tests all variants of the ``circle`` token for circles in symbols"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'since_v7', 'test_circleAllVariants')
+        symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))
+
+    def test_arcAllVariants(self):
+        """Tests all variants of the ``arc`` token for arcs in symbols"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'since_v7', 'test_arcAllVariants')
         symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(symbolLib, self.testData))

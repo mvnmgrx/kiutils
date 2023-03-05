@@ -95,3 +95,17 @@ class Tests_Schematic(unittest.TestCase):
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_parseStrokeTokens')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+class Tests_Schematic_Since_V7(unittest.TestCase):
+    """Schematic related test cases since KiCad 7"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+
+    def test_textBoxAllVariants(self):
+        """Tests all variants of the ``text_box`` token that was added in KiCad 7"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_textBoxAllVariants')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

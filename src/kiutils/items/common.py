@@ -860,7 +860,10 @@ class Property():
 
 @dataclass
 class RenderCachePolygon():
-    """A polygon used by the ``render_cache`` token"""
+    """A polygon used by the ``render_cache`` token
+    
+    Used since KiCad v7
+    """
 
     pts: List[Position] = field(default_factory=list)
     """The ``pts`` token defines a list of points that define the outlines of the polygon"""
@@ -923,6 +926,8 @@ class RenderCachePolygon():
 @dataclass
 class RenderCache():
     """The ``render_cache`` token defines a cache for none-standard fonts.
+    
+    Used since KiCad v7
 
     Documentation:
         - None found (05.03.2023), seems to be used in ''text_box'' tokens for custom fonts

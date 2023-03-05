@@ -24,6 +24,7 @@ from tests.test_libtable import *
 from tests.test_schematic import *
 from tests.test_symbol import *
 from tests.test_worksheets import *
+from tests.test_misc import *
 from tests.reporter.runner import HTMLTestRunner
 
 if __name__ == "__main__":

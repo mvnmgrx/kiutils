@@ -1,0 +1,61 @@
+(kicad_sch (version 20211123) (generator eeschema)
+
+  (uuid e63e39d7-6ac0-4ffd-8aa3-1841a4541b55)
+
+  (paper "A4 \"quote\" \\")
+
+  (title_block
+    (title "The title")
+    (date "19.02.2022")
+    (rev "A")
+    (company "The company")
+    (comment 1 "SomeLayer")
+    (comment 2 "Some \"quoted\" Layer")
+    (comment 3 "Some Layer\\\")
+    (comment 4 "Some \"quoted\" Layer\\\")
+    (comment 5 "\\\\\\\\\\\\\\"\\\\\\\\\\\"")
+    (comment 6 "|\\")
+    (comment 7 "!\"§$%&/()=?`´+*~#'-_.:,;<>|")
+  )
+
+  (lib_symbols
+    (symbol "TEST"
+      (property "Normal string without quotes" "abc" (id 0) (at 0 9.525 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Normal string \"with\" quotes" " " (id 1) (at 0 9.525 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Normal string with \\backslashes\\" "\\" (id 2) (at 0 9.525 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Normal string with \\backslashes\\ and \"quotes\" "\"" (id 3) (at 0 9.525 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "|\\" "\\"\"" (id 4) (at 0 9.525 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "\\\\\\\\\\\\\\"\\\\\\\\\\\"" "" (id 5) (at 0 9.525 0)
+        (effects (font (size 1.27 1.27)))
+      )
+    )
+
+    (symbol "TEST with \"quoted\" strings "
+    )
+
+    (symbol "TEST with \\backslashes\\"
+    )
+
+    (symbol "TEST with \"quoted\" strings and \\backslashes\\"
+    )
+
+    (symbol "|\\"
+    )
+
+    (symbol "\\\\\\\\\\"\\\\\"\\\\"\"\\\"
+    )
+
+    (symbol "!\"§$%&/()=?`´+*~#'-_.:,;<>|"
+    )
+  )
+)

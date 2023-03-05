@@ -120,3 +120,15 @@ class Tests_Symbol(unittest.TestCase):
         for symbol in symbolLib2.symbols:
             symbolLib1.symbols.insert(0, symbol)
         self.assertTrue(to_file_and_compare(symbolLib1, self.testData))
+
+    def test_symbolIdParser(self):
+        """Tests edge cases of parsing the symbol ID token and checks if the ID was split into 
+        its parts correctly
+        
+        Related issues:
+            - [Pull request 73](https://github.com/mvnmgrx/kiutils/pull/73)
+        """
+        self.testData.pathToTestFile = path.join(SYMBOL_BASE, 'test_symbolIdParser')
+        self.testData.compareToTestFile = True
+        symbolLib = SymbolLib().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(symbolLib, self.testData))

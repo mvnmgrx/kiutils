@@ -1,0 +1,14 @@
+(kicad_symbol_lib (version 20211014) (generator kiutils)
+  (symbol "AD2023"
+    (symbol "AD2023_0_0"
+    )
+  )
+  (symbol "formula:R_0_2512"
+    (symbol "R_0_2512_0_0"
+    )
+  )
+  (symbol "Some_Library:R_0_2512"
+    (symbol "R_0_2512_0_0"
+    )
+  )
+)

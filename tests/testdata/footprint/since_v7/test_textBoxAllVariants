@@ -1,5 +1,6 @@
 (footprint "test" (version 20221018) (generator pcbnew)
   (layer "F.Cu")
+  (tedit 6404ec1a)
   (attr smd)
   (fp_text reference "REF**" (at 0 -0.5 unlocked) (layer "F.SilkS") hide
     (effects (font (size 1 1) (thickness 0.1)))
@@ -28,67 +29,67 @@
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 83.82 10.16) (end 106.68 12.7) (layer "F.Paste") (tstamp d2c1b9e8-7717-4509-b816-10978d73269f)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 81.28) (end 55.88 83.82) (layer "F.SilkS") (tstamp 075ac5dc-d8fe-4385-8466-6ca73fbf873e)
     (effects (font (size 1 1) (thickness 0.2) bold) (justify left top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 15.24) (end 55.88 17.78) (layer "F.SilkS") (tstamp 0cc7f2dd-d40b-4228-afd5-0e40ccebb1c6)
     (effects (font (size 1 1) (thickness 0.1)) (justify right top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 45.72) (end 55.88 48.26) (layer "F.SilkS") (tstamp 19aa2dfe-8e81-4696-91b2-6293a03112d3)
     (effects (font (size 1 1) (thickness 0.1) italic) (justify right top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 35.56) (end 55.88 38.1) (layer "F.SilkS") (tstamp 1dbd5b15-621a-45e0-9e0a-84a64137d125)
     (effects (font (size 1 1) (thickness 0.1) italic) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 60.96 35.56) (end 58.42 58.42) (angle 270) (layer "F.SilkS") (tstamp 1dbedb60-3a16-4543-b5e1-33aafa8fba46)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 106.68) (end 55.88 109.22) (layer "F.SilkS") (tstamp 1ddb9369-023f-46d4-a270-b5633a5ac338)
     (effects (font (size 1 1) (thickness 0.1) italic) (justify right top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 86.36) (end 55.88 88.9) (layer "F.SilkS") (tstamp 22238a34-72ee-400b-80d3-5e54ad3de17a)
     (effects (font (size 1 1) (thickness 0.2) bold) (justify top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 50.8) (end 55.88 53.34) (layer "F.SilkS") (tstamp 22657e6e-100d-4d3a-a3c3-fb8a57a6ab75)
     (effects (font (size 1 1) (thickness 0.2) bold italic) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 25.4) (end 55.88 27.94) (layer "F.SilkS") (tstamp 2de82614-e4ad-4a86-94c1-b42fc39caa09)
     (effects (font (size 1 1) (thickness 0.2) bold) (justify top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 5.08) (end 30.48 7.62) (layer "F.SilkS") (tstamp 32346b54-f7bb-4b3a-b599-1f99940ebdf8)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type default))  
+    (stroke (width 0.1) (type default))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 30.48) (end 55.88 33.02) (layer "F.SilkS") (tstamp 38b19ef6-3b2e-47b2-999a-a277e1b79652)
     (effects (font (size 1 1) (thickness 0.2) bold) (justify right top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 25.4) (end 30.48 27.94) (layer "F.SilkS") (tstamp 38c362a6-d4c5-46ae-94b6-412e71e42ef1)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type dash_dot))  
+    (stroke (width 0.1) (type dash_dot))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 40.64) (end 30.48 43.18) (layer "F.SilkS") (tstamp 47f050b6-ff37-423d-bb39-bc5a6708c285)
@@ -101,12 +102,12 @@
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 96.52) (end 55.88 99.06) (layer "F.SilkS") (tstamp 722bb73b-d9b5-4896-ab08-b94c5e51b720)
     (effects (font (size 1 1) (thickness 0.1) italic) (justify left top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 60.96) (end 55.88 63.5) (layer "F.SilkS") (tstamp 84d117bc-8774-4a68-8f27-a907c3e275ff)
     (effects (font (size 1 1) (thickness 0.2) bold italic) (justify right top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 55.88) (end 30.48 58.42) (layer "F.SilkS") (tstamp 8b7f237a-9227-408a-a4c8-1840905efb42)
@@ -115,12 +116,12 @@
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 20.32) (end 55.88 22.86) (layer "F.SilkS") (tstamp 8d20babe-adfe-43ea-8b8a-471fa69e8eba)
     (effects (font (size 1 1) (thickness 0.2) bold) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 116.84) (end 55.88 119.38) (layer "F.SilkS") (tstamp 8e8ecceb-51eb-4c0a-8dca-62e6b38f8546)
     (effects (font (size 1 1) (thickness 0.2) bold italic) (justify top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 45.72) (end 30.48 48.26) (layer "F.SilkS") (tstamp 956964a4-3080-4393-97fd-7de631bc9c75)
@@ -129,47 +130,47 @@
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 15.24) (end 30.48 17.78) (layer "F.SilkS") (tstamp 9ceff9b9-909e-49a5-ba55-d3f1c7a0edd7)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type dash))  
+    (stroke (width 0.1) (type dash))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 111.76) (end 55.88 114.3) (layer "F.SilkS") (tstamp a1462a23-eef0-4434-8353-111d6567f099)
     (effects (font (size 1 1) (thickness 0.2) bold italic) (justify left top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 58.42 5.08) (end 81.28 7.62) (layer "F.SilkS") (tstamp a7aa41e6-8fea-4b7d-9884-f47b5102bea0)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type default))  
+    (stroke (width 0.1) (type default))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 20.32) (end 30.48 22.86) (layer "F.SilkS") (tstamp a91ccabb-ae9f-4982-93aa-6771fd8111eb)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type dot))  
+    (stroke (width 0.1) (type dot))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 5.08) (end 55.88 7.62) (layer "F.SilkS") (tstamp b5d16d8e-c631-48b2-b456-20705dcd25e7)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 81.28 63.5) (end 58.42 60.96) (angle 180) (layer "F.SilkS") (tstamp b61515a3-1c99-4a61-b6ab-f03cce68809f)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 10.16) (end 30.48 12.7) (layer "F.SilkS") (tstamp bcea8bf2-0c5c-4b3e-bfeb-3141b7e0e6d3)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 71.12) (end 55.88 73.66) (layer "F.SilkS") (tstamp bd31944d-5cd0-491b-bb40-3c38ca05c99d)
     (effects (font (size 1 1) (thickness 0.1)) (justify top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 40.64) (end 55.88 43.18) (layer "F.SilkS") (tstamp c04984b2-2670-4380-a9ac-6c69e7772c59)
     (effects (font (size 1 1) (thickness 0.1) italic) (justify top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 60.96) (end 30.48 63.5) (layer "F.SilkS") (tstamp c20d5ee9-7396-4dff-945c-a8f762d9db3b)
@@ -178,27 +179,27 @@
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 121.92) (end 55.88 124.46) (layer "F.SilkS") (tstamp c29911b4-ee3a-42f0-b5e3-330c73e204a4)
     (effects (font (size 1 1) (thickness 0.2) bold italic) (justify right top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 30.48) (end 30.48 33.02) (layer "F.SilkS") (tstamp c5ba9f23-cb66-440f-9e8a-7bc0f7d576cf)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type dash_dot_dot))  
+    (stroke (width 0.1) (type dash_dot_dot))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 55.88) (end 55.88 58.42) (layer "F.SilkS") (tstamp c6ec68b1-9e6b-4b2c-8c39-1131651342fe)
     (effects (font (size 1 1) (thickness 0.2) bold italic) (justify top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 58.42 33.02) (end 60.96 10.16) (angle 90) (layer "F.SilkS") (tstamp cd6299be-521a-47a8-b5e1-ed68be3bea8b)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 66.04) (end 55.88 68.58) (layer "F.SilkS") (tstamp d78808b1-0a48-4221-a74a-1edf7b504e07)
     (effects (font (size 1 1) (thickness 0.1)) (justify left top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 7.62 50.8) (end 30.48 53.34) (layer "F.SilkS") (tstamp e5503340-1733-4e02-8d62-7b238f53651f)
@@ -207,22 +208,23 @@
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 101.6) (end 55.88 104.14) (layer "F.SilkS") (tstamp e55d9467-e61f-4c22-b2a7-2d89e7a31fec)
     (effects (font (size 1 1) (thickness 0.1) italic) (justify top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 10.16) (end 55.88 12.7) (layer "F.SilkS") (tstamp e7e12072-0086-4935-a831-ea9643c7ee8d)
     (effects (font (size 1 1) (thickness 0.1)) (justify top))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 91.44) (end 55.88 93.98) (layer "F.SilkS") (tstamp f4022187-7c2b-4191-beb9-8a6e1add5cdd)
     (effects (font (size 1 1) (thickness 0.2) bold) (justify right top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
   )
   (fp_text_box "t a"
     (start 83.82 5.08) (end 106.68 7.62) (layer "F.SilkS") (tstamp f47d60bc-33ea-4fbd-a273-1843ab00f907)
     (effects (font (face "Wingdings") (size 1 1) (thickness 0.1)) (justify left top))
-    (stroke (width 0.1) (type solid))    (render_cache "t a" 0
+    (stroke (width 0.1) (type solid))
+    (render_cache "t a" 0
       (polygon
         (pts
           (xy 84.738946 6.364403)          (xy 85.14561 5.785792)          (xy 85.552274 6.364403)          (xy 85.14561 6.942526)
@@ -411,6 +413,27 @@
   (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
     (start 33.02 76.2) (end 55.88 78.74) (layer "F.SilkS") (tstamp fe318c2f-59b7-4360-ab2c-33e18a3dbd5c)
     (effects (font (size 1 1) (thickness 0.1)) (justify right top mirror))
-    (stroke (width 0.1) (type solid))  
+    (stroke (width 0.1) (type solid))
+  )
+  (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
+    (pts
+      (xy 81.6335 93.955281)      (xy 58.995972 97.136778)      (xy 58.642472 94.621498)      (xy 81.28 91.44)
+    )
+    (angle 188) (layer "F.SilkS") (tstamp 51b2d208-7c09-4cd1-9949-746d68c5bd7f)
+    (effects (font (size 1 1) (thickness 0.1)) (justify left top))
+    (stroke (width 0.1) (type solid))
+  )
+  (fp_text_box "test {dblquote}test{dblquote} \\\\test\\\\ \\\\\\\\\\\\\\"
+    (pts
+      (xy 60.433949 83.293949)      (xy 76.59841 67.129488)      (xy 78.394461 68.925539)      (xy 62.23 85.09)
+    )
+    (angle 45) (layer "F.SilkS") (tstamp de4ab058-9f00-491e-af02-d7f3141c07c1)
+    (effects (font (size 1 1) (thickness 0.1)) (justify left top))
+    (stroke (width 0.1) (type solid))
+  )
+  (fp_text_box locked "locked"
+    (start 7.62 66.04) (end 30.48 68.58) (layer "F.SilkS") (tstamp 05c2c330-50fb-44ff-8350-688ca4c39be3)
+    (effects (font (size 1 1) (thickness 0.1)) (justify left top))
+    (stroke (width 0.1) (type solid))
   )
 )

@@ -1004,9 +1004,23 @@ class RenderCache():
 
 @dataclass
 class Fill():
-    type: str = ""
+    """The ``fill`` token defines how schematic and symbol graphical items are filled
+    
+    Documentation: 
+        - https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_fill_definition
+    """
+
+    type: str = "none"
+    """The ``type`` attribute defines how the graphical item is filled. Defaults to ``None``. 
+    Possible values are:
+    - ``none``: Graphic is not filled
+    - ``outline``: Graphic item filled with the line color
+    - ``background``: Graphic item filled with the theme background color"""
 
     color: Optional[ColorRGBA] = None
+    """The optional ``color`` token defines the color of the filled item.
+    
+    Available since KiCad v7"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Fill:

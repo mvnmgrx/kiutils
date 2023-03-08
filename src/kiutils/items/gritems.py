@@ -182,10 +182,12 @@ class GrTextBox():
         if exp[1] == "locked" and not isinstance(exp[2], list):
             object.locked = True
             object.text = exp[2]
+            start_at = 3
         else:
             object.text = exp[1]
+            start_at = 2
 
-        for item in exp:
+        for item in exp[start_at:]:
             if item[0] == 'start': object.start = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'pts':

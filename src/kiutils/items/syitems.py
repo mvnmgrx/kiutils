@@ -20,64 +20,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from kiutils.items.common import Fill, Position, Stroke, Effects
+from kiutils.items.common import Fill, Position, Stroke, Effects, Fill
 from kiutils.utils.strings import dequote
-
-@dataclass
-class SyFill():
-    """The ``fill`` token defines how schematic and symbol library graphical items are filled.
-
-    Documentation:
-        https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_fill_definition
-    """
-
-    type: str = "none"
-    """The ``type`` attribute defines how the graphical item is filled. Possible values are:
-    - ``none``: Graphic is not filled
-    - ``outline``: Graphic item filled with the line color
-    - ``background``: Graphic item filled with the theme background color
-    """
-
-    @classmethod
-    def from_sexpr(cls, exp: list) -> SyFill:
-        """Convert the given S-Expresstion into a SyFill object
-
-        Args:
-            - exp (list): Part of parsed S-Expression ``(fill ...)``
-
-        Raises:
-            - Exception: When given parameter's type is not a list
-            - Exception: When the first item of the list is not fill
-
-        Returns:
-            - SyFill: Object of the class initialized with the given S-Expression
-        """
-        if not isinstance(exp, list):
-            raise Exception("Expression does not have the correct type")
-
-        if exp[0] != 'fill':
-            raise Exception("Expression does not have the correct type")
-
-        object = cls()
-        for item in exp:
-            if item[0] == 'type': object.type = item[1]
-        return object
-
-    def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
-        """Generate the S-Expression representing this object
-
-        Args:
-            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
-            - newline (bool): Adds a newline to the end of the output. Defaults to True.
-
-        Returns:
-            - str: S-Expression of this object
-        """
-        indents = ' '*indent
-        endline = '\n' if newline else ''
-
-        return f'{indents}(fill (type {self.type})){endline}'
-
 
 @dataclass
 class SyArc():
@@ -86,6 +30,12 @@ class SyArc():
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_arc
     """
+
+    private: bool = False
+    """The ``private`` token defines if the arc is only visible in the symbol editor. Defaults
+    to ``False``.
+
+    Available since KiCad v7"""
 
     start: Position = field(default_factory=lambda: Position())
     """The ``start`` token defines the coordinates of start point of the arc"""
@@ -99,7 +49,7 @@ class SyArc():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the arc outline is drawn"""
 
-    fill: SyFill = field(default_factory=lambda: SyFill())
+    fill: Fill = field(default_factory=lambda: Fill())
     """The ``fill`` token attributes define how the arc is filled"""
 
     @classmethod
@@ -123,12 +73,16 @@ class SyArc():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+
         for item in exp:
+            if isinstance(item, str):
+                if item == 'private': object.private = True
+                continue
             if item[0] == 'start': object.start = Position().from_sexpr(item)
             if item[0] == 'mid': object.mid = Position().from_sexpr(item)
             if item[0] == 'end': object.end = Position().from_sexpr(item)
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = SyFill().from_sexpr(item)
+            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
@@ -147,10 +101,11 @@ class SyArc():
         startA = f' {self.start.angle}' if self.start.angle is not None else ''
         midA = f' {self.mid.angle}' if self.mid.angle is not None else ''
         endA = f' {self.end.angle}' if self.end.angle is not None else ''
+        private = ' private' if self.private else ''
 
-        expression =  f'{indents}(arc (start {self.start.X} {self.start.Y}{startA}) (mid {self.mid.X} {self.mid.Y}{midA}) (end {self.end.X} {self.end.Y}{endA})\n'
-        expression += f'{indents}{self.stroke.to_sexpr()}'
-        expression += f'{indents}{self.fill.to_sexpr()}'
+        expression =  f'{indents}(arc{private} (start {self.start.X} {self.start.Y}{startA}) (mid {self.mid.X} {self.mid.Y}{midA}) (end {self.end.X} {self.end.Y}{endA})\n'
+        expression += self.stroke.to_sexpr(indent+2)
+        expression += self.fill.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 
@@ -162,6 +117,12 @@ class SyCircle():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_circle
     """
 
+    private: bool = False
+    """The ``private`` token defines if the circle is only visible in the symbol editor. Defaults
+    to ``False``.
+
+    Available since KiCad v7"""
+
     center: Position = field(default_factory=lambda: Position())
     """The ``center`` token defines the coordinates of center point of the circle"""
 
@@ -171,7 +132,7 @@ class SyCircle():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the circle outline is drawn"""
 
-    fill: SyFill = field(default_factory=lambda: SyFill())
+    fill: Fill = field(default_factory=lambda: Fill())
     """The ``fill`` token attributes define how the circle is filled"""
 
     @classmethod
@@ -195,11 +156,15 @@ class SyCircle():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+
         for item in exp:
+            if isinstance(item, str):
+                if item == 'private': object.private = True
+                continue
             if item[0] == 'center': object.center = Position().from_sexpr(item)
             if item[0] == 'radius': object.radius = item[1]
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = SyFill().from_sexpr(item)
+            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
@@ -214,10 +179,11 @@ class SyCircle():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
+        private = ' private' if self.private else ''
 
-        expression =  f'{indents}(circle (center {self.center.X} {self.center.Y}) (radius {self.radius})\n'
-        expression += f'{indents}{self.stroke.to_sexpr()}'
-        expression += f'{indents}{self.fill.to_sexpr()}'
+        expression =  f'{indents}(circle{private} (center {self.center.X} {self.center.Y}) (radius {self.radius})\n'
+        expression += self.stroke.to_sexpr(indent+2)
+        expression += self.fill.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 
@@ -235,7 +201,7 @@ class SyCurve():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the curve outline is drawn"""
 
-    fill: SyFill = field(default_factory=lambda: SyFill())
+    fill: Fill = field(default_factory=lambda: Fill())
     """The ``fill`` token attributes define how curve arc is filled"""
 
     @classmethod
@@ -261,7 +227,7 @@ class SyCurve():
         object = cls()
         for item in exp:
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = SyFill().from_sexpr(item)
+            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
             if item[0] == 'pts':
                 for point in item[1:]:
                     object.points.append(Position().from_sexpr(point))
@@ -285,8 +251,8 @@ class SyCurve():
         for point in self.points:
             expression =  f'{indents}    (xy {point.X} {point.Y})\n'
         expression =  f'{indents}  )\n'
-        expression += f'{indents}{self.stroke.to_sexpr()}'
-        expression += f'{indents}{self.fill.to_sexpr()}'
+        expression += self.stroke.to_sexpr(indent+2)
+        expression += self.fill.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 
@@ -304,7 +270,7 @@ class SyPolyLine():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the polyline outline is drawn"""
 
-    fill: SyFill = field(default_factory=lambda: SyFill())
+    fill: Fill = field(default_factory=lambda: Fill())
     """The ``fill`` token attributes define how polyline arc is filled"""
 
     @classmethod
@@ -330,7 +296,7 @@ class SyPolyLine():
         object = cls()
         for item in exp:
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = SyFill().from_sexpr(item)
+            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
             if item[0] == 'pts':
                 for point in item[1:]:
                     object.points.append(Position().from_sexpr(point))
@@ -354,8 +320,8 @@ class SyPolyLine():
         for point in self.points:
             expression +=  f'{indents}    (xy {point.X} {point.Y})\n'
         expression += f'{indents}  )\n'
-        expression += f'{indents}{self.stroke.to_sexpr()}'
-        expression += f'{indents}{self.fill.to_sexpr()}'
+        expression += self.stroke.to_sexpr(indent+2)
+        expression += self.fill.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 
@@ -367,6 +333,12 @@ class SyRect():
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbol_rectangle
     """
 
+    private: bool = False
+    """The ``private`` token defines if the rectangle is only visible in the symbol editor. Defaults
+    to ``False``.
+    
+    Available since KiCad v7"""
+
     start: Position = field(default_factory=lambda: Position())
     """The ``start`` token attributes define the coordinates of the start point of the rectangle"""
 
@@ -376,7 +348,7 @@ class SyRect():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the rectangle outline is drawn"""
 
-    fill: SyFill = field(default_factory=lambda: SyFill())
+    fill: Fill = field(default_factory=lambda: Fill())
     """The ``fill`` token attributes define how rectangle arc is filled"""
 
     @classmethod
@@ -400,11 +372,15 @@ class SyRect():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+
         for item in exp:
+            if isinstance(item, str):
+                if item == 'private': object.private = True
+                continue
             if item[0] == 'start': object.start = Position().from_sexpr(item)
             if item[0] == 'end': object.end = Position().from_sexpr(item)
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = SyFill().from_sexpr(item)
+            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
@@ -419,10 +395,11 @@ class SyRect():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
+        private = ' private' if self.private else ''
 
-        expression =  f'{indents}(rectangle (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y})\n'
-        expression += f'{indents}{self.stroke.to_sexpr()}'
-        expression += f'{indents}{self.fill.to_sexpr()}'
+        expression =  f'{indents}(rectangle{private} (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y})\n'
+        expression += self.stroke.to_sexpr(indent+2)
+        expression += self.fill.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 
@@ -489,20 +466,20 @@ class SyText():
         expression += f'{indents}  {self.effects.to_sexpr()}'
         expression += f'{indents}){endline}'
         return expression
-    
+
 @dataclass
 class SyTextBox():
     """The ``text_box`` token defines a text box inside a symbol
-    
+
     Available since KiCad v7
 
     Documentation:
         ????
     """
-    
-    # NOTE: This is almost the same implementation as in ``kiutils.items.schitems.TextBox`` but 
-    #       used in a different context. 
-          
+
+    # NOTE: This is almost the same implementation as in ``kiutils.items.schitems.TextBox`` but
+    #       used in a different context.
+
     text: str = ""
     """The ``text`` token defines the text string"""
 
@@ -549,6 +526,7 @@ class SyTextBox():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+
         # Extract "private" token, if any is present
         if exp[1] == "private" and not isinstance(exp[2], list):
             object.private = True

@@ -541,7 +541,7 @@ class TextBox():
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
     @classmethod
-    def from_sexpr(cls, exp: list) -> Text:
+    def from_sexpr(cls, exp: list) -> TextBox:
         """Convert the given S-Expresstion into a TextBox object
 
         Args:

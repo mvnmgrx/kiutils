@@ -3,10 +3,7 @@
   (uuid 3a563ed9-b266-4375-be29-6a2d9f906b82)
 
   (paper "A4")
-
-  (lib_symbols
-  )
-
+  (lib_symbols)
 
   (circle (center 179.07 101.6) (radius 14.3684)
     (stroke (width -0.0001) (type dash_dot))

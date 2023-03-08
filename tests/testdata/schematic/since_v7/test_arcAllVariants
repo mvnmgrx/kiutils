@@ -3,10 +3,7 @@
   (uuid 721ffcf0-2683-45a5-82ff-f53d532e9160)
 
   (paper "A4")
-
-  (lib_symbols
-  )
-
+  (lib_symbols)
 
   (arc (start 83.818 63.498) (mid 89.7702 49.1302) (end 104.138 43.178)
     (stroke (width 1) (type solid) (color 255 7 109 1))

@@ -3,10 +3,7 @@
   (uuid c1ef0f5b-928d-41cb-9d70-a66e71feb54d)
 
   (paper "A4")
-
-  (lib_symbols
-  )
-
+  (lib_symbols)
 
   (rectangle (start 106.68 102.87) (end 116.84 105.41)
     (stroke (width 1) (type solid) (color 255 111 208 1))

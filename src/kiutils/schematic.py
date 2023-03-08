@@ -73,6 +73,9 @@ class Schematic():
     texts: List[Text] = field(default_factory=list)
     """The ``text`` token defines a list of texts used in the schematic"""
 
+    textBoxes: List[TextBox] = field(default_factory=list)
+    """The ``text_box`` token defines a list of text boxes used in the schematic"""
+
     labels: List[LocalLabel] = field(default_factory=list)
     """The ``labels`` token defines a list of local labels used in the schematic"""
 
@@ -135,6 +138,7 @@ class Schematic():
             if item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item))
             if item[0] == 'image': object.images.append(Image().from_sexpr(item))
             if item[0] == 'text': object.texts.append(Text().from_sexpr(item))
+            if item[0] == 'text_box': object.textBoxes.append(TextBox().from_sexpr(item))
             if item[0] == 'label': object.labels.append(LocalLabel().from_sexpr(item))
             if item[0] == 'global_label': object.globalLabels.append(GlobalLabel().from_sexpr(item))
             if item[0] == 'hierarchical_label': object.hierarchicalLabels.append(HierarchicalLabel().from_sexpr(item))
@@ -258,6 +262,11 @@ class Schematic():
         if self.images:
             expression += '\n'
             for item in self.images:
+                expression += item.to_sexpr(indent+2)
+
+        if self.textBoxes:
+            expression += '\n'
+            for item in self.textBoxes:
                 expression += item.to_sexpr(indent+2)
 
         if self.texts:

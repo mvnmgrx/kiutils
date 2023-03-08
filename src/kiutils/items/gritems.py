@@ -106,8 +106,10 @@ class GrText():
 
 @dataclass
 class GrTextBox():
-    """TBD when KiCad 7 is released
+    """The ``gr_text_box`` token defines a graphical rectangle containing line-wrapped text.
 
+    Available since KiCad v7
+    
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_graphical_text_box
     """
@@ -133,9 +135,9 @@ class GrTextBox():
 
     Note:
         - If ``angle`` is not given, or is a cardinal angle (0, 90, 180 or 270), then the text box
-        MUST have ``start`` and ``end`` tokens.
+          MUST have ``start`` and ``end`` tokens.
         - If ``angle`` is given and is not a cardinal angle, then the text box MUST have a ``pts``
-        token (with 4 pts).
+          token (with 4 pts).
     """
 
     layer: str = "F.Cu"

@@ -494,6 +494,8 @@ class SyText():
 class SyTextBox():
     """The ``text_box`` token defines a text box inside a symbol
     
+    Available since KiCad v7
+
     Documentation:
         ????
     """

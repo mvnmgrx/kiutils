@@ -309,7 +309,7 @@ class FpRect():
 class FpTextBox():
     """The ``fp_text_box`` token defines a rectangle containing line-wrapped text.
     
-    Used since KiCad v7
+    Available since KiCad v7
     
     Documentation:
         https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_footprint_text_box

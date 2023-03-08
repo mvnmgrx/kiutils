@@ -18,9 +18,9 @@ Documentation taken from:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
-from kiutils.items.common import Position, Stroke, Effects
+from kiutils.items.common import Fill, Position, Stroke, Effects
 from kiutils.utils.strings import dequote
 
 @dataclass
@@ -487,5 +487,106 @@ class SyText():
 
         expression =  f'{indents}(text "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA})\n'
         expression += f'{indents}  {self.effects.to_sexpr()}'
+        expression += f'{indents}){endline}'
+        return expression
+    
+@dataclass
+class SyTextBox():
+    """The ``text_box`` token defines a text box inside a symbol
+    
+    Documentation:
+        ????
+    """
+    
+    # NOTE: This is almost the same implementation as in ``kiutils.items.schitems.TextBox`` but 
+    #       used in a different context. 
+          
+    text: str = ""
+    """The ``text`` token defines the text string"""
+
+    private: bool = False
+    """The ``private`` token defines if the text box is only visible in the symbol editor. Defaults
+    to ``False``."""
+
+    position: Position = field(default_factory=lambda: Position())
+    """The ``position`` token defines the X and Y coordinates and rotation angle of the text"""
+
+    size: Position = field(default_factory=lambda: Position())
+    """The ``size`` token defines the size in X and Y direction. Angle is not used."""
+
+    stroke: Stroke = field(default_factory=lambda: Stroke())
+    """The ``stroke`` token defines the look of the outline of the text box"""
+
+    fill: Fill = field(default_factory=lambda: Fill())
+    """The ``fill`` token defines how the text box should be filled"""
+
+    effects: Effects = field(default_factory=lambda: Effects())
+    """The ``effects`` token defines how the text is drawn"""
+
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> SyTextBox:
+        """Convert the given S-Expresstion into a SyTextBox object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(text_box ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not text_box
+
+        Returns:
+            - SyTextBox: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'text_box':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        # Extract "private" token, if any is present
+        if exp[1] == "private" and not isinstance(exp[2], list):
+            object.private = True
+            object.text = exp[2]
+            start_at = 3
+        else:
+            object.text = exp[1]
+            start_at = 2
+
+        for item in exp[start_at:]:
+            if item[0] == 'at': object.position = Position().from_sexpr(item)
+            if item[0] == 'size': object.size = Position().from_sexpr(item)
+            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            if item[0] == 'uuid': object.uuid = item[1]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        private = ' private' if self.private else ''
+
+        expression =  f'{indents}(text_box{private} "{dequote(self.text)}"\n'
+        expression += f'{indents}  (at {self.position.X} {self.position.Y}{posA}) (size {self.size.X} {self.size.Y})\n'
+        expression += self.stroke.to_sexpr(indent+2)
+        expression += self.fill.to_sexpr(indent+2)
+        expression += self.effects.to_sexpr(indent+2)
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression

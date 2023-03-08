@@ -1,15 +1,15 @@
 (kicad_symbol_lib (version 20220914) (generator kicad_symbol_editor)
   (symbol "test" (in_bom yes) (on_board yes)
-    (property "Reference" "U" (at 0 0 0)
+    (property "Reference" "U" (id 0) (at 0 0 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "" (at 0 0 0)
+    (property "Value" "" (id 1) (at 0 0 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "" (at 0 0 0)
+    (property "Footprint" "" (id 2) (at 0 0 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "" (at 0 0 0)
+    (property "Datasheet" "" (id 3) (at 0 0 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (symbol "test_0_0"
@@ -691,7 +691,7 @@
       )
     )
     (symbol "test_1_1"
-      (text_box private "test \"test\" \\\\test\\\\ \\\\\\\\\\\\\\"
+      (text_box private "private"
         (at 161.29 -29.21 0) (size 27.94 -3.81)
         (stroke (width 0) (type default))
         (fill (type none))

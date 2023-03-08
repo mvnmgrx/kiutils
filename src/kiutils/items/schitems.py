@@ -19,7 +19,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
-from kiutils.items.common import Position, ColorRGBA, Stroke, Effects, Property
+from kiutils.items.common import Fill, Position, ColorRGBA, Stroke, Effects, Property
 from kiutils.utils.strings import dequote
 
 @dataclass
@@ -506,6 +506,90 @@ class Text():
         else:
             expression += ' '
         expression += f'(at {self.position.X} {self.position.Y}{posA})\n'
+        expression += self.effects.to_sexpr(indent+2)
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
+        expression += f'{indents}){endline}'
+        return expression
+
+@dataclass
+class TextBox():
+    """The ``text_box`` token defines a text box inside a schematic
+    
+    Documentation:
+        ????
+    """
+    text: str = ""
+    """The ``text`` token defines the text string"""
+
+    position: Position = field(default_factory=lambda: Position())
+    """The ``position`` token defines the X and Y coordinates and rotation angle of the text"""
+
+    size: Position = field(default_factory=lambda: Position())
+    """The ``size`` token defines the size in X and Y direction. Angle is not used."""
+
+    stroke: Stroke = field(default_factory=lambda: Stroke())
+    """The ``stroke`` token defines the look of the outline of the text box"""
+
+    fill: Fill = field(default_factory=lambda: Fill())
+    """The ``fill`` token defines how the text box should be filled"""
+
+    effects: Effects = field(default_factory=lambda: Effects())
+    """The ``effects`` token defines how the text is drawn"""
+
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> Text:
+        """Convert the given S-Expresstion into a TextBox object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(text_box ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not text_box
+
+        Returns:
+            - TextBox: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'text_box':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.text = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'at': object.position = Position().from_sexpr(item)
+            if item[0] == 'size': object.size = Position().from_sexpr(item)
+            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            if item[0] == 'uuid': object.uuid = item[1]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        posA = f' {self.position.angle}' if self.position.angle is not None else ''
+
+        expression =  f'{indents}(text_box "{dequote(self.text)}"\n'
+        expression += f'{indents}  (at {self.position.X} {self.position.Y}{posA}) (size {self.size.X} {self.size.Y})\n'
+        expression += self.stroke.to_sexpr(indent+2)
+        expression += self.fill.to_sexpr(indent+2)
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
             expression += f'{indents}  (uuid {self.uuid})\n'

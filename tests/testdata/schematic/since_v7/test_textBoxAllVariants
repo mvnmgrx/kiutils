@@ -3,10 +3,7 @@
   (uuid d0829a30-06bc-4626-976d-ea8fabf3d638)
 
   (paper "A4")
-
-  (lib_symbols
-  )
-
+  (lib_symbols)
 
   (text_box "Test \"test\" \\\\test\\\\"
     (at 19.05 38.1 0) (size 13.97 6.35)

@@ -110,3 +110,10 @@ class Tests_Footprint_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_textBoxAllVariants')
         footprint = Footprint().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(footprint, self.testData))
+
+    def test_imageWithLayerToken(self):
+        """Tests the new ``layer`` token for images in footprints"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_imageWithLayerToken')
+        footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))

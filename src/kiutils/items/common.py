@@ -217,7 +217,7 @@ class Stroke():
     """
 
     color: Optional[ColorRGBA] = None
-    """The ``color`` token attributes define the line red, green, blue, and alpha color settings. 
+    """The ``color`` token attributes define the line red, green, blue, and alpha color settings.
     Defaults to ``None`` and was made optional since KiCad 7."""
 
     @classmethod
@@ -297,6 +297,11 @@ class Font():
     """The 'line_spacing' token specifies the spacing between lines as a ratio of standard
     line-spacing. (Not yet supported)"""
 
+    color: Optional[ColorRGBA] = None
+    """The optional ``color`` token specifies the color of the text element
+    
+    Available since KiCad v7"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Font:
         """Convert the given S-Expresstion into a Font object
@@ -329,6 +334,7 @@ class Font():
                 object.width = item[2]
             if item[0] == 'thickness': object.thickness = item[1]
             if item[0] == 'line_spacing': object.lineSpacing = item[1]
+            if item[0] == 'color': object.color = ColorRGBA.from_sexpr(item)
         return object
 
     def to_sexpr(self, indent=0, newline=False) -> str:
@@ -343,15 +349,16 @@ class Font():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        face_name, thickness, bold, italic, linespacing = '', '', '', '', ''
+        face_name, thickness, bold, italic, linespacing, color = '', '', '', '', '', ''
 
-        if self.face is not None:        face_name = f'(face {self.face}) '
+        if self.face is not None:        face_name = f'(face "{dequote(self.face)}") '
         if self.thickness is not None:   thickness = f' (thickness {self.thickness})'
         if self.bold == True:            bold = ' bold'
         if self.italic == True:          italic = ' italic'
         if self.lineSpacing is not None: linespacing = f' (line_spacing {self.lineSpacing})'
+        if self.color is not None:       color = f' {self.color.to_sexpr()}'
 
-        expression = f'{indents}(font {face_name}(size {self.height} {self.width}){thickness}{bold}{italic}{linespacing}){endline}'
+        expression = f'{indents}(font {face_name}(size {self.height} {self.width}){color}{thickness}{bold}{italic}{linespacing}){endline}'
         return expression
 
 @dataclass
@@ -407,8 +414,8 @@ class Justify():
             - newline (bool): Adds a newline to the end of the output. Defaults to False.
 
         Returns:
-            - str: S-Expression of this object or an empty string (depending on given indentation 
-              and newline settings) if no justification is given. This will cause the text to be 
+            - str: S-Expression of this object or an empty string (depending on given indentation
+              and newline settings) if no justification is given. This will cause the text to be
               horizontally and vertically aligend
         """
         indents = ' '*indent
@@ -443,6 +450,11 @@ class Effects():
     hide: bool = False
     """The optional ``hide`` token defines if the text is hidden"""
 
+    href: Optional[str] = None
+    """The optional ``href`` token specifies a link that the text element represents. 
+    
+    Available since KiCad v7"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Effects:
         """Convert the given S-Expresstion into a Effects object
@@ -470,6 +482,7 @@ class Effects():
                 else: continue
             if item[0] == 'font': object.font = Font().from_sexpr(item)
             if item[0] == 'justify': object.justify = Justify().from_sexpr(item)
+            if item[0] == 'href': object.href = item[1]
         return object
 
     def to_sexpr(self, indent=0, newline=True) -> str:
@@ -485,10 +498,11 @@ class Effects():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        justification = f' {self.justify.to_sexpr()}' if self.justify.to_sexpr() != '' else ''
+        justify = f' {self.justify.to_sexpr()}' if self.justify.to_sexpr() != '' else ''
         hide = f' hide' if self.hide else ''
+        href = f' (href "{dequote(self.href)}")' if self.href is not None else ''
 
-        expression =  f'{indents}(effects {self.font.to_sexpr()}{justification}{hide}){endline}'
+        expression =  f'{indents}(effects {self.font.to_sexpr()}{justify}{href}{hide}){endline}'
         return expression
 
 
@@ -626,7 +640,7 @@ class PageSettings():
     """
     paperSize: str = "A4"
     """The ``paperSize`` token defines the size of the paper. Valid sizes are `A0`, `A1`, `A2`,
-    `A3`, `A4`, `A5`, ``A``, ``B``, ``C``, ``D`` and ``E``. When using user-defines page sizes, set 
+    `A3`, `A4`, `A5`, ``A``, ``B``, ``C``, ``D`` and ``E``. When using user-defines page sizes, set
     this to ``User``"""
 
     width: Optional[float] = None
@@ -856,4 +870,197 @@ class Property():
             expression += f'{indents}){endline}'
         else:
             expression += f'){endline}'
+        return expression
+
+@dataclass
+class RenderCachePolygon():
+    """A polygon used by the ``render_cache`` token
+
+    Used since KiCad v7
+    """
+
+    pts: List[Position] = field(default_factory=list)
+    """The ``pts`` token defines a list of points that define the outlines of the polygon"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> RenderCachePolygon:
+        """Convert the given S-Expresstion into a RenderCachePolygon object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(polygon ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not polygon
+
+        Returns:
+            - RenderCachePolygon: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'polygon':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp:
+            if item[0] == 'pts':
+                for point in item[1:]:
+                    object.pts.append(Position.from_sexpr(point))
+        return object
+
+    def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 6.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        expression = f'{indents}(polygon\n'
+        expression += f'{indents}  (pts'
+
+        for i, point in enumerate(self.pts):
+            if i % 4 == 0:
+                expression += f'\n'
+            expression += f'{indents}    '
+            expression += f'(xy {point.X} {point.Y})'
+
+        # NOTE: This expects the length of the points array to be a multiple of four to get the
+        #       formatting right.
+        expression += f'\n{indents}  )\n'
+        expression += f'{indents}){endline}'
+        return expression
+
+@dataclass
+class RenderCache():
+    """The ``render_cache`` token defines a cache for none-standard fonts.
+
+    Used since KiCad v7
+
+    Documentation:
+        - None found (05.03.2023), seems to be used in ''text_box'' tokens for custom fonts
+    """
+
+    text: str = ""
+    """The ``text`` token defines which text the cache represents. Defaults to an empty string."""
+
+    id: int = 0
+    """The ``id`` token is some number after the text. Defaults to 0."""
+
+    polygons: List[Position] = field(default_factory=list)
+    """The ``polygons`` token is a list of polygons that define the outline of the cached text"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> RenderCache:
+        """Convert the given S-Expresstion into a RenderCache object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(render_cache ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list or the list is smaller than 3
+            - Exception: When the first item of the list is not render_cache
+
+        Returns:
+            - RenderCache: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list) or len(exp) < 3:
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'render_cache':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.text = exp[1]
+        object.id = exp[2]
+        for item in exp:
+            if item[0] == 'polygon': object.polygons.append(RenderCachePolygon.from_sexpr(item))
+        return object
+
+    def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        expression = f'{indents}(render_cache "{dequote(self.text)}" {self.id}\n'
+        for poly in self.polygons:
+            expression += poly.to_sexpr(indent+2)
+        expression += f'{indents}){endline}'
+        return expression
+
+@dataclass
+class Fill():
+    """The ``fill`` token defines how schematic and symbol graphical items are filled
+    
+    Documentation: 
+        - https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_fill_definition
+    """
+
+    type: str = "none"
+    """The ``type`` attribute defines how the graphical item is filled. Defaults to ``None``. 
+    Possible values are:
+    - ``none``: Graphic is not filled
+    - ``outline``: Graphic item filled with the line color
+    - ``background``: Graphic item filled with the theme background color"""
+
+    color: Optional[ColorRGBA] = None
+    """The optional ``color`` token defines the color of the filled item.
+    
+    Available since KiCad v7"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> Fill:
+        """Convert the given S-Expresstion into a Fill object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(fill ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list or the list is smaller than 3
+            - Exception: When the first item of the list is not fill
+
+        Returns:
+            - Fill: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'fill':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp:
+            if item[0] == 'type': object.type = item[1]
+            if item[0] == 'color': object.color = ColorRGBA().from_sexpr(item)
+        return object
+
+    def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+        color = f' {self.color.to_sexpr()}' if self.color is not None else ''
+
+        expression = f'{indents}(fill (type {self.type}){color}){endline}'
         return expression

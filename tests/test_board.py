@@ -84,3 +84,17 @@ class Tests_Board(unittest.TestCase):
         board.footprints[0].libId = "I_was_renamed:BUS_PCIexpress_x1"
         board.footprints[1].libId = "I_was_added:BUS_PCIexpress_x1"
         self.assertTrue(to_file_and_compare(board, self.testData))
+
+class Tests_Board_Since_V7(unittest.TestCase):
+    """Test cases for Boards since KiCad 7"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+
+    def test_textBoxAllVariants(self):
+        """Tests all variants of the ``text_box`` token for text boxes in PCBs"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_textBoxAllVariants')
+        board = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(board, self.testData))

@@ -16,7 +16,7 @@ Documentation taken from:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional, List, Union
 from os import path
 
 from kiutils.items.common import PageSettings, TitleBlock
@@ -33,10 +33,10 @@ class Schematic():
         https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/
     """
 
-    version: str = "20211123"
+    version: str = KIUTILS_CREATE_NEW_VERSION_STR
     """The ``version`` token attribute defines the schematic version using the YYYYMMDD date format"""
 
-    generator: str = "kicad-python-tools"
+    generator: str = KIUTILS_CREATE_NEW_GENERATOR_STR
     """The ``generator`` token attribute defines the program used to write the file"""
 
     uuid: Optional[str] = None
@@ -63,15 +63,24 @@ class Schematic():
     busEntries: List[BusEntry] = field(default_factory=list)
     """The ``busEntries`` token defines a list of bus_entry used in the schematic"""
 
-    graphicalItems: List = field(default_factory=list)
-    """The ``graphicalItems`` token defines a list of ``bus``, ``wire`` or ``polyline`` elements used in
-    the schematic"""
+    graphicalItems: List[Union[Connection, PolyLine]] = field(default_factory=list)
+    """The ``graphicalItems`` token defines a list of ``bus``, ``wire`` or ``polyline`` elements 
+    used in the schematic"""
+
+    shapes: List[Union[Arc, Circle, Rectangle]] = field(default_factory=list)
+    """The ``shapes`` token defines a list of graphical shapes (``Arc``, ``Rectangle`` or 
+    ``Circle``) used in the schematic.
+    
+    Available since KiCad v7"""
 
     images: List[Image] = field(default_factory=list)
     """The ``images`` token defines a list of images used in the schematic"""
 
     texts: List[Text] = field(default_factory=list)
     """The ``text`` token defines a list of texts used in the schematic"""
+
+    textBoxes: List[TextBox] = field(default_factory=list)
+    """The ``text_box`` token defines a list of text boxes used in the schematic"""
 
     labels: List[LocalLabel] = field(default_factory=list)
     """The ``labels`` token defines a list of local labels used in the schematic"""
@@ -133,8 +142,12 @@ class Schematic():
             if item[0] == 'wire': object.graphicalItems.append(Connection().from_sexpr(item))
             if item[0] == 'bus': object.graphicalItems.append(Connection().from_sexpr(item))
             if item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item))
+            if item[0] == 'arc': object.shapes.append(Arc.from_sexpr(item))
+            if item[0] == 'circle': object.shapes.append(Circle.from_sexpr(item))
+            if item[0] == 'rectangle': object.shapes.append(Rectangle.from_sexpr(item))
             if item[0] == 'image': object.images.append(Image().from_sexpr(item))
             if item[0] == 'text': object.texts.append(Text().from_sexpr(item))
+            if item[0] == 'text_box': object.textBoxes.append(TextBox().from_sexpr(item))
             if item[0] == 'label': object.labels.append(LocalLabel().from_sexpr(item))
             if item[0] == 'global_label': object.globalLabels.append(GlobalLabel().from_sexpr(item))
             if item[0] == 'hierarchical_label': object.hierarchicalLabels.append(HierarchicalLabel().from_sexpr(item))
@@ -255,9 +268,19 @@ class Schematic():
             for item in self.graphicalItems:
                 expression += item.to_sexpr(indent+2)
 
+        if self.shapes:
+            expression += '\n'
+            for item in self.shapes:
+                expression += item.to_sexpr(indent+2)
+
         if self.images:
             expression += '\n'
             for item in self.images:
+                expression += item.to_sexpr(indent+2)
+
+        if self.textBoxes:
+            expression += '\n'
+            for item in self.textBoxes:
                 expression += item.to_sexpr(indent+2)
 
         if self.texts:

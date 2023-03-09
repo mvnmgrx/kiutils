@@ -1089,6 +1089,10 @@ class Image():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    layer: Optional[str] = None
+    """The optional ``layer`` token defines the canonical layer name when the image is used inside
+    a footprint or PCB. When used inside a schematic, this token is required to be ``None``."""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Image:
         """Convert the given S-Expresstion into a Image object
@@ -1114,6 +1118,7 @@ class Image():
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'scale': object.scale = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'layer': object.layer = item[1]
             if item[0] == 'data':
                 for b64part in item[1:]:
                     object.data.append(b64part)
@@ -1133,8 +1138,9 @@ class Image():
         endline = '\n' if newline else ''
 
         scale = f' (scale {self.scale})' if self.scale is not None else ''
+        layer = f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
 
-        expression =  f'{indents}(image (at {self.position.X} {self.position.Y}){scale}\n'
+        expression =  f'{indents}(image (at {self.position.X} {self.position.Y}){layer}{scale}\n'
         if self.uuid is not None:
             expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}  (data\n'

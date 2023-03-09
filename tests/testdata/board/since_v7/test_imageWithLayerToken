@@ -15,7 +15,7 @@
 
   (net 0 "")
 
-  (image (at 203.2 99.06) (layer "F.Cu")
+  (image (at 203.2 99.06) (layer "F.Cu") (scale 7.875)
     (data
       iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAAAA3NCSVQICAjb4U/gAAAACXBIWXMA
       AA50AAAOdAFrJLPWAAAA9ElEQVRIiWP88OEDA20AE43MHbJGs+CX1pp4hUiDruXroIkMzQAZmkYT

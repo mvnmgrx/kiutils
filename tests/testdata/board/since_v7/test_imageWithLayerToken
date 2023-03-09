@@ -6,7 +6,6 @@
 
   (paper "A4")
   (layers
-    (0 "F.Cu" signal)
   )
 
   (setup
@@ -25,4 +24,5 @@
       p+sXX34XbntMjMqhmdFHjaaf0QRKPkrA0AyQUaPRAACmk1AZ+UHU4QAAAABJRU5ErkJggg==
     )
   )
+
 )

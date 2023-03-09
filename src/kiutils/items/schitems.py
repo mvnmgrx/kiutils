@@ -618,6 +618,10 @@ class LocalLabel():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    fieldsAutoplaced: bool = False
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
+    with the global label have been place automatically"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> LocalLabel:
         """Convert the given S-Expresstion into a LocalLabel object
@@ -644,6 +648,7 @@ class LocalLabel():
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -660,8 +665,9 @@ class LocalLabel():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        fieldsAutoplaced = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
 
-        expression =  f'{indents}(label "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA})\n'
+        expression =  f'{indents}(label "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
             expression += f'{indents}  (uuid {self.uuid})\n'
@@ -770,7 +776,7 @@ class HierarchicalLabel():
 
     shape: str = "input"
     """The ``shape`` token defines the way the global label is drawn. Possible values are:
-       ``input``, ``output``, ``bidirectional``, ``tri_state``, ``passive``."""
+    ``input``, ``output``, ``bidirectional``, ``tri_state``, ``passive``."""
 
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` token defines the X and Y coordinates and rotation angle of the label"""
@@ -780,6 +786,10 @@ class HierarchicalLabel():
 
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
+    
+    fieldsAutoplaced: bool = False
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
+    with the global label have been place automatically"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> HierarchicalLabel:
@@ -808,6 +818,7 @@ class HierarchicalLabel():
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'shape': object.shape = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -824,8 +835,9 @@ class HierarchicalLabel():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        fieldsAutoplaced = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
 
-        expression =  f'{indents}(hierarchical_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA})\n'
+        expression =  f'{indents}(hierarchical_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
             expression += f'{indents}  (uuid {self.uuid})\n'
@@ -902,6 +914,11 @@ class SchematicSymbol():
     """The ``on_board`` token attribute determines if the footprint associated with the symbol is
     exported to the board via the netlist"""
 
+    dnp: Optional[bool] = None
+    """The optional ``dnp`` token defines if a symbol is marked as do-not-populate in the schematic. 
+    
+    Available since KiCad v7"""
+
     fieldsAutoplaced: bool = False
     """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
     with the global label have been place automatically"""
@@ -950,6 +967,7 @@ class SchematicSymbol():
             if item[0] == 'unit': object.unit = item[1]
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
+            if item[0] == 'dnp': object.dnp = True if item[1] == 'yes' else False
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
             if item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
@@ -976,9 +994,13 @@ class SchematicSymbol():
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
         unit = f' (unit {self.unit})' if self.unit is not None else ''
         lib_name = f' (lib_name "{dequote(self.libName)}")' if self.libName is not None else ''
+        if self.dnp is not None:
+            dnp = ' (dnp yes)' if self.dnp else ' (dnp no)'
+        else:
+            dnp = ''
 
         expression =  f'{indents}(symbol{lib_name} (lib_id "{dequote(self.libId)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
-        expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'
+        expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){dnp}{fa}\n'
         if self.uuid:
             expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:

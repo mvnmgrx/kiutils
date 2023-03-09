@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 from os import path
 
-from kiutils.items.common import Group, Net, PageSettings, TitleBlock
+from kiutils.items.common import Group, Image, Net, PageSettings, TitleBlock
 from kiutils.items.zones import Zone
 from kiutils.items.brditems import *
 from kiutils.items.gritems import *
@@ -67,9 +67,12 @@ class Board():
     footprints: List[Footprint] = field(default_factory=list)
     """The ``footprints`` token defines a list of footprints used in the layout"""
 
-    graphicalItems: List = field(default_factory=list) # as in gritems.py
-    """The ``graphicalItems`` token defines a list of graphical items (as listed in `gritems.py`) used
-    in the layout"""
+    # TODO: Type hinting for this list
+    graphicItems: List = field(default_factory=list) # as in gritems.py
+    """The ``graphicItems`` token defines a list of graphical items used in the layout. Possible
+    tokens are found in ``kiutils.items.gritems``
+    
+    The ``Image`` token is supported since KiCad v7 and must be added into this list when used."""
 
     traceItems: List = field(default_factory=list)
     """The ``traceItems`` token defines a list of segments, arcs and vias used in the layout"""
@@ -124,14 +127,15 @@ class Board():
             if item[0] == 'property': object.properties.update({item[1]: item[2]})
             if item[0] == 'net': object.nets.append(Net().from_sexpr(item))
             if item[0] == 'footprint': object.footprints.append(Footprint().from_sexpr(item))
-            if item[0] == 'gr_text': object.graphicalItems.append(GrText().from_sexpr(item))
-            if item[0] == 'gr_text_box': object.graphicalItems.append(GrTextBox().from_sexpr(item))
-            if item[0] == 'gr_line': object.graphicalItems.append(GrLine().from_sexpr(item))
-            if item[0] == 'gr_rect': object.graphicalItems.append(GrRect().from_sexpr(item))
-            if item[0] == 'gr_circle': object.graphicalItems.append(GrCircle().from_sexpr(item))
-            if item[0] == 'gr_arc': object.graphicalItems.append(GrArc().from_sexpr(item))
-            if item[0] == 'gr_poly': object.graphicalItems.append(GrPoly().from_sexpr(item))
-            if item[0] == 'gr_curve': object.graphicalItems.append(GrCurve().from_sexpr(item))
+            if item[0] == 'gr_text': object.graphicItems.append(GrText().from_sexpr(item))
+            if item[0] == 'gr_text_box': object.graphicItems.append(GrTextBox().from_sexpr(item))
+            if item[0] == 'gr_line': object.graphicItems.append(GrLine().from_sexpr(item))
+            if item[0] == 'gr_rect': object.graphicItems.append(GrRect().from_sexpr(item))
+            if item[0] == 'gr_circle': object.graphicItems.append(GrCircle().from_sexpr(item))
+            if item[0] == 'gr_arc': object.graphicItems.append(GrArc().from_sexpr(item))
+            if item[0] == 'gr_poly': object.graphicItems.append(GrPoly().from_sexpr(item))
+            if item[0] == 'gr_curve': object.graphicItems.append(GrCurve().from_sexpr(item))
+            if item[0] == 'image': object.graphicItems.append(Image().from_sexpr(item))
             if item[0] == 'dimension': object.dimensions.append(Dimension().from_sexpr(item))
             if item[0] == 'target': object.targets.append(Target().from_sexpr(item))
             if item[0] == 'segment': object.traceItems.append(Segment().from_sexpr(item))
@@ -278,9 +282,9 @@ class Board():
             expression += footprint.to_sexpr(indent+2, layerInFirstLine=True) + '\n'
 
         # Lines, Texts, Arcs and other graphical items
-        if len(self.graphicalItems) > 0:
+        if len(self.graphicItems) > 0:
             addNewLine = True
-            for item in self.graphicalItems:
+            for item in self.graphicItems:
                 if isinstance(item, GrPoly):
                     expression += item.to_sexpr(indent+2, pts_newline=True)
                 else:

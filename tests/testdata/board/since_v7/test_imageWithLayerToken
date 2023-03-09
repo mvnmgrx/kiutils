@@ -1,0 +1,28 @@
+(kicad_pcb (version 20221018) (generator kiutils)
+
+  (general
+    (thickness 1.6)
+  )
+
+  (paper "A4")
+  (layers
+  )
+
+  (setup
+    (pad_to_mask_clearance 0)
+  )
+
+  (net 0 "")
+
+  (image (at 203.2 99.06) (layer "F.Cu") (scale 7.875)
+    (data
+      iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAAAA3NCSVQICAjb4U/gAAAACXBIWXMA
+      AA50AAAOdAFrJLPWAAAA9ElEQVRIiWP88OEDA20AE43MHbJGs+CX1pp4hUiDruXroIkMzQAZmkYT
+      iEZMIMHDWmEvaS3P8/33v1NPvvYfffH002+sKhnx50a0FCLBw7o+WoWfg5kYR5Dm6go7SX4O5kuX
+      Li1atIiRkTEuLk5XV5c6Rlsr8DAwMCxevBji14kTJ8Kl5syZg6aYXtFIMO+dePTFWZkvLi5u0aJF
+      DAwM8fHxOjromRAOUKKRoNGKguzLw5X42GkQjfff/wxYcqfcTsJanvf777+nnnydcOwlJPFhliEk
+      p+sXX34XbntMjMqhmdFHjaaf0QRKPkrA0AyQUaPRAACmk1AZ+UHU4QAAAABJRU5ErkJggg==
+    )
+  )
+
+)

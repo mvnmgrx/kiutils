@@ -1,0 +1,27 @@
+(footprint "image_test" (version 20221018) (generator kiutils)
+  (layer "F.Cu")
+  (tedit 640a506b)
+  (attr smd)
+  (fp_text reference "REF**" (at 0 -0.5 unlocked) (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.1)))
+    (tstamp 8fee236d-a937-47a4-b037-5b1ec0ea729a)
+  )
+  (fp_text value "image_test" (at 0 1 unlocked) (layer "F.Fab")
+    (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp aeb0c71a-d788-467d-a13c-49ed75f3dbdb)
+  )
+  (image (at 5.08 -7.62) (layer "F.SilkS") (scale 7.875)
+    (data
+      iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAAAA3NCSVQICAjb4U/gAAAACXBIWXMA
+      AA50AAAOdAFrJLPWAAAA9ElEQVRIiWP88OEDA20AE43MHbJGs+CX1pp4hUiDruXroIkMzQAZmkYT
+      iEZMIMHDWmEvaS3P8/33v1NPvvYfffH002+sKhnx50a0FCLBw7o+WoWfg5kYR5Dm6go7SX4O5kuX
+      Li1atIiRkTEuLk5XV5c6Rlsr8DAwMCxevBji14kTJ8Kl5syZg6aYXtFIMO+dePTFWZkvLi5u0aJF
+      DAwM8fHxOjromRAOUKKRoNGKguzLw5X42GkQjfff/wxYcqfcTsJanvf777+nnnydcOwlJPFhliEk
+      p+sXX34XbntMjMqhmdFHjaaf0QRKPkrA0AyQUaPRAACmk1AZ+UHU4QAAAABJRU5ErkJggg==
+    )
+  )
+  (fp_text user "${REFERENCE}" (at 0 2.5 unlocked) (layer "F.Fab")
+    (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp a5217a7a-3aed-4722-8474-750c47ad16eb)
+  )
+)

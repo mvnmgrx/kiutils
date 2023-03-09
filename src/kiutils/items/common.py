@@ -1067,3 +1067,85 @@ class Fill():
 
         expression = f'{indents}(fill (type {self.type}){color}){endline}'
         return expression
+
+@dataclass
+class Image():
+    """The ``image`` token defines an image embedded into the file
+
+    Documentation:
+        https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_image_section
+    """
+
+    position: Position = field(default_factory=lambda: Position())
+    """The ``position`` defines the X and Y coordinates of the image"""
+
+    scale: Optional[float] = None
+    """The optional ``scale`` token attribute defines the scale factor (size) of the image"""
+
+    data: List[str] = field(default_factory=list)
+    """The ``data`` token attribute defines the image data in the portable network graphics
+    format (PNG) encoded with MIME type base64 as a list of strings"""
+
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
+
+    layer: Optional[str] = None
+    """The optional ``layer`` token defines the canonical layer name when the image is used inside
+    a footprint or PCB. When used inside a schematic, this token is required to be ``None``."""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> Image:
+        """Convert the given S-Expresstion into a Image object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(image ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not image
+
+        Returns:
+            - Image: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'image':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        for item in exp:
+            if item[0] == 'at': object.position = Position().from_sexpr(item)
+            if item[0] == 'scale': object.scale = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'layer': object.layer = item[1]
+            if item[0] == 'data':
+                for b64part in item[1:]:
+                    object.data.append(b64part)
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        scale = f' (scale {self.scale})' if self.scale is not None else ''
+        layer = f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
+
+        expression =  f'{indents}(image (at {self.position.X} {self.position.Y}){layer}{scale}\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
+        expression += f'{indents}  (data\n'
+        for b64part in self.data:
+            expression += f'{indents}    {b64part}\n'
+        expression += f'{indents}  )\n'
+        expression += f'{indents}){endline}'
+        return expression

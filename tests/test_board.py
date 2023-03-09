@@ -98,3 +98,10 @@ class Tests_Board_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_textBoxAllVariants')
         board = Board().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(board, self.testData))
+
+    def test_imageWithLayerToken(self):
+        """Tests the new ``layer`` token for images in PCBs"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_imageWithLayerToken')
+        board = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(board, self.testData))

@@ -820,7 +820,7 @@ class Property():
     All three items will initially be set to zero."""
 
     effects: Optional[Effects] = None
-    """The ``effects`` section defines how the text is displayed"""
+    """The optional ``effects`` section defines how the text is displayed"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Property:

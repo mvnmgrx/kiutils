@@ -914,6 +914,11 @@ class SchematicSymbol():
     """The ``on_board`` token attribute determines if the footprint associated with the symbol is
     exported to the board via the netlist"""
 
+    dnp: Optional[bool] = None
+    """The optional ``dnp`` token defines if a symbol is marked as do-not-populate in the schematic. 
+    
+    Available since KiCad v7"""
+
     fieldsAutoplaced: bool = False
     """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
     with the global label have been place automatically"""
@@ -962,6 +967,7 @@ class SchematicSymbol():
             if item[0] == 'unit': object.unit = item[1]
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
+            if item[0] == 'dnp': object.dnp = True if item[1] == 'yes' else False
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
             if item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
@@ -988,9 +994,13 @@ class SchematicSymbol():
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
         unit = f' (unit {self.unit})' if self.unit is not None else ''
         lib_name = f' (lib_name "{dequote(self.libName)}")' if self.libName is not None else ''
+        if self.dnp is not None:
+            dnp = ' (dnp yes)' if self.dnp else ' (dnp no)'
+        else:
+            dnp = ''
 
         expression =  f'{indents}(symbol{lib_name} (lib_id "{dequote(self.libId)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
-        expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){fa}\n'
+        expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){dnp}{fa}\n'
         if self.uuid:
             expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:

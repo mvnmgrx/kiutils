@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union
 from os import path
 
-from kiutils.items.common import PageSettings, TitleBlock
+from kiutils.items.common import Image, PageSettings, TitleBlock
 from kiutils.items.schitems import *
 from kiutils.symbol import Symbol
 from kiutils.utils import sexpr

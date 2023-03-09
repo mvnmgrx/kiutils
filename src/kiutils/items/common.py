@@ -299,7 +299,7 @@ class Font():
 
     color: Optional[ColorRGBA] = None
     """The optional ``color`` token specifies the color of the text element
-    
+
     Available since KiCad v7"""
 
     @classmethod
@@ -451,8 +451,8 @@ class Effects():
     """The optional ``hide`` token defines if the text is hidden"""
 
     href: Optional[str] = None
-    """The optional ``href`` token specifies a link that the text element represents. 
-    
+    """The optional ``href`` token specifies a link that the text element represents.
+
     Available since KiCad v7"""
 
     @classmethod
@@ -810,8 +810,10 @@ class Property():
     value: str = ""
     """The ``value`` string defines the value of the property"""
 
-    id: int = 0
-    """The id token defines an integer ID for the property and must be unique"""
+    id: Optional[int] = None
+    """The ``id`` token defines an integer ID for the property and must be unique.
+
+    Optional since KiCad v7, but required in older versions"""
 
     position: Position = field(default_factory=lambda: Position(angle=0))
     """The ``position`` defines the X and Y coordinates as well as the rotation angle of the property.
@@ -863,8 +865,9 @@ class Property():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        id = f' (id {self.id})' if self.id is not None else ''
 
-        expression =  f'{indents}(property "{dequote(self.key)}" "{dequote(self.value)}" (id {self.id}) (at {self.position.X} {self.position.Y}{posA})'
+        expression =  f'{indents}(property "{dequote(self.key)}" "{dequote(self.value)}"{id} (at {self.position.X} {self.position.Y}{posA})'
         if self.effects is not None:
             expression += f'\n{self.effects.to_sexpr(indent+2)}'
             expression += f'{indents}){endline}'
@@ -1005,13 +1008,13 @@ class RenderCache():
 @dataclass
 class Fill():
     """The ``fill`` token defines how schematic and symbol graphical items are filled
-    
-    Documentation: 
+
+    Documentation:
         - https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_fill_definition
     """
 
     type: str = "none"
-    """The ``type`` attribute defines how the graphical item is filled. Defaults to ``None``. 
+    """The ``type`` attribute defines how the graphical item is filled. Defaults to ``None``.
     Possible values are:
     - ``none``: Graphic is not filled
     - ``outline``: Graphic item filled with the line color
@@ -1019,7 +1022,7 @@ class Fill():
 
     color: Optional[ColorRGBA] = None
     """The optional ``color`` token defines the color of the filled item.
-    
+
     Available since KiCad v7"""
 
     @classmethod

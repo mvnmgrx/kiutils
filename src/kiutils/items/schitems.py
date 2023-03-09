@@ -618,6 +618,10 @@ class LocalLabel():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    fieldsAutoplaced: bool = False
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
+    with the global label have been place automatically"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> LocalLabel:
         """Convert the given S-Expresstion into a LocalLabel object
@@ -644,6 +648,7 @@ class LocalLabel():
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -660,8 +665,9 @@ class LocalLabel():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        fieldsAutoplaced = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
 
-        expression =  f'{indents}(label "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA})\n'
+        expression =  f'{indents}(label "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
             expression += f'{indents}  (uuid {self.uuid})\n'
@@ -770,7 +776,7 @@ class HierarchicalLabel():
 
     shape: str = "input"
     """The ``shape`` token defines the way the global label is drawn. Possible values are:
-       ``input``, ``output``, ``bidirectional``, ``tri_state``, ``passive``."""
+    ``input``, ``output``, ``bidirectional``, ``tri_state``, ``passive``."""
 
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` token defines the X and Y coordinates and rotation angle of the label"""
@@ -780,6 +786,10 @@ class HierarchicalLabel():
 
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
+    
+    fieldsAutoplaced: bool = False
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
+    with the global label have been place automatically"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> HierarchicalLabel:
@@ -808,6 +818,7 @@ class HierarchicalLabel():
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'shape': object.shape = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -824,8 +835,9 @@ class HierarchicalLabel():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        fieldsAutoplaced = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
 
-        expression =  f'{indents}(hierarchical_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA})\n'
+        expression =  f'{indents}(hierarchical_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
             expression += f'{indents}  (uuid {self.uuid})\n'

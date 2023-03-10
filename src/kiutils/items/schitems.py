@@ -1478,3 +1478,96 @@ class Circle():
             expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
+    
+@dataclass
+class NetclassFlag():
+    """The ``netclass_flag`` token defines a netclass flag in a schematic.
+
+    Available since KiCad v7
+
+    Documentation:
+        - ???
+    """
+
+    text: str = ""
+    """The ``text`` token defines the text the netclass flag"""
+
+    length: float = 2.54
+    """The ``length`` token defines the length of the netclass flag"""
+
+    shape: str = "round"
+    """The ``shape`` token defines the shape of the netclass flag. Valid values are ``round``,
+    ``rectangle``, ``dot`` or``diamond``."""
+
+    position: Position = field(default_factory=lambda: Position)
+    """The ``position`` token defines the position and rotation of the netclass flag"""
+
+    effects: Effects = field(default_factory=lambda: Effects)
+    """The ``effects`` token defines how the text is drawn"""
+
+    properties: List[Property] = field(default_factory=list)
+    """The ``properties`` token defines a list of properties the netclass is assigned to"""
+
+    uuid: Optional[str] = None
+    """The optional ``uuid`` defines the universally unique identifier"""
+
+    fieldsAutoplaced: bool = False
+    """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
+    with the netclas flag have been place automatically"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> NetclassFlag:
+        """Convert the given S-Expresstion into a Circle object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(netclass_flag ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not netclass_flag
+
+        Returns:
+            - NetclassFlag: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'netclass_flag':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.text = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'length': object.length = item[1]
+            if item[0] == 'shape': object.shape = item[1]
+            if item[0] == 'at': object.position = Position.from_sexpr(item)
+            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
+            if item[0] == 'effects': object.effects = Effects.from_sexpr(item)
+            if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'property': object.properties.append(Property.from_sexpr(item))
+        return object
+
+    def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        fa = f' (fields_autoplaced)' if self.fieldsAutoplaced else ''
+
+        expression =  f'{indents}(netclass_flag "{dequote(self.text)}" (length {self.length}) (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fa}\n'
+        expression += self.effects.to_sexpr(indent+2)
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
+        for property in self.properties:
+            expression += property.to_sexpr(indent+2)
+        expression += f'{indents}){endline}'
+        return expression

@@ -151,10 +151,12 @@ class SymbolPin():
             if item[0] == 'length': object.length = item[1]
             if item[0] == 'name':
                 object.name = item[1]
-                object.nameEffects = Effects().from_sexpr(item[2])
+                if len(item) > 2:
+                    object.nameEffects = Effects().from_sexpr(item[2])
             if item[0] == 'number':
                 object.number = item[1]
-                object.numberEffects = Effects().from_sexpr(item[2])
+                if len(item) > 2:
+                    object.numberEffects = Effects().from_sexpr(item[2])
             if item[0] == 'alternate': object.alternatePins.append(SymbolAlternativePin().from_sexpr(item))
         return object
 
@@ -238,34 +240,28 @@ class Symbol():
         Raises:
             - Exception: If the given ID is neither a top-level nor a child symbol
         """
-        # Split library id into nickname, entry name, unit id and style id (if any)
-        # Check if the given ID has the correct format
-        parse_symbol_id = re.match(r"^(.+?):(.+?)_(\d+?)_(\d+?)$", symbol_id)
+        # Try to parse the given ID
+        parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
         if parse_symbol_id:
-            raise Exception("Given ID is neither to a top-level nor to a child symbol")
+            # The symbol is a top-level symbol with a library nickname
+            self.libraryNickname = parse_symbol_id.group(1)
+            self.entryName = parse_symbol_id.group(2)
+            self.unitId = None
+            self.styleId = None
         else:
-            # Try to parse the given ID
-            parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
+            parse_symbol_id = re.match(r"^(.+?)_(\d+?)_(\d+?)$", symbol_id)
             if parse_symbol_id:
-                # The symbol is a top-level symbol with a library nickname
-                self.libraryNickname = parse_symbol_id.group(1)
-                self.entryName = parse_symbol_id.group(2)
+                # The symbol is a child symbol
+                self.libraryNickname = None
+                self.entryName = parse_symbol_id.group(1)
+                self.unitId = int(parse_symbol_id.group(2))
+                self.styleId = int(parse_symbol_id.group(3))
+            else:
+                # The symbol is a top-level symbol without a library nickname
+                self.libraryNickname = None
+                self.entryName = symbol_id
                 self.unitId = None
                 self.styleId = None
-            else:
-                parse_symbol_id = re.match(r"^(.+?)_(\d+?)_(\d+?)$", symbol_id)
-                if parse_symbol_id:
-                    # The symbol is a child symbol
-                    self.libraryNickname = None
-                    self.entryName = parse_symbol_id.group(1)
-                    self.unitId = int(parse_symbol_id.group(2))
-                    self.styleId = int(parse_symbol_id.group(3))
-                else:
-                    # The symbol is a top-level symbol without a library nickname
-                    self.libraryNickname = None
-                    self.entryName = symbol_id
-                    self.unitId = None
-                    self.styleId = None
 
         # Update units id to match parent id
         for unit in self.units:

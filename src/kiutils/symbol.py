@@ -321,9 +321,9 @@ class Symbol():
     All other properties are optional. Unit symbols cannot have any properties."""
 
     graphicItems: List = field(default_factory=list)
-    """The ``graphicItems`` section is list of graphical arcs, circles, curves, lines, polygons, rectangles
-    and text that define the symbol drawing. This section can be empty if the symbol has no graphical
-    items."""
+    """The ``graphicItems`` section is list of graphical arcs, circles, curves, lines, polygons, 
+    rectangles, text and text boxes that define the symbol drawing. Possible items are defined in 
+    ``kiutils.items.syitems``. This section can be empty if the symbol has no graphical items."""
 
     pins: List[SymbolPin] = field(default_factory=list)
     """The ``pins`` section is a list of pins that are used by the symbol. This section can be empty if
@@ -380,6 +380,7 @@ class Symbol():
             if item[0] == 'polyline': object.graphicItems.append(SyPolyLine().from_sexpr(item))
             if item[0] == 'rectangle': object.graphicItems.append(SyRect().from_sexpr(item))
             if item[0] == 'text': object.graphicItems.append(SyText().from_sexpr(item))
+            if item[0] == 'text_box': object.graphicItems.append(SyTextBox().from_sexpr(item))
 
         return object
 

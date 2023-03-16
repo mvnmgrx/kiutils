@@ -23,7 +23,7 @@ from typing import Optional, List, Dict
 from os import path
 
 from kiutils.items.zones import Zone
-from kiutils.items.common import Position, Coordinate, Net, Group, Font
+from kiutils.items.common import Image, Position, Coordinate, Net, Group, Font
 from kiutils.items.fpitems import *
 from kiutils.items.gritems import *
 from kiutils.utils import sexpr
@@ -776,10 +776,13 @@ class Footprint():
     attributes: Attributes = field(default_factory=lambda: Attributes())
     """The optional ``attributes`` section defines the attributes of the footprint"""
 
+    # TODO: Type hinting for this list
     graphicItems: List = field(default_factory=list)
-    """The ``graphic`` objects section is a list of one or more graphical objects in the footprint. At a
-    minimum, the reference designator and value text objects are defined. All other graphical objects
-    are optional."""
+    """The ``graphic`` objects section is a list of one or more graphical objects in the footprint. 
+    Possible items are defined in ``kiutils.items.fpitems``. At minimum the reference designator 
+    and value text objects are defined. All other graphical objects are optional.
+
+    The ``Image`` token is supported since KiCad v7 and must be added into this list when used."""
 
     pads: List[Pad] = field(default_factory=list)
     """The optional ``pads`` section is a list of pads in the footprint"""
@@ -825,55 +828,41 @@ class Footprint():
                 if item == 'placed': object.placed = True
                 continue
 
-            if (item[0] == 'version'): object.version = item[1]
-            if (item[0] == 'generator'): object.generator = item[1]
-            if (item[0] == 'layer'): object.layer = item[1]
-            if (item[0] == 'tedit'): object.tedit = item[1]
-            if (item[0] == 'tstamp'): object.tstamp = item[1]
-            if (item[0] == 'descr'): object.description = item[1]
-            if (item[0] == 'tags'): object.tags = item[1]
-            if (item[0] == 'path'): object.path = item[1]
-            if (item[0] == 'at'): object.position = Position().from_sexpr(item)
-            if (item[0] == 'autoplace_cost90'): object.autoplaceCost90 = item[1]
-            if (item[0] == 'autoplace_cost180'): object.autoplaceCost180 = item[1]
-            if (item[0] == 'solder_mask_margin'): object.solderMaskMargin = item[1]
-            if (item[0] == 'solder_paste_margin'): object.solderPasteMargin = item[1]
-            if (item[0] == 'solder_paste_ratio'): object.solderPasteRatio = item[1]
-            if (item[0] == 'clearance'): object.clearance = item[1]
-            if (item[0] == 'zone_connect'): object.zoneConnect = item[1]
-            if (item[0] == 'thermal_width'): object.thermalWidth = item[1]
-            if (item[0] == 'thermal_gap'): object.thermalGap = item[1]
-
-            if item[0] == 'attr':
-                object.attributes = Attributes.from_sexpr(item)
-            if item[0] == 'model':
-                object.models.append(Model.from_sexpr(item))
-            if item[0] == 'fp_text':
-                object.graphicItems.append(FpText.from_sexpr(item))
-            if item[0] == 'fp_text_box':
-                object.graphicItems.append(FpTextBox.from_sexpr(item))
-            if item[0] == 'fp_line':
-                object.graphicItems.append(FpLine.from_sexpr(item))
-            if item[0] == 'fp_rect':
-                object.graphicItems.append(FpRect.from_sexpr(item))
-            if item[0] == 'fp_circle':
-                object.graphicItems.append(FpCircle.from_sexpr(item))
-            if item[0] == 'fp_arc':
-                object.graphicItems.append(FpArc.from_sexpr(item))
-            if item[0] == 'fp_poly':
-                object.graphicItems.append(FpPoly.from_sexpr(item))
-            if item[0] == 'fp_curve':
-                object.graphicItems.append(FpCurve.from_sexpr(item))
+            if item[0] == 'version': object.version = item[1]
+            if item[0] == 'generator': object.generator = item[1]
+            if item[0] == 'layer': object.layer = item[1]
+            if item[0] == 'tedit': object.tedit = item[1]
+            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'descr': object.description = item[1]
+            if item[0] == 'tags': object.tags = item[1]
+            if item[0] == 'path': object.path = item[1]
+            if item[0] == 'at': object.position = Position().from_sexpr(item)
+            if item[0] == 'autoplace_cost90': object.autoplaceCost90 = item[1]
+            if item[0] == 'autoplace_cost180': object.autoplaceCost180 = item[1]
+            if item[0] == 'solder_mask_margin': object.solderMaskMargin = item[1]
+            if item[0] == 'solder_paste_margin': object.solderPasteMargin = item[1]
+            if item[0] == 'solder_paste_ratio': object.solderPasteRatio = item[1]
+            if item[0] == 'clearance': object.clearance = item[1]
+            if item[0] == 'zone_connect': object.zoneConnect = item[1]
+            if item[0] == 'thermal_width': object.thermalWidth = item[1]
+            if item[0] == 'thermal_gap': object.thermalGap = item[1]
+            if item[0] == 'attr': object.attributes = Attributes.from_sexpr(item)
+            if item[0] == 'model': object.models.append(Model.from_sexpr(item))
+            if item[0] == 'fp_text': object.graphicItems.append(FpText.from_sexpr(item))
+            if item[0] == 'fp_text_box': object.graphicItems.append(FpTextBox.from_sexpr(item))
+            if item[0] == 'fp_line': object.graphicItems.append(FpLine.from_sexpr(item))
+            if item[0] == 'fp_rect': object.graphicItems.append(FpRect.from_sexpr(item))
+            if item[0] == 'fp_circle': object.graphicItems.append(FpCircle.from_sexpr(item))
+            if item[0] == 'fp_arc': object.graphicItems.append(FpArc.from_sexpr(item))
+            if item[0] == 'fp_poly': object.graphicItems.append(FpPoly.from_sexpr(item))
+            if item[0] == 'fp_curve': object.graphicItems.append(FpCurve.from_sexpr(item))
+            if item[0] == 'image':object.graphicItems.append(Image.from_sexpr(item))
+            if item[0] == 'pad': object.pads.append(Pad.from_sexpr(item))
+            if item[0] == 'zone': object.zones.append(Zone.from_sexpr(item))
+            if item[0] == 'property': object.properties.update({ item[1]: item[2] })
+            if item[0] == 'group': object.groups.append(Group.from_sexpr(item))
             if item[0] == 'dimension':
                 raise NotImplementedError("Dimensions are not yet handled! Please report this bug along with the file being parsed.")
-            if item[0] == 'pad':
-                object.pads.append(Pad.from_sexpr(item))
-            if item[0] == 'zone':
-                object.zones.append(Zone.from_sexpr(item))
-            if item[0] == 'property':
-                object.properties.update({ item[1]: item[2] })
-            if item[0] == 'group':
-                object.groups.append(Group.from_sexpr(item))
 
         return object
 

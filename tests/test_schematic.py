@@ -95,3 +95,53 @@ class Tests_Schematic(unittest.TestCase):
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'test_parseStrokeTokens')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+class Tests_Schematic_Since_V7(unittest.TestCase):
+    """Schematic related test cases since KiCad 7"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+
+    def test_textBoxAllVariants(self):
+        """Tests all variants of the ``text_box`` token for text boxes in schematics"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_textBoxAllVariants')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_rectangleAllVariants(self):
+        """Tests all variants of the ``rectangle`` token for rectangles in schematics"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_rectangleAllVariants')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_circleAllVariants(self):
+        """Tests all variants of the ``circle`` token for circles in schematics"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_circleAllVariants')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_arcAllVariants(self):
+        """Tests all variants of the ``arc`` token for arcs in schematics"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_arcAllVariants')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_schematicWithAllPrimitives(self):
+        """Tests the parsing of a schematic with all primitives (lines, traces, busses, connections,
+        images, etc) for KiCad 7"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_schematicWithAllPrimitives')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_netclassFlags(self):
+        """Tests the parsing netclass flags for KiCad 7"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_netclassFlags')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

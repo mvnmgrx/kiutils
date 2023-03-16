@@ -263,8 +263,8 @@ class Stroke():
         indents = ' '*indent
         endline = '\n' if newline else ''
         color = f' {self.color.to_sexpr()}' if self.color is not None else ''
-        expression = f'{indents}(stroke (width {self.width}) (type {self.type}){color}){endline}'
-        return expression
+        the_type = f' (type {self.type})' if self.type is not None else ''
+        return f'{indents}(stroke (width {self.width}){the_type}{color}){endline}'
 
 
 

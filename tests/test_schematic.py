@@ -138,3 +138,10 @@ class Tests_Schematic_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_schematicWithAllPrimitives')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_netclassFlags(self):
+        """Tests the parsing netclass flags for KiCad 7"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_netclassFlags')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

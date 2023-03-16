@@ -91,6 +91,11 @@ class Schematic():
     hierarchicalLabels: List[HierarchicalLabel] = field(default_factory=list)
     """The ``herarchicalLabels`` token defines a list of hierarchical labels used in the schematic"""
 
+    netclassFlags: List[NetclassFlag] = field(default_factory=list)
+    """The ``netclassFlags`` token defines a list of netclass flags used in the schematic.
+    
+    Available since KiCad v7"""
+
     sheets: List[HierarchicalSheet] = field(default_factory=list)
     """The ``sheets`` token defines a list of hierarchical sheets used in the schematic"""
 
@@ -151,6 +156,7 @@ class Schematic():
             if item[0] == 'label': object.labels.append(LocalLabel().from_sexpr(item))
             if item[0] == 'global_label': object.globalLabels.append(GlobalLabel().from_sexpr(item))
             if item[0] == 'hierarchical_label': object.hierarchicalLabels.append(HierarchicalLabel().from_sexpr(item))
+            if item[0] == 'netclass_flag': object.netclassFlags.append(NetclassFlag.from_sexpr(item))
             if item[0] == 'symbol': object.schematicSymbols.append(SchematicSymbol().from_sexpr(item))
             if item[0] == 'sheet': object.sheets.append(HierarchicalSheet().from_sexpr(item))
             if item[0] == 'sheet_instances':
@@ -301,6 +307,11 @@ class Schematic():
         if self.hierarchicalLabels:
             expression += '\n'
             for item in self.hierarchicalLabels:
+                expression += item.to_sexpr(indent+2)
+
+        if self.netclassFlags:
+            expression += '\n'
+            for item in self.netclassFlags:
                 expression += item.to_sexpr(indent+2)
 
         if self.schematicSymbols:

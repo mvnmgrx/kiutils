@@ -211,9 +211,10 @@ class Stroke():
     width: float = 0.0
     """The ``width`` token attribute defines the line width of the graphic object"""
 
-    type: str = "default"
-    """The ``type`` token attribute defines the line style of the graphic object. Valid stroke line styles are:
-    - ``dash``, ``dash_dot``, ``dash_dot_dot`` (version 7), ``dot``, ``default``, ``solid``
+    type: Optional[str] = None
+    """The optional ``type`` token attribute defines the line style of the graphic object. Valid 
+    stroke line styles are: 
+    - ``dash``, ``dash_dot``, ``dash_dot_dot`` (since KiCad v7), ``dot``, ``default``, ``solid``
     """
 
     color: Optional[ColorRGBA] = None

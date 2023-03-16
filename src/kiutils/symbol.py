@@ -106,13 +106,15 @@ class SymbolPin():
     """The ``name`` token defines a string containing the name of the pin"""
 
     nameEffects: Optional[Effects] = None
-    """The optional ``nameEffects`` token define how the pin's name is displayed"""
+    """The optional ``nameEffects`` token define how the pin's name is displayed. This token is
+    mandatory for KiCad v6 and was made optional since KiCad v7."""
 
     number: str = "0"
     """The ``number`` token defines a string containing the NUMBER of the pin"""
 
     numberEffects: Optional[Effects] = None
-    """The optional ``numberEffects`` token define how the pin's number is displayed"""
+    """The optional ``numberEffects`` token define how the pin's number is displayed. This token is
+    mandatory for KiCad v6 and was made optional since KiCad v7."""
 
     hide: bool = False      # Missing in documentation
     """The 'hide' token defines if the pin should be hidden"""
@@ -175,8 +177,8 @@ class SymbolPin():
 
         hide = ' hide' if self.hide else ''
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        nameEffects = f'  {self.nameEffects.to_sexpr(newline=False)}' if self.nameEffects is not None else ''
-        numberEffects = f'  {self.numberEffects.to_sexpr(newline=False)}' if self.numberEffects is not None else ''
+        nameEffects = f' {self.nameEffects.to_sexpr(newline=False)}' if self.nameEffects is not None else ''
+        numberEffects = f' {self.numberEffects.to_sexpr(newline=False)}' if self.numberEffects is not None else ''
 
         expression =  f'{indents}(pin {self.electricalType} {self.graphicalStyle} (at {self.position.X} {self.position.Y}{posA}) (length {self.length}){hide}\n'
         expression += f'{indents}  (name "{dequote(self.name)}"{nameEffects})\n'

@@ -1,0 +1,25 @@
+(kicad_sch (version 20200506) (generator kiutils)
+  (paper "A3")
+
+  (title_block
+    (title "test")
+  )
+
+  (lib_symbols
+    (symbol "some_symbol"
+      (symbol "child0"
+        (rectangle (start 5.08 2.54) (end 50.8 -132.08)
+          (stroke (width 0.3048))
+          (fill (type background))
+        )
+      )
+    )
+  )
+
+  (wire (pts (xy 66.04 158.75) (xy 66.04 153.67))
+    (stroke (width 0) (type solid) (color 0 0 0 0))
+  )
+  (wire (pts (xy 66.04 158.75) (xy 66.04 153.67))
+    (stroke (width 0))
+  )
+)

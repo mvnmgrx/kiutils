@@ -211,9 +211,10 @@ class Stroke():
     width: float = 0.0
     """The ``width`` token attribute defines the line width of the graphic object"""
 
-    type: str = "default"
-    """The ``type`` token attribute defines the line style of the graphic object. Valid stroke line styles are:
-    - ``dash``, ``dash_dot``, ``dash_dot_dot`` (version 7), ``dot``, ``default``, ``solid``
+    type: Optional[str] = None
+    """The optional ``type`` token attribute defines the line style of the graphic object. Valid 
+    stroke line styles are: 
+    - ``dash``, ``dash_dot``, ``dash_dot_dot`` (since KiCad v7), ``dot``, ``default``, ``solid``
     """
 
     color: Optional[ColorRGBA] = None
@@ -234,8 +235,8 @@ class Stroke():
         Returns:
             - Stroke: Object of the class initialized with the given S-Expression
         """
-        if not isinstance(exp, list) or len(exp) < 1:
-            raise Exception(f"Expression does not have the correct type {exp}")
+        if not isinstance(exp, list) or len(exp) < 2:
+            raise Exception("Expression does not have the correct type")
 
         if exp[0] != 'stroke':
             raise Exception("Expression does not have the correct type")
@@ -262,8 +263,8 @@ class Stroke():
         indents = ' '*indent
         endline = '\n' if newline else ''
         color = f' {self.color.to_sexpr()}' if self.color is not None else ''
-        expression = f'{indents}(stroke (width {self.width}) (type {self.type}){color}){endline}'
-        return expression
+        the_type = f' (type {self.type})' if self.type is not None else ''
+        return f'{indents}(stroke (width {self.width}){the_type}{color}){endline}'
 
 
 

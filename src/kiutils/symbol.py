@@ -105,14 +105,16 @@ class SymbolPin():
     name: str = ""
     """The ``name`` token defines a string containing the name of the pin"""
 
-    nameEffects: Effects = field(default_factory=lambda: Effects())
-    """The ``nameEffects`` token define how the pin's name is displayed"""
+    nameEffects: Optional[Effects] = None
+    """The optional ``nameEffects`` token define how the pin's name is displayed. This token is
+    mandatory for KiCad v6 and was made optional since KiCad v7."""
 
     number: str = "0"
     """The ``number`` token defines a string containing the NUMBER of the pin"""
 
-    numberEffects: Effects = field(default_factory=lambda: Effects())
-    """The ``nameEffects`` token define how the pin's number is displayed"""
+    numberEffects: Optional[Effects] = None
+    """The optional ``numberEffects`` token define how the pin's number is displayed. This token is
+    mandatory for KiCad v6 and was made optional since KiCad v7."""
 
     hide: bool = False      # Missing in documentation
     """The 'hide' token defines if the pin should be hidden"""
@@ -172,16 +174,37 @@ class SymbolPin():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
+        newLineAdded = False
 
         hide = ' hide' if self.hide else ''
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        nameEffects = f' {self.nameEffects.to_sexpr(newline=False)}' if self.nameEffects is not None else ''
+        numberEffects = f' {self.numberEffects.to_sexpr(newline=False)}' if self.numberEffects is not None else ''
 
-        expression =  f'{indents}(pin {self.electricalType} {self.graphicalStyle} (at {self.position.X} {self.position.Y}{posA}) (length {self.length}){hide}\n'
-        expression += f'{indents}  (name "{dequote(self.name)}" {self.nameEffects.to_sexpr(newline=False)})\n'
-        expression += f'{indents}  (number "{dequote(self.number)}" {self.numberEffects.to_sexpr(newline=False)})\n'
-        for alternativePin in self.alternatePins:
-            expression += alternativePin.to_sexpr(indent+2)
-        expression += f'{indents}){endline}'
+        expression =  f'{indents}(pin {self.electricalType} {self.graphicalStyle} (at {self.position.X} {self.position.Y}{posA}) (length {self.length}){hide}'
+        
+        # Since KiCad v7 nightly: Missing name and number effects print both other tokens into 
+        # the same line.
+        # Constrained in: schematic/since_v7/test_symbolPinOptionalTokens
+        if self.nameEffects is None and self.numberEffects is None:
+            expression += f' (name "{dequote(self.name)}") (number "{dequote(self.number)}")'
+        else:
+            expression += f'\n{indents}  (name "{dequote(self.name)}"{nameEffects})\n'
+            expression += f'{indents}  (number "{dequote(self.number)}"{numberEffects})\n'
+            newLineAdded = True
+
+        # Alternative pins always generate a line break
+        if self.alternatePins:
+            if not newLineAdded:
+                expression += '\n' 
+            newLineAdded = True
+            for alternativePin in self.alternatePins:
+                expression += alternativePin.to_sexpr(indent+2)
+
+        if newLineAdded:
+            expression += f'{indents}){endline}'
+        else:
+            expression += f'){endline}'
         return expression
 
 @dataclass

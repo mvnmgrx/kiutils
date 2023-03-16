@@ -1,0 +1,114 @@
+(kicad_sch (version 20200506) (generator kiutils)
+  (paper "A3")
+
+  (title_block
+    (title "Self-Balancing Car Controller")
+    (date "2020-04-06")
+    (rev "2.0")
+    (company "Simon Lu")
+  )
+
+  (lib_symbols
+    (symbol "Both name and number effects missing"
+      (symbol "child0"
+        (pin bidirectional line (at 1.27 11.43 270) (length 2.54) (name "X-G") (number "1"))
+        (pin bidirectional line (at 11.43 -5.08 180) (length 2.54) (name "Y-G") (number "1"))
+      )
+    )
+
+    (symbol "Only number effects present"
+      (symbol "child0"
+        (pin passive line (at -2.54 0 0) (length 1.27)
+          (name "1")
+          (number "1" (effects (font (size 0.762 0.762))))
+        )
+        (pin passive line (at 0 -2.54 90) (length 0.635)
+          (name "2")
+          (number "2" (effects (font (size 0.762 0.762))))
+        )
+      )
+    )
+
+    (symbol "Only name effects present"
+      (symbol "child0"
+        (pin passive line (at -2.54 0 0) (length 1.27)
+          (name "1" (effects (font (size 0.762 0.762))))
+          (number "1")
+        )
+        (pin passive line (at 0 -2.54 90) (length 0.635)
+          (name "2" (effects (font (size 0.762 0.762))))
+          (number "2")
+        )
+      )
+    )
+
+    (symbol "Both name and number effects present"
+      (symbol "child0"
+        (pin passive line (at -2.54 0 0) (length 1.27)
+          (name "1")
+          (number "1" (effects (font (size 0.762 0.762))))
+        )
+        (pin passive line (at 0 -2.54 90) (length 0.635)
+          (name "2")
+          (number "2" (effects (font (size 0.762 0.762))))
+        )
+      )
+    )
+
+    (symbol "Both name and number effects missing as well as alternative pins"
+      (symbol "child0"
+        (pin bidirectional line (at 1.27 11.43 270) (length 2.54) (name "X-G") (number "1")
+          (alternate "Alternate1" open_emitter line)
+        )
+        (pin bidirectional line (at 11.43 -5.08 180) (length 2.54) (name "Y-G") (number "1")
+          (alternate "Alternate1" open_emitter line)
+        )
+      )
+    )
+
+    (symbol "Only number effects present as well as alternative pins"
+      (symbol "child0"
+        (pin passive line (at -2.54 0 0) (length 1.27)
+          (name "1")
+          (number "1" (effects (font (size 0.762 0.762))))
+          (alternate "Alternate1" open_emitter line)
+        )
+        (pin passive line (at 0 -2.54 90) (length 0.635)
+          (name "2")
+          (number "2" (effects (font (size 0.762 0.762))))
+          (alternate "Alternate1" open_emitter line)
+        )
+      )
+    )
+
+    (symbol "Only name effects present as well as alternative pins"
+      (symbol "child0"
+        (pin passive line (at -2.54 0 0) (length 1.27)
+          (name "1" (effects (font (size 0.762 0.762))))
+          (number "1")
+          (alternate "Alternate1" open_emitter line)
+        )
+        (pin passive line (at 0 -2.54 90) (length 0.635)
+          (name "2" (effects (font (size 0.762 0.762))))
+          (number "2")
+          (alternate "Alternate1" open_emitter line)
+        )
+      )
+    )
+
+    (symbol "Both name and number effects present as well as alternative pins"
+      (symbol "child0"
+        (pin passive line (at -2.54 0 0) (length 1.27)
+          (name "1")
+          (number "1" (effects (font (size 0.762 0.762))))
+          (alternate "Alternate1" open_emitter line)
+        )
+        (pin passive line (at 0 -2.54 90) (length 0.635)
+          (name "2")
+          (number "2" (effects (font (size 0.762 0.762))))
+          (alternate "Alternate1" open_emitter line)
+        )
+      )
+    )
+  )
+)

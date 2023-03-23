@@ -233,7 +233,7 @@ class DesignRules():
 
         object = cls()
         for item in exp:
-            if item[0] == 'version': object.version = item[0]
+            if item[0] == 'version': object.version = item[1]
             if item[0] == 'rule': object.rules.append(Rule().from_sexpr(item))
         return object
 

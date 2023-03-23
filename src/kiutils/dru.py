@@ -137,6 +137,12 @@ class Rule():
     layer: Optional[str] = None
     """The optional ``layer`` token defines the canonical layer the rule applys to"""
 
+    severity: Optional[str] = None
+    """The optional ``severity`` token defines the severity of the design rule. Valid values are
+    ``warning``, ``error``, ``exclusion`` or ``ignore``.
+    
+    Available since KiCad v7"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Rule:
         """Convert the given S-Expresstion into a Rule object
@@ -163,9 +169,10 @@ class Rule():
             if item[0] == 'constraint': object.constraints.append(Constraint().from_sexpr(item))
             if item[0] == 'condition': object.condition = item[1]
             if item[0] == 'layer': object.layer = item[1]
+            if item[0] == 'severity': object.severity = item[1]
         return object
 
-    def to_sexpr(self, indent=0):
+    def to_sexpr(self, indent: int = 0):
         """Generate the S-Expression representing this object
 
         Args:
@@ -181,7 +188,10 @@ class Rule():
             expression += f'{indents}  (layer "{dequote(self.layer)}")\n'
         for item in self.constraints:
             expression += f'{indents}{item.to_sexpr(indent+2)}'
-        expression += f'{indents}  (condition "{dequote(self.condition)}"))\n'
+        expression += f'{indents}  (condition "{dequote(self.condition)}")'
+        if self.severity is not None:
+            expression += f'\n{indents}  (severity "{dequote(self.severity)}")'
+        expression += ')\n'
         return expression
 
 @dataclass

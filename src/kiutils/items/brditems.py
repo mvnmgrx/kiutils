@@ -413,6 +413,12 @@ class PlotSettings():
     layerSelection: str = ""
     """The ``layerSelection`` token defines a hexadecimal bit set of the layers to plot"""
 
+    plotOnAllLayersSelection: Optional[str] = None
+    """The ``plotOnAllLayersSelection`` token defines a hexadecimal bit set of layers where all 
+    selected layers shall be plotted.
+    
+    Available and required since KiCad v7"""
+
     disableApertMacros: bool = False
     """The ``disableApertMacros`` token defines if aperture macros are to be used in gerber plots"""
 
@@ -428,17 +434,33 @@ class PlotSettings():
     included in gerber plots"""
 
     createGerberJobFile: bool = False
-    """The ``createGerberJobFile`` token defines if a job file should be created when
-    plotting gerber files"""
+    """The ``createGerberJobFile`` token defines if a job file should be created when plotting 
+    gerber files"""
 
-    svgUseInch: bool = False
-    """The ``svgUseInch`` token defines if inch units should be use when plotting SVG files"""
+    # FIXME: Where is the docu of this token?
+    dashedLineDashRatio: Optional[float] = None
+    """The ``dashedLineDashRatio`` token's documentation is still missing ..
+    
+    Available and required since KiCad v7"""
+
+    # FIXME: Where is the docu of this token?
+    dashedLineGapRatio: Optional[float] = None
+    """The ``dashedLineGapRatio`` token's documentation is still missing ..
+    
+    Available and required since KiCad v7"""
+
+    svgUseInch: Optional[bool] = None
+    """The ``svgUseInch`` token defines if inch units should be use when plotting SVG files.
+    
+    Required until KiCad v6, removed since KiCad v7"""
 
     svgPrecision: float = 0.0
     """The ``svgPrecision`` token defines the units precision used when plotting SVG files"""
 
-    excludeEdgeLayer: bool = False
-    """The ``excludeEdgeLayer`` token defines if the board edge layer is plotted on all layers"""
+    excludeEdgeLayer: Optional[bool] = None
+    """The ``excludeEdgeLayer`` token defines if the board edge layer is plotted on all layers.
+    
+    Required until KiCad v6, removed since KiCad v7"""
 
     plotFameRef: bool = False
     """The ``plotFameRef`` token defines if the border and title block should be plotted"""
@@ -540,11 +562,14 @@ class PlotSettings():
         object = cls()
         for item in exp:
             if item[0] == 'layerselection': object.layerSelection = item[1]
+            if item[0] == 'plot_on_all_layers_selection': object.plotOnAllLayersSelection = item[1]
             if item[0] == 'disableapertmacros': object.disableApertMacros = True if item[1] == 'true' else False
             if item[0] == 'usegerberextensions' : object.useGerberExtensions = True if item[1] == 'true' else False
             if item[0] == 'usegerberattributes' : object.useGerberAttributes = True if item[1] == 'true' else False
             if item[0] == 'usegerberadvancedattributes' : object.useGerberAdvancedAttributes = True if item[1] == 'true' else False
             if item[0] == 'creategerberjobfile' : object.createGerberJobFile = True if item[1] == 'true' else False
+            if item[0] == 'dashed_line_dash_ratio': object.dashedLineDashRatio = item[1]
+            if item[0] == 'dashed_line_gap_ratio': object.dashedLineGapRatio = item[1]
             if item[0] == 'svguseinch' : object.svgUseInch = True if item[1] == 'true' else False
             if item[0] == 'svgprecision' : object.svgPrecision = item[1]
             if item[0] == 'excludeedgelayer' : object.excludeEdgeLayer = True if item[1] == 'true' else False
@@ -587,14 +612,22 @@ class PlotSettings():
 
         expression =  f'{indents}(pcbplotparams\n'
         expression += f'{indents}  (layerselection {self.layerSelection})\n'
+        if self.plotOnAllLayersSelection is not None:
+            expression += f'{indents}  (plot_on_all_layers_selection {self.plotOnAllLayersSelection})\n'
         expression += f'{indents}  (disableapertmacros {str(self.disableApertMacros).lower()})\n'
         expression += f'{indents}  (usegerberextensions {str(self.useGerberExtensions).lower()})\n'
         expression += f'{indents}  (usegerberattributes {str(self.useGerberAttributes).lower()})\n'
         expression += f'{indents}  (usegerberadvancedattributes {str(self.useGerberAdvancedAttributes).lower()})\n'
         expression += f'{indents}  (creategerberjobfile {str(self.createGerberJobFile).lower()})\n'
-        expression += f'{indents}  (svguseinch {str(self.svgUseInch).lower()})\n'
+        if self.dashedLineDashRatio is not None:
+            expression += f'{indents}  (dashed_line_dash_ratio {float(self.dashedLineDashRatio):.6f})\n'
+        if self.dashedLineGapRatio is not None:
+            expression += f'{indents}  (dashed_line_gap_ratio {float(self.dashedLineGapRatio):.6f})\n'
+        if self.svgUseInch is not None:
+            expression += f'{indents}  (svguseinch {str(self.svgUseInch).lower()})\n'
         expression += f'{indents}  (svgprecision {self.svgPrecision})\n'
-        expression += f'{indents}  (excludeedgelayer {str(self.excludeEdgeLayer).lower()})\n'
+        if self.excludeEdgeLayer is not None:
+            expression += f'{indents}  (excludeedgelayer {str(self.excludeEdgeLayer).lower()})\n'
         expression += f'{indents}  (plotframeref {str(self.plotFameRef).lower()})\n'
         expression += f'{indents}  (viasonmask {str(self.viasOnMask).lower()})\n'
         expression += f'{indents}  (mode {self.mode})\n'

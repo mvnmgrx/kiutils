@@ -85,6 +85,13 @@ class Tests_Board(unittest.TestCase):
         board.footprints[1].libId = "I_was_added:BUS_PCIexpress_x1"
         self.assertTrue(to_file_and_compare(board, self.testData))
 
+    def test_pcbPlotParams(self):
+        """Tests the parsing of board plot params"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_pcbPlotParams')
+        board = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(board, self.testData))
+
 class Tests_Board_Since_V7(unittest.TestCase):
     """Test cases for Boards since KiCad 7"""
 
@@ -103,5 +110,12 @@ class Tests_Board_Since_V7(unittest.TestCase):
         """Tests the new ``layer`` token for images in PCBs"""
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_imageWithLayerToken')
+        board = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(board, self.testData))
+
+    def test_pcbPlotParams(self):
+        """Tests the parsing of board plot params since KiCad v7"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_pcbPlotParams')
         board = Board().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(board, self.testData))

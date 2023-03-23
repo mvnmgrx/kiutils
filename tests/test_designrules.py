@@ -35,3 +35,17 @@ class Tests_DesignRules(unittest.TestCase):
         self.testData.pathToTestFile = path.join(DESIGNRULE_BASE, 'test_createNewDesignRules')
         dru = DesignRules.create_new()
         self.assertTrue(to_file_and_compare(dru, self.testData))
+
+class Tests_DesignRules_Since_V7(unittest.TestCase):
+    """Test cases for Design Rules since KiCad v7"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+
+    def test_severityToken(self):
+        """Tests the parsing the new severity token"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(DESIGNRULE_BASE, 'since_v7', 'test_severityToken')
+        dru = DesignRules.from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(dru, self.testData))

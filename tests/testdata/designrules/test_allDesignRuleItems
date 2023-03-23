@@ -1,4 +1,4 @@
-(version version)
+(version 1)
 
 (rule "HV"
   (constraint clearance (min "1.5mm"))

@@ -49,6 +49,12 @@ class GrText():
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
 
+    renderCache: Optional[RenderCache] = None
+    """If the ``effects`` token prescribe a TrueType font then the optional ``render_cache`` token 
+    should be given in case the font can not be found on the current system.
+    
+    Available since KiCad v7"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> GrText:
         """Convert the given S-Expresstion into a GrText object
@@ -79,6 +85,7 @@ class GrText():
             if item[0] == 'layer': object.layer = item[1]
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
@@ -101,6 +108,8 @@ class GrText():
 
         expression =  f'{indents}(gr_text{locked} "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}){layer}{tstamp}\n'
         expression += f'{indents}  {self.effects.to_sexpr()}'
+        if self.renderCache is not None:
+            expression += self.renderCache.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 
@@ -156,7 +165,9 @@ class GrTextBox():
 
     renderCache: Optional[RenderCache] = None
     """If the ``effects`` token prescribe a TrueType font then the optional ``render_cache`` token 
-    should be given in case the font can not be found on the current system."""
+    should be given in case the font can not be found on the current system.
+    
+    Available since KiCad v7"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> GrTextBox:

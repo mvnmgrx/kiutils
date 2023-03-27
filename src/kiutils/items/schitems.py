@@ -1152,6 +1152,124 @@ class HierarchicalPin():
         expression += f'{indents}){endline}'
         return expression
 
+
+@dataclass
+class HierarchicalSheetProjectPath():
+    """The symbol project path defines the ``path`` token to the sheet instance of the instance data
+    of a symbol.
+
+    Available since KiCad v7.
+
+    Documentation:
+        https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_hierarchical_sheet_section
+    """
+    
+    sheetInstancePath: str = ""
+    """The ``PATH_INSTANCE`` token defines the path to the symbol instance"""
+
+    page: str = ""
+    """The ``page`` token is a string that defines the page number of the sheet instance"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> HierarchicalSheetProjectPath:        
+        """Convert the given S-Expression into a HierarchicalSheetProjectPath object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(path ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not path
+
+        Returns:
+            - HierarchicalSheetProjectPath: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list) or len(exp) < 2:
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'path':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.sheetInstancePath = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'page': object.page = item[1]
+        return object
+
+    def to_sexpr(self, indent=4, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+        return f'{indents}(path "{dequote(self.sheetInstancePath)}" (page "{dequote(self.page)}")){endline}'
+
+@dataclass
+class HierarchicalSheetProjectInstance(ProjectInstance):
+    """The ``project`` token attribute defines the name of the project as well as a list of 
+    hierarchical sheet project paths (instance data). There can be instance data from other project 
+    when schematics are shared across multiple projects. The projects will have to be sorted by the 
+    ``name`` token in alphabetical order.
+
+    Available since KiCad v7.
+
+    Documentation:
+        https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_hierarchical_sheet_section
+    """
+
+    paths: List[HierarchicalSheetProjectPath] = field(default_factory=list)
+    """The ``paths`` token defines a list of hierarchical sheet project paths for this project instance"""
+    
+    @classmethod
+    def from_sexpr(cls, exp: list) -> HierarchicalSheetProjectInstance:        
+        """Convert the given S-Expression into a HierarchicalSheetProjectInstance object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(project ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not project
+
+        Returns:
+            - HierarchicalSheetProjectInstance: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list) or len(exp) < 2:
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'project':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.name = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'path': object.paths.append(HierarchicalSheetProjectPath.from_sexpr(item))
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+        expression = f'{indents}(project "{dequote(self.name)}"\n'
+        for path in self.paths:
+            expression += path.to_sexpr(indent+2)
+        expression += f'{indents}){endline}'
+        return expression
+
 @dataclass
 class HierarchicalSheet():
     """The ``sheet`` token defines a hierarchical sheet of the schematic
@@ -1193,6 +1311,12 @@ class HierarchicalSheet():
     pins: List[HierarchicalPin] = field(default_factory=list)
     """The ``pins`` section is a list of hierarchical pins that map a hierarchical label defined in
        the associated schematic file"""
+    
+    instances: List[HierarchicalSheetProjectInstance] = field(default_factory=list)
+    """The ``instances`` token defines a list of hierachical sheet instances grouped by project. 
+    Every hierarchical sheet will have a least one instance.
+    
+    Available since KiCad v7."""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> HierarchicalSheet:
@@ -1230,6 +1354,9 @@ class HierarchicalSheet():
                 if item[1] == 'Sheet name' or item[1] == 'Sheetname': object.sheetName = Property().from_sexpr(item)
                 if item[1] == 'Sheet file' or item[1] == 'Sheetfile': object.fileName = Property().from_sexpr(item)
             if item[0] == 'pin': object.pins.append(HierarchicalPin().from_sexpr(item))
+            if item[0] == 'instances':
+                for instance in item[1:]:
+                    object.instances.append(HierarchicalSheetProjectInstance.from_sexpr(instance))
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -1256,6 +1383,11 @@ class HierarchicalSheet():
         expression += self.fileName.to_sexpr(indent+2)
         for pin in self.pins:
             expression += pin.to_sexpr(indent+2)
+        if len(self.instances) != 0:
+            expression += f'{indents}  (instances\n'
+            for instance in self.instances:
+                expression += instance.to_sexpr(indent+4)
+            expression += f'{indents}  )\n'
         expression += f'{indents}){endline}'
         return expression
 

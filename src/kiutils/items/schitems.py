@@ -19,7 +19,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
-from kiutils.items.common import Fill, Position, ColorRGBA, Stroke, Effects, Property
+from kiutils.items.common import Fill, Position, ColorRGBA, ProjectInstance, Stroke, Effects, Property
 from kiutils.utils.strings import dequote
 
 @dataclass
@@ -769,6 +769,132 @@ class HierarchicalLabel():
         return expression
 
 @dataclass
+class SymbolProjectPath():
+    """The symbol project path defines the ``path`` token to the sheet instance of the instance data
+    of a symbol.
+
+    Available since KiCad v7.
+
+    Documentation:
+        https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_symbol_section
+    """
+    
+    sheetInstancePath: str = ""
+    """The ``PATH_INSTANCE`` token defines the path to the symbol instance"""
+
+    reference: str = ""
+    """The ``reference`` token is a string that defines the reference designator for the symbol
+    instance"""
+
+    unit: int = 1
+    """The ``unit`` token is a integer that defines the symbol unit for the symbol instance. For 
+    symbols that do not define multiple units, this will always be 1."""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> SymbolProjectPath:        
+        """Convert the given S-Expression into a SymbolProjectPath object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(path ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not path
+
+        Returns:
+            - SymbolProjectPath: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list) or len(exp) < 2:
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'path':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.sheetInstancePath = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'reference': object.reference = item[1]
+            if item[0] == 'unit': object.unit = item[1]
+        return object
+
+    def to_sexpr(self, indent=4, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 4.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+        expression =  f'{indents}(path "{dequote(self.sheetInstancePath)}"\n'
+        expression += f'{indents}  (reference "{dequote(self.reference)}") (unit {self.unit})\n'
+        expression += f'{indents}){endline}'
+        return expression
+
+@dataclass
+class SymbolProjectInstance(ProjectInstance):
+    """The ``project`` token attribute defines the name of the project as well as a list of symbol
+    project paths (instance data). There can be instance data from other project when schematics 
+    are shared across multiple projects. The projects will have to be sorted by the ``name`` token
+    in alphabetical order.
+
+    Available since KiCad v7.
+
+    Documentation:
+        https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/#_symbol_section
+    """
+
+    paths: List[SymbolProjectPath] = field(default_factory=list)
+    """The ``paths`` token defines a list of symbol project paths for this project instance"""
+    
+    @classmethod
+    def from_sexpr(cls, exp: list) -> SymbolProjectInstance:        
+        """Convert the given S-Expression into a SymbolProjectInstance object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(project ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not project
+
+        Returns:
+            - SymbolProjectInstance: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list) or len(exp) < 2:
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'project':
+            raise Exception("Expression does not have the correct type")
+
+        object = cls()
+        object.name = exp[1]
+        for item in exp[2:]:
+            if item[0] == 'path': object.paths.append(SymbolProjectPath.from_sexpr(item))
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+        expression = f'{indents}(project "{dequote(self.name)}"\n'
+        for path in self.paths:
+            expression += path.to_sexpr(indent+2)
+        expression += f'{indents}){endline}'
+        return expression
+
+@dataclass
 class SchematicSymbol():
     """The ``symbol`` token in the symbol section of the schematic defines an instance of a symbol
     from the library symbol section of the schematic
@@ -862,6 +988,12 @@ class SchematicSymbol():
     ``x`` or ``y``. When mirroring around the x and y axis at the same time use some additional
     rotation to get the correct orientation of the symbol."""
 
+    instances: List[SymbolProjectInstance] = field(default_factory=list)
+    """The ``instances`` token defines a list of symbol instances grouped by project. Every symbol 
+    will have a least one instance.
+    
+    Available since KiCad v7."""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> SchematicSymbol:
         """Convert the given S-Expresstion into a SchematicSymbol object
@@ -896,6 +1028,10 @@ class SchematicSymbol():
             if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
             if item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
             if item[0] == 'mirror': object.mirror = item[1]
+            if item[0] == 'instances':
+                for instance in item[1:]:
+                    object.instances.append(SymbolProjectInstance.from_sexpr(instance))
+        
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -931,6 +1067,11 @@ class SchematicSymbol():
             expression += property.to_sexpr(indent+2)
         for number, uuid in self.pins.items():
             expression += f'{indents}  (pin "{dequote(number)}" (uuid {uuid}))\n'
+        if len(self.instances) != 0:
+            expression += f'{indents}  (instances\n'
+            for instance in self.instances:
+                expression += instance.to_sexpr(indent+4)
+            expression += f'{indents}  )\n'
         expression += f'{indents}){endline}'
         return expression
 

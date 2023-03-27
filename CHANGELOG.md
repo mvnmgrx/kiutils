@@ -1,5 +1,36 @@
 # kiutils - CHANGELOG
 
+## v1.4.0 - 27.03.2023
+This release adds initial KiCad v7 support.
+
+### Breaking changes
+- Changed: Removed `SyFill` in favour of `Fill` tokens everywhere - (PR #76)
+
+### Non-breaking changes
+- Added: Parsing new sheet names - (PR #59)
+- Added: `Arc`, `Rectangle` and `Circle` tokens - (PR #76)
+- Added: `Schematic.shapes` to hold arcs, rectangles and circles - (PR #76)
+- Added: `GrTextBox`, `FpTextBox`, `SyTextBox` and `TextBox` tokens - (PR #76)
+- Added: `SchematicSymbol.dnp` token - (PR #77)
+- Added: `fields_autoplaced` token to all kinds of lables - (PR #77)
+- Added: `NetclassFlag` token - (PR #80)
+- Added: `Property.showName` token - (PR #80)
+- Added: `Rule.severity` token for design rules - (PR #84)
+- Added: `plotOnAllLayersSelection`, `dashedLineDashRatio` and `dashedLineGapRatio` tokens 
+         in `PlotSettings` - (PR #85)
+- Added: `RenderCache` token for supported text items - (PR #87)
+- Added: `ProjectInstance` tokens for schematic symbols and hierarchical sheets - (PR #88)
+- Changed: Strokes are now parsed less strictly - (PR #57)
+- Changed: Default value of `Stroke.type` from "dash" to "default" - (PR #63)
+- Changed: `Stroke.color` is now optional - (PR #63)
+- Changed: `Stroke.type` is now optional - (PR #82)
+- Changed: `Schematic.uuid` is now optional - (PR #63)
+- Changed: `Property.id` is now optional - (PR #78)
+- Changed: `SymbolPin.nameEffects` and `SymbolPin.numberEffects` are now optional - (PR #82)
+- Changed: `PlotSettings.svgUseInch` and `PlotSettings.excludeEdgeLayer` are now optional - (PR #85)
+- Fixed: Regex parser not correctly handling backslashes in quoted strings - (PR #82)
+- Fixed: `DesignRules.from_sexpr()` not parsing version token - (PR #84)
+
 ## v1.3.0 - 21.02.2023
 ### Breaking changes
 - Changed: The ID token API was consolidated - (PR #54)

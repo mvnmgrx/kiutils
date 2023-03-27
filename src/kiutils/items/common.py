@@ -15,6 +15,7 @@ Documentation taken from:
 """
 
 from __future__ import annotations
+from abc import ABC, abstractmethod
 
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
@@ -212,8 +213,8 @@ class Stroke():
     """The ``width`` token attribute defines the line width of the graphic object"""
 
     type: Optional[str] = None
-    """The optional ``type`` token attribute defines the line style of the graphic object. Valid 
-    stroke line styles are: 
+    """The optional ``type`` token attribute defines the line style of the graphic object. Valid
+    stroke line styles are:
     - ``dash``, ``dash_dot``, ``dash_dot_dot`` (since KiCad v7), ``dot``, ``default``, ``solid``
     """
 
@@ -824,9 +825,9 @@ class Property():
     """The optional ``effects`` section defines how the text is displayed"""
 
     showName: bool = False
-    """The ``show_name`` token defines if the property name is visibly shown. Used for netclass 
+    """The ``show_name`` token defines if the property name is visibly shown. Used for netclass
     labels.
-    
+
     Available since KiCad v7"""
 
     @classmethod
@@ -1158,3 +1159,21 @@ class Image():
         expression += f'{indents}  )\n'
         expression += f'{indents}){endline}'
         return expression
+
+@dataclass
+class ProjectInstance(ABC):
+    """The ``instances`` token defines a project instance and serves as an abstract base class for
+    symbol and hierarchical sheet project instances.
+    
+    Available since KiCad v7."""
+
+    name: str = ""
+    """The ``name`` token defines the name of the project instance"""
+
+    @abstractmethod
+    def from_sexpr(cls, exp: list) -> ProjectInstance:
+        raise NotImplementedError
+
+    @abstractmethod
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        raise NotImplementedError

@@ -119,3 +119,10 @@ class Tests_Board_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_pcbPlotParams')
         board = Board().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(board, self.testData))
+        
+    def test_textsWithRenderCaches(self):
+        """Tests text elements with the ``render_cache`` token"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_textsWithRenderCaches')
+        board = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(board, self.testData))

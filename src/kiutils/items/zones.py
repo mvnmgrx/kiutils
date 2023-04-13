@@ -626,13 +626,13 @@ class Zone():
         layers, layer_token = '', ''
         for layer in self.layers:
             layers += f' "{dequote(layer)}"'
-
-        if len(self.layers) == 1:
-            layer_token = f' (layer{layers})'
-        elif len(self.layers) > 1:
-            layer_token = f' (layers{layers})'
-        else:
+            
+        if len(self.layers) == 0:
             raise Exception("Zone: No layers set for this zone")
+        elif len(self.layers) == 1 and self.layers[0] != "F&B.Cu":
+            layer_token = f' (layer{layers})'
+        else:
+            layer_token = f' (layers{layers})'
 
         expression =  f'{indents}(zone{locked} (net {self.net}) (net_name "{dequote(self.netName)}"){layer_token}{tstamp}{name} (hatch {self.hatch.style} {self.hatch.pitch})\n'
         if self.priority is not None:

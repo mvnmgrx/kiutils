@@ -92,6 +92,14 @@ class Tests_Board(unittest.TestCase):
         board = Board().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(board, self.testData))
 
+    def test_zoneOnOuterLayersOnly(self):
+        """Tests the parsing of a zone that is only on the outer board layers (F.Cu and B.Cu). 
+        Regression test for bug in PR #89."""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_zoneOnOuterLayersOnly')
+        board = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(board, self.testData))
+
 class Tests_Board_Since_V7(unittest.TestCase):
     """Test cases for Boards since KiCad 7"""
 

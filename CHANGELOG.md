@@ -1,5 +1,10 @@
 # kiutils - CHANGELOG
 
+## v1.4.1 - 22.04.2023
+
+## Non-breaking changes
+- Fixed: Zones on only outer layers produce wrong S-Expression for the `layer` token (PR #89)
+
 ## v1.4.0 - 27.03.2023
 This release adds initial KiCad v7 support.
 

@@ -63,6 +63,9 @@ class Schematic():
     busEntries: List[BusEntry] = field(default_factory=list)
     """The ``busEntries`` token defines a list of bus_entry used in the schematic"""
 
+    busAliases: Dict[BusAlias] = field(default_factory=dict)
+    """The ``busEntries`` token defines a list of bus_entry used in the schematic"""
+
     graphicalItems: List[Union[Connection, PolyLine]] = field(default_factory=list)
     """The ``graphicalItems`` token defines a list of ``bus``, ``wire`` or ``polyline`` elements 
     used in the schematic"""
@@ -144,6 +147,7 @@ class Schematic():
             if item[0] == 'junction': object.junctions.append(Junction().from_sexpr(item))
             if item[0] == 'no_connect': object.noConnects.append(NoConnect().from_sexpr(item))
             if item[0] == 'bus_entry': object.busEntries.append(BusEntry().from_sexpr(item))
+            if item[0] == 'bus_alias': busAlias = BusAlias().from_sexpr(item); object.busAliases[busAlias.name] = busAlias
             if item[0] == 'wire': object.graphicalItems.append(Connection().from_sexpr(item))
             if item[0] == 'bus': object.graphicalItems.append(Connection().from_sexpr(item))
             if item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item))

@@ -5,6 +5,7 @@
   (paper "A4")
   (lib_symbols)
 
+  (bus_alias "" (members ))
   (bus_alias "test (not empty)" (members "" "m0" "m2" "\"test\"" "!\"§$%&/()=?"))
   (bus_alias "test (empty)" (members ))
   (bus_alias "test (empty, \"quoted\")" (members ))

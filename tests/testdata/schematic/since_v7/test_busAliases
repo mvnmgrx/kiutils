@@ -1,0 +1,16 @@
+(kicad_sch (version 20230121) (generator kiutils)
+
+  (uuid 80899fed-1b75-4222-a6b3-1ed87b4e7bbb)
+
+  (paper "A4")
+  (lib_symbols)
+
+  (bus_alias "" (members ))
+  (bus_alias "test (not empty)" (members "" "m0" "m2" "\"test\"" "!\"§$%&/()=?"))
+  (bus_alias "test (empty)" (members ))
+  (bus_alias "test (empty, \"quoted\")" (members ))
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

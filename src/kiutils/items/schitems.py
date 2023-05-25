@@ -256,8 +256,8 @@ class BusAlias():
         
         object = cls()
 
-        object.name = exp[1]
-        object.members = exp[2][1:]
+        object.name = dequote(exp[1])
+        object.members = [dequote(x) for x in exp[2][1:]]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -273,7 +273,10 @@ class BusAlias():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        expression =  f'{indents}(bus_alias "{self.name}" (members {" ".join(self.members)}){endline}'
+        members = [f'"{member}"' for member in self.members]
+
+        expression =  f'{indents}(bus_alias "{self.name}" (members {" ".join(members)}){endline}'
+
         return expression
 
 @dataclass

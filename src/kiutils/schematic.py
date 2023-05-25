@@ -63,7 +63,7 @@ class Schematic():
     busEntries: List[BusEntry] = field(default_factory=list)
     """The ``busEntries`` token defines a list of bus_entry used in the schematic"""
 
-    busAliases: Dict[BusAlias] = field(default_factory=dict)
+    busAliases: List[BusAlias] = field(default_factory=list)
     """The ``busEntries`` token defines a list of bus_entry used in the schematic"""
 
     graphicalItems: List[Union[Connection, PolyLine]] = field(default_factory=list)
@@ -147,7 +147,7 @@ class Schematic():
             if item[0] == 'junction': object.junctions.append(Junction().from_sexpr(item))
             if item[0] == 'no_connect': object.noConnects.append(NoConnect().from_sexpr(item))
             if item[0] == 'bus_entry': object.busEntries.append(BusEntry().from_sexpr(item))
-            if item[0] == 'bus_alias': busAlias = BusAlias().from_sexpr(item); object.busAliases[busAlias.name] = busAlias
+            if item[0] == 'bus_alias': object.busAliases.append(BusAlias().from_sexpr(item))
             if item[0] == 'wire': object.graphicalItems.append(Connection().from_sexpr(item))
             if item[0] == 'bus': object.graphicalItems.append(Connection().from_sexpr(item))
             if item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item))
@@ -271,6 +271,11 @@ class Schematic():
         if self.busEntries:
             expression += '\n'
             for item in self.busEntries:
+                expression += item.to_sexpr(indent+2)
+
+        if self.busAliases:
+            expression += '\n'
+            for item in self.busAliases:
                 expression += item.to_sexpr(indent+2)
 
         if self.graphicalItems:

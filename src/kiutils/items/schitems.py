@@ -226,7 +226,7 @@ class BusAlias():
 
     members: List[str] = field(default_factory=list)
     """The list of ``members`` defined in the bus. Note that when you tap out a bus entry
-       from a bus using one these members a label will be created with the selected member name"""
+    from a bus using one these members a label will be created with the selected member name"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> BusAlias:
@@ -238,6 +238,8 @@ class BusAlias():
         Raises:
             - Exception: When given parameter's type is not a list
             - Exception: When the first item of the list is not bus_alias
+            - Exception: When the S-Expression is not exactly three items long
+            - Exception: When the ``members`` token is missing
 
         Returns:
             - BusAlias: Object of the class initialized with the given S-Expression
@@ -255,9 +257,8 @@ class BusAlias():
             raise Exception("bus_alias needs to contain a list of members")
         
         object = cls()
-
-        object.name = dequote(exp[1])
-        object.members = [dequote(x) for x in exp[2][1:]]
+        object.name = exp[1]
+        object.members = [x for x in exp[2][1:]]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -273,10 +274,8 @@ class BusAlias():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        members = [f'"{member}"' for member in self.members]
-
-        expression =  f'{indents}(bus_alias "{self.name}" (members {" ".join(members)})){endline}'
-
+        members = [f'"{dequote(member)}"' for member in self.members]
+        expression =  f'{indents}(bus_alias "{dequote(self.name)}" (members {" ".join(members)})){endline}'
         return expression
 
 @dataclass

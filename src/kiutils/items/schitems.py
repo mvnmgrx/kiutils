@@ -214,6 +214,72 @@ class BusEntry():
         return expression
 
 @dataclass
+class BusAlias():
+    """The ``bus_alias`` token defines a bus entry in the schematic
+
+    Documentation:
+        https://gitlab.com/kicad/services/kicad-dev-docs/-/merge_requests/53/diffs
+    """
+
+    name: str = ""
+    """The ``name`` of the bus."""
+
+    members: List[str] = field(default_factory=list)
+    """The list of ``members`` defined in the bus. Note that when you tap out a bus entry
+       from a bus using one these members a label will be created with the selected member name"""
+
+    @classmethod
+    def from_sexpr(cls, exp: list) -> BusAlias:
+        """Convert the given S-Expresstion into a BusAlias object
+
+        Args:
+            - exp (list): Part of parsed S-Expression ``(bus_alias ...)``
+
+        Raises:
+            - Exception: When given parameter's type is not a list
+            - Exception: When the first item of the list is not bus_alias
+
+        Returns:
+            - BusAlias: Object of the class initialized with the given S-Expression
+        """
+        if not isinstance(exp, list):
+            raise Exception("Expression does not have the correct type")
+
+        if exp[0] != 'bus_alias':
+            raise Exception("Expression does not have the correct type")
+
+        if len(exp) != 3:
+            raise Exception("Exactly three items are expected in a bus_alias S-Expression.")
+        
+        if not isinstance(exp[2], list) or exp[2][0] != 'members':
+            raise Exception("bus_alias needs to contain a list of members")
+        
+        object = cls()
+
+        object.name = dequote(exp[1])
+        object.members = [dequote(x) for x in exp[2][1:]]
+        return object
+
+    def to_sexpr(self, indent=2, newline=True) -> str:
+        """Generate the S-Expression representing this object
+
+        Args:
+            - indent (int): Number of whitespaces used to indent the output. Defaults to 2.
+            - newline (bool): Adds a newline to the end of the output. Defaults to True.
+
+        Returns:
+            - str: S-Expression of this object
+        """
+        indents = ' '*indent
+        endline = '\n' if newline else ''
+
+        members = [f'"{member}"' for member in self.members]
+
+        expression =  f'{indents}(bus_alias "{self.name}" (members {" ".join(members)})){endline}'
+
+        return expression
+
+@dataclass
 class Connection():
     """The ``wire`` and ``bus`` tokens define wires and buses in the schematic
 

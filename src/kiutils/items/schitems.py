@@ -275,7 +275,7 @@ class BusAlias():
 
         members = [f'"{member}"' for member in self.members]
 
-        expression =  f'{indents}(bus_alias "{self.name}" (members {" ".join(members)}){endline}'
+        expression =  f'{indents}(bus_alias "{self.name}" (members {" ".join(members)})){endline}'
 
         return expression
 

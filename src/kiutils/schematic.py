@@ -64,7 +64,7 @@ class Schematic():
     """The ``busEntries`` token defines a list of bus_entry used in the schematic"""
 
     busAliases: List[BusAlias] = field(default_factory=list)
-    """The ``busEntries`` token defines a list of bus_entry used in the schematic"""
+    """The ``busAliases`` token defines a list of bus_alias used in the schematic"""
 
     graphicalItems: List[Union[Connection, PolyLine]] = field(default_factory=list)
     """The ``graphicalItems`` token defines a list of ``bus``, ``wire`` or ``polyline`` elements 

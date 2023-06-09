@@ -1,8 +1,13 @@
 # kiutils - CHANGELOG
 
+## v1.4.2 - 09.06.2023
+
+### Non-breaking changes
+- Added: Support for `bus_alias` tokens (PR #92)
+
 ## v1.4.1 - 22.04.2023
 
-## Non-breaking changes
+### Non-breaking changes
 - Fixed: Zones on only outer layers produce wrong S-Expression for the `layer` token (PR #89)
 
 ## v1.4.0 - 27.03.2023

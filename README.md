@@ -1,6 +1,7 @@
 # KiUtils
 
 [![PyPI version](https://img.shields.io/pypi/v/kiutils)](https://pypi.org/project/kiutils)
+[![PyPI downloads](https://img.shields.io/pypi/dm/kiutils.svg)](https://pypistats.org/packages/kiutils)
 ![Python version](https://img.shields.io/pypi/pyversions/kiutils)
 [![License](https://img.shields.io/github/license/mvnmgrx/kiutils)](https://github.com/mvnmgrx/kiutils/blob/master/LICENSE)
 ![Last commit](https://img.shields.io/github/last-commit/mvnmgrx/kiutils)

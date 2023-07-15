@@ -147,6 +147,9 @@ class Model():
     rotate: Coordinate = field(default_factory=lambda: Coordinate(0.0, 0.0, 0.0))
     """The ``rotate`` token specifies the model rotation for each 3D axis relative to the footprint"""
 
+    hide: bool = False
+    """The `hide` token specifies if the 3d model is visible or not"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Model:
         """Convert the given S-Expresstion into a Model object
@@ -161,7 +164,7 @@ class Model():
         Returns:
             - Model: Object of the class initialized with the given S-Expression
         """
-        if not isinstance(exp, list) or len(exp) != 5:
+        if not isinstance(exp, list) or len(exp) < 5 or len(exp) > 6:
             raise Exception("Expression does not have the correct type")
 
         if exp[0] != 'model':
@@ -169,9 +172,16 @@ class Model():
 
         object = cls()
         object.path = exp[1]
-        object.pos = Coordinate.from_sexpr(exp[2][1])
-        object.scale = Coordinate.from_sexpr(exp[3][1])
-        object.rotate = Coordinate.from_sexpr(exp[4][1])
+        if len(exp) == 6 and exp[2] == 'hide':
+            object.hide = True
+            object.pos = Coordinate.from_sexpr(exp[3][1])
+            object.scale = Coordinate.from_sexpr(exp[4][1])
+            object.rotate = Coordinate.from_sexpr(exp[5][1])
+        else:
+            object.pos = Coordinate.from_sexpr(exp[2][1])
+            object.scale = Coordinate.from_sexpr(exp[3][1])
+            object.rotate = Coordinate.from_sexpr(exp[4][1])
+
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -186,7 +196,9 @@ class Model():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        expression =  f'{indents}(model "{dequote(self.path)}"\n'
+        hide = " hide" if self.hide else ""
+
+        expression =  f'{indents}(model "{dequote(self.path)}"{hide}\n'
         expression += f'{indents}  (offset {self.pos.to_sexpr()})\n'
         expression += f'{indents}  (scale {self.scale.to_sexpr()})\n'
         expression += f'{indents}  (rotate {self.rotate.to_sexpr()})\n'

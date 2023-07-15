@@ -1,5 +1,10 @@
 # kiutils - CHANGELOG
 
+## v1.4.3 - 15.07.2023
+
+### Non-breaking changes
+- Fixed: 3D model `hide` property not parsed (PR #97)
+
 ## v1.4.2 - 09.06.2023
 
 ### Non-breaking changes

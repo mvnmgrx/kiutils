@@ -1,0 +1,9 @@
+(footprint "test"
+  (layer "F.Cu")
+  (tedit 64b312a4)
+  (model "${KICAD6_3DMODEL_DIR}/Battery.3dshapes/Battery_CR1225.wrl" hide
+    (offset (xyz 0 0 0))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 0))
+  )
+)

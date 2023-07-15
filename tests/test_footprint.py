@@ -96,6 +96,13 @@ class Tests_Footprint(unittest.TestCase):
         footprint.tedit = '6328916A'
 
         self.assertTrue(to_file_and_compare(footprint, self.testData))
+    
+    def test_3dModelHideProperty(self):
+        """Tests the 3d model hide property (see issue #96)"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'test_3dModelHideProperty')
+        footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))
 
 class Tests_Footprint_Since_V7(unittest.TestCase):
     """Test cases for Footprints since KiCad 7"""

@@ -205,7 +205,8 @@ class Model():
         hide = " hide" if self.hide else ""
 
         expression =  f'{indents}(model "{dequote(self.path)}"{hide}\n'
-        expression += f'{indents}  (opacity {self.opacity})\n'
+        if self.opacity < 0.999:
+            expression += f'{indents}  (opacity {self.opacity})\n'
         expression += f'{indents}  (offset {self.pos.to_sexpr()})\n'
         expression += f'{indents}  (scale {self.scale.to_sexpr()})\n'
         expression += f'{indents}  (rotate {self.rotate.to_sexpr()})\n'

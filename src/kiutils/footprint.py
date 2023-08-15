@@ -54,6 +54,12 @@ class Attributes():
     """The optional ``excludeFromBom`` token indicates that the footprint should be excluded when
     creating bill of materials (BOM) files"""
 
+    allowMissingCourtyard: bool = False
+    """The optional ``allowMissingCourtyard`` token indicates if the footprint may not have a
+    courtyard defined. 
+    
+    Available since KiCad 7"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Attributes:
         """Convert the given S-Expresstion into a Attributes object
@@ -85,6 +91,7 @@ class Attributes():
             if item == 'board_only': object.boardOnly = True
             if item == 'exclude_from_pos_files': object.excludeFromPosFiles = True
             if item == 'exclude_from_bom': object.excludeFromBom = True
+            if item == 'allow_missing_courtyard': object.allowMissingCourtyard = True
         return object
 
     def to_sexpr(self, indent=0, newline=False) -> str:
@@ -94,6 +101,7 @@ class Attributes():
         - ``boardOnly``: False
         - ``excludeFromBom``: False
         - ``excludeFromPosFiles``: False
+        - ``allowMissingCourtyard``: False
 
         KiCad won't add the ``(attr ..)`` token to a footprint when this combination is selected.
 
@@ -107,7 +115,8 @@ class Attributes():
         if (self.type == None
             and self.boardOnly == False
             and self.excludeFromBom == False
-            and self.excludeFromPosFiles == False):
+            and self.excludeFromPosFiles == False
+            and self.allowMissingCourtyard == False):
             return ''
 
         indents = ' '*indent
@@ -124,6 +133,9 @@ class Attributes():
         if self.excludeFromBom is not None:
             if self.excludeFromBom:
                 expression += ' exclude_from_bom'
+        if self.allowMissingCourtyard is not None:
+            if self.allowMissingCourtyard:
+                expression += ' allow_missing_courtyard'
         expression += f'){endline}'
         return expression
 

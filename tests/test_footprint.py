@@ -145,4 +145,11 @@ class Tests_Footprint_Since_V7(unittest.TestCase):
         self.testData.compareToTestFile = True
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_textsWithRenderCaches')
         footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))     
+
+    def test_exemptFromCourtyardToken(self):
+        """Tests the ``allow_missing_courtyard`` token"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_exemptFromCourtyardToken')
+        footprint = Footprint().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(footprint, self.testData))

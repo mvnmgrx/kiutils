@@ -15,6 +15,21 @@ from kiutils.footprint import Footprint
 
 FOOTPRINT_BASE = path.join(TEST_BASE, 'footprint')
 
+class Tests_Footprint_Legacy(unittest.TestCase):
+    """Test cases for Footprints from legacy KiCad versions (<= 5)"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+
+    def test_moduleNameOnlyNumbers(self):
+        """Constraints the behavior of legacy footprint names that are only numbers. As they are not
+        quoted strings, our parser does parse them as numbers. The behavior was changed in PR #91
+        to convert numbers back to strings when exporting to S-Expression"""
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'legacy', 'test_moduleNameOnlyNumbers')
+        footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))
+
 class Tests_Footprint(unittest.TestCase):
     """Test cases for Footprints"""
 

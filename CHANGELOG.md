@@ -1,5 +1,10 @@
 # kiutils - CHANGELOG
 
+## v1.4.4 - xx.xx.xxxx
+
+### Non-breaking changes
+- Fixed: Legacy footprints with only digits as name are now correctly parsed (PR #91)
+
 ## v1.4.3 - 15.07.2023
 
 ### Non-breaking changes

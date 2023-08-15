@@ -682,6 +682,7 @@ class Footprint():
             - symbol_id (str): The symbol id in the following format: ``<libraryNickname>:<entryName>``
               or only ``<entryName>``
         """
+        # kicad5 fix: module names may not be quoted strings (only numbers) - see PR #91
         parse_symbol_id = re.match(r"^(.+?):(.+?)$", str(symbol_id))
         if parse_symbol_id:
             self.libraryNickname = parse_symbol_id.group(1)

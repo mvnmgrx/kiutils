@@ -1,0 +1,7 @@
+(footprint "BatteryClip_Keystone_54_D16-19mm" (version 20221018) (generator pcbnew)
+  (layer "F.Cu")
+  (tedit 64dbffd5)
+  (descr "some description")
+  (tags "some tags")
+  (attr through_hole board_only exclude_from_pos_files exclude_from_bom allow_missing_courtyard)
+)

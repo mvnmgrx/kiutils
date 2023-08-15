@@ -682,7 +682,7 @@ class Footprint():
             - symbol_id (str): The symbol id in the following format: ``<libraryNickname>:<entryName>``
               or only ``<entryName>``
         """
-        parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
+        parse_symbol_id = re.match(r"^(.+?):(.+?)$", str(symbol_id))
         if parse_symbol_id:
             self.libraryNickname = parse_symbol_id.group(1)
             self.entryName = parse_symbol_id.group(2)

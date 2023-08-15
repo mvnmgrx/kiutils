@@ -55,8 +55,8 @@ class Attributes():
     creating bill of materials (BOM) files"""
 
     allowMissingCourtyard: bool = False
-    """The optional ``allowMissingCourtyard`` token indicates if the footprint may not have a
-    courtyard defined. 
+    """The optional ``allowMissingCourtyard`` token indicates if the footprint generates a 
+    "missing courtyard" DRC violation.
     
     Available since KiCad 7"""
 

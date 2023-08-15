@@ -124,18 +124,10 @@ class Attributes():
         type = f' {self.type}' if self.type is not None else ''
 
         expression = f'{indents}(attr{type}'
-        if self.boardOnly is not None:
-            if self.boardOnly:
-                expression += ' board_only'
-        if self.excludeFromPosFiles is not None:
-            if self.excludeFromPosFiles:
-                expression += ' exclude_from_pos_files'
-        if self.excludeFromBom is not None:
-            if self.excludeFromBom:
-                expression += ' exclude_from_bom'
-        if self.allowMissingCourtyard is not None:
-            if self.allowMissingCourtyard:
-                expression += ' allow_missing_courtyard'
+        if self.boardOnly: expression += ' board_only'
+        if self.excludeFromPosFiles: expression += ' exclude_from_pos_files'
+        if self.excludeFromBom: expression += ' exclude_from_bom'
+        if self.allowMissingCourtyard: expression += ' allow_missing_courtyard'
         expression += f'){endline}'
         return expression
 

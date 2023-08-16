@@ -150,8 +150,8 @@ class Model():
     hide: bool = False
     """The `hide` token specifies if the 3d model is visible or not"""
     
-    opacity: float = 1.0
-    """Opacity of the element. By default it is set to unity for backward compatibility"""
+    opacity: Optional[float] = None
+    """The optional opacity token specifies the opacity of the 3D model on a scale between 1.0 and 0.0."""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Model:
@@ -205,7 +205,7 @@ class Model():
         hide = " hide" if self.hide else ""
 
         expression =  f'{indents}(model "{dequote(self.path)}"{hide}\n'
-        if self.opacity < 0.999:
+        if self.opacity is not None:
             expression += f'{indents}  (opacity {self.opacity})\n'
         expression += f'{indents}  (offset {self.pos.to_sexpr()})\n'
         expression += f'{indents}  (scale {self.scale.to_sexpr()})\n'

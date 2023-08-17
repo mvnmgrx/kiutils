@@ -3,7 +3,6 @@
 ## v1.4.4 - 17.08.2023
 
 ### Non-breaking changes
-- Added: Parsing of 3d-model `hide` property (PR #97)
 - Added: Parsing of footprint `private_layers` token (PR #103)
 - Added: Parsing of 3d-model `opacity` token (PR #98)
 - Added: Parsing of footprint attribute's `allow_missing_courtyard` token (PR #101)

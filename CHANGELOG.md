@@ -3,6 +3,7 @@
 ## v1.4.4 - xx.xx.xxxx
 
 ### Non-breaking changes
+- Added: Parsing of footprint `private_layers` token (PR #103)
 - Added: Parsing of 3d-model `opacity` token (PR #98)
 - Added: Parsing of footprint attribute's `allow_missing_courtyard` token (PR #101)
 - Fixed: Legacy footprints with only digits as name are now correctly parsed (PR #91)

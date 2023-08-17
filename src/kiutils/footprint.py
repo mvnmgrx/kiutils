@@ -153,6 +153,9 @@ class Model():
 
     hide: bool = False
     """The `hide` token specifies if the 3d model is visible or not"""
+    
+    opacity: Optional[float] = None
+    """The optional opacity token specifies the opacity of the 3D model on a scale between 1.0 and 0.0."""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> Model:
@@ -168,7 +171,7 @@ class Model():
         Returns:
             - Model: Object of the class initialized with the given S-Expression
         """
-        if not isinstance(exp, list) or len(exp) < 5 or len(exp) > 6:
+        if not isinstance(exp, list) or len(exp) < 5:
             raise Exception("Expression does not have the correct type")
 
         if exp[0] != 'model':
@@ -176,16 +179,19 @@ class Model():
 
         object = cls()
         object.path = exp[1]
-        if len(exp) == 6 and exp[2] == 'hide':
-            object.hide = True
-            object.pos = Coordinate.from_sexpr(exp[3][1])
-            object.scale = Coordinate.from_sexpr(exp[4][1])
-            object.rotate = Coordinate.from_sexpr(exp[5][1])
-        else:
-            object.pos = Coordinate.from_sexpr(exp[2][1])
-            object.scale = Coordinate.from_sexpr(exp[3][1])
-            object.rotate = Coordinate.from_sexpr(exp[4][1])
 
+        if exp[2] == 'hide':
+            object.hide = True
+
+        for e in exp[2:]:
+            if e[0] == 'opacity':
+                object.opacity = e[1]
+            elif e[0] == 'offset':
+                object.pos = Coordinate.from_sexpr(e[1])
+            elif e[0] == 'scale':
+                object.scale = Coordinate.from_sexpr(e[1])
+            elif e[0] == 'rotate':
+                object.rotate = Coordinate.from_sexpr(e[1])
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -203,6 +209,8 @@ class Model():
         hide = " hide" if self.hide else ""
 
         expression =  f'{indents}(model "{dequote(self.path)}"{hide}\n'
+        if self.opacity is not None:
+            expression += f'{indents}  (opacity {self.opacity})\n'
         expression += f'{indents}  (offset {self.pos.to_sexpr()})\n'
         expression += f'{indents}  (scale {self.scale.to_sexpr()})\n'
         expression += f'{indents}  (rotate {self.rotate.to_sexpr()})\n'

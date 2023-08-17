@@ -160,3 +160,10 @@ class Tests_Footprint_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_3dModelOpacityToken')
         footprint = Footprint().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(footprint, self.testData))
+
+    def test_privateLayersToken(self):
+        """Tests the ``private_layers`` token of a footprint"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_privateLayersToken')
+        footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))

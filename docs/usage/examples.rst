@@ -101,3 +101,47 @@ This example adds two vias on the normal axis at the end of each segment:
 
    # Write changes back to board file
    board.to_file()
+
+Adding a schematic symbol
+-------------------------
+
+This example shows how a schematic symbol might be added from a symbol library into a schematic:
+
+.. code-block:: python
+
+   from kiutils.schematic import Schematic, SymbolInstance, SchematicSymbol
+   from kiutils.symbol import SymbolLib  
+   from kiutils.items.common import Property, Position
+   
+   # Load the symbol library  
+   symbol_lib = SymbolLib().from_file('/usr/share/kicad/symbols/Device.kicad_sym')  
+   
+   # Find the symbol in the library  
+   symbol = None  
+   for s in symbol_lib.symbols:  
+      if s.entryName == 'R_Small_US':  
+         symbol = s  
+         break  
+   
+   if symbol is None:  
+      raise ValueError('Symbol not found in library')  
+
+   
+   # Create a new schematic  
+   schematic = Schematic.create_new()  
+   
+   # Add the symbol to the schematic  
+   schematic.libSymbols.append(symbol)  
+
+   schematic_symbol = SchematicSymbol()
+   schematic_symbol.libName = 'R_Small_US'
+   schematic_symbol.libId = 'Device:R_Small_US' 
+   schematic_symbol.position = Position(X=0, Y=0, angle=0)
+
+   schematic_symbol.properties.append(Property(key='Reference', value='R?', id=0))
+   schematic_symbol.properties.append(Property(key='Value', value='R_Small_US', id=1))  
+
+   schematic.schematicSymbols.append(schematic_symbol)  
+
+   # Save the schematic to a file  
+   schematic.to_file('path_to_save_schematic.kicad_sch')  

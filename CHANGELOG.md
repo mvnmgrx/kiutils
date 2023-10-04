@@ -1,5 +1,10 @@
 # kiutils - CHANGELOG
 
+## v1.4.5 - 04.10.2023
+
+### Non-breaking changes
+- Added: Parsing of footprint `net_tie_pad_groups` token (PR #105)
+
 ## v1.4.4 - 17.08.2023
 
 ### Non-breaking changes

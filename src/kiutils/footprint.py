@@ -807,6 +807,12 @@ class Footprint():
     
     Available since KiCad v7."""
 
+    netTiePadGroups: List[str] = field(default_factory=list)
+    """The optional ``netTiePadGroups`` token defines a list of net tie groups assigned to the 
+    footprint. 
+    
+    Available since KiCad v7."""
+
     # TODO: Type hinting for this list
     graphicItems: List = field(default_factory=list)
     """The ``graphic`` objects section is a list of one or more graphical objects in the footprint. 
@@ -895,6 +901,9 @@ class Footprint():
             if item[0] == 'private_layers':
                 for layer in item[1:]:
                     object.privateLayers.append(layer)
+            if item[0] == 'net_tie_pad_groups':
+                for layer in item[1:]:
+                    object.netTiePadGroups.append(layer)
             if item[0] == 'dimension':
                 raise NotImplementedError("Dimensions are not yet handled! Please report this bug along with the file being parsed.")
 
@@ -1064,6 +1073,12 @@ class Footprint():
         if self.privateLayers:
             expression += f'{indents}  (private_layers'
             for item in self.privateLayers:
+                expression += f' "{dequote(item)}"'
+            expression += f')\n'
+            
+        if self.netTiePadGroups:
+            expression += f'{indents}  (net_tie_pad_groups'
+            for item in self.netTiePadGroups:
                 expression += f' "{dequote(item)}"'
             expression += f')\n'
 

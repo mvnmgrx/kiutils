@@ -1375,7 +1375,7 @@ class HierarchicalSheet():
 
     properties: List[Property] = field(default_factory=list)
     """The ``properties`` section defines a list of properties defined for the hiererchical sheet.
-       This holds all properties except that held by sheetName and fileName members."""
+       This holds all properties except that held by ``sheetName`` and ``fileName`` members."""
 
     pins: List[HierarchicalPin] = field(default_factory=list)
     """The ``pins`` section is a list of hierarchical pins that map a hierarchical label defined in

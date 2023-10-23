@@ -1,0 +1,40 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid b6528edb-33c3-487d-9ca3-4d67bb7a5a12)
+
+  (paper "A4")
+  (lib_symbols)
+
+  (sheet (at 31.75 34.29) (size 43.815 15.24)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 34ae3b7c-6af7-425f-8025-a9ad084df767)
+    (property "Sheetname" "Untitled Sheet" (at 31.75 33.5784 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "untitled.kicad_sch" (at 31.75 50.1146 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (property "test" "test1" (at 31.75 34.29 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "test \"123\"" "!\"§$%&/()=?`²³{[]}\\}\\_:;-.,+#*'~" (at 31.75 34.29 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "field" "a \"field\"" (at 31.75 34.29 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "p" "some properties" (at 41.91 29.21 0) (show_name)
+      (effects (font (size 1.27 1.27) bold italic))
+    )
+    (instances
+      (project "test-sheet-properties"
+        (path "/b6528edb-33c3-487d-9ca3-4d67bb7a5a12" (page "2"))
+      )
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

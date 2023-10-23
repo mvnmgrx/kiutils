@@ -169,3 +169,11 @@ class Tests_Schematic_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_busAliases')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_sheetProperties(self):
+        """Tests the parsing of sheet file properties since KiCad v7.
+        Came up in PR #106."""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_sheetProperties')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

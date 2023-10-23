@@ -1,5 +1,10 @@
 # kiutils - CHANGELOG
 
+## v1.4.6 - 23.10.2023
+
+### Non-breaking changes
+- Added: Parsing of schematic sheet file properties (PR #106)
+
 ## v1.4.5 - 04.10.2023
 
 ### Non-breaking changes

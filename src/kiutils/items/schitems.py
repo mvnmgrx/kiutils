@@ -1373,6 +1373,10 @@ class HierarchicalSheet():
     """The ``fileName`` is a property that defines the file name of the sheet. The property's
        key should therefore be set to `Sheet file`"""
 
+    properties: List[Property] = field(default_factory=list)
+    """The ``properties`` section defines a list of properties defined for the hiererchical sheet.
+       This holds all properties except that held by sheetName and fileName members."""
+
     pins: List[HierarchicalPin] = field(default_factory=list)
     """The ``pins`` section is a list of hierarchical pins that map a hierarchical label defined in
        the associated schematic file"""
@@ -1416,8 +1420,10 @@ class HierarchicalSheet():
                 object.fill.precision = 4
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'property':
-                if item[1] == 'Sheet name' or item[1] == 'Sheetname': object.sheetName = Property().from_sexpr(item)
-                if item[1] == 'Sheet file' or item[1] == 'Sheetfile': object.fileName = Property().from_sexpr(item)
+                p = Property().from_sexpr(item)
+                if item[1] == 'Sheet name' or item[1] == 'Sheetname': object.sheetName = p
+                elif item[1] == 'Sheet file' or item[1] == 'Sheetfile': object.fileName = p
+                else: object.properties.append(p)
             if item[0] == 'pin': object.pins.append(HierarchicalPin().from_sexpr(item))
             if item[0] == 'instances':
                 for instance in item[1:]:
@@ -1446,6 +1452,8 @@ class HierarchicalSheet():
             expression += f'{indents}  (uuid {self.uuid})\n'
         expression += self.sheetName.to_sexpr(indent+2)
         expression += self.fileName.to_sexpr(indent+2)
+        for p in self.properties:
+            expression += p.to_sexpr(indent+2)
         for pin in self.pins:
             expression += pin.to_sexpr(indent+2)
         if len(self.instances) != 0:

@@ -190,7 +190,7 @@ class Rule():
             expression += f'{indents}{item.to_sexpr(indent+2)}'
         expression += f'{indents}  (condition "{dequote(self.condition)}")'
         if self.severity is not None:
-            expression += f'\n{indents}  (severity "{dequote(self.severity)}")'
+            expression += f'\n{indents}  (severity {dequote(self.severity)})'
         expression += ')\n'
         return expression
 

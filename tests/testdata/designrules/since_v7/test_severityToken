@@ -3,13 +3,13 @@
 (rule "HV"
   (constraint clearance (min "1.5mm"))
   (condition "A.NetClass == 'HV'")
-  (severity "ignore"))
+  (severity ignore))
 (rule "HV"
   (layer "outer")
   (constraint clearance (min "1.5mm"))
   (condition "A.NetClass == 'HV'")
-  (severity "error"))
+  (severity error))
 (rule "HV_HV"
   (constraint clearance (min "1.5mm + 2.0mm"))
   (condition "A.NetClass == 'HV' && B.NetClass == 'HV'")
-  (severity "warning"))
+  (severity warning))

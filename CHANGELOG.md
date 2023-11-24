@@ -1,5 +1,10 @@
 # kiutils - CHANGELOG
 
+## v1.4.7 - 23.10.2023
+
+### Non-breaking changes
+- Fixed: No quotes for DRC rules "severity" token (PR #108)
+
 ## v1.4.6 - 23.10.2023
 
 ### Non-breaking changes

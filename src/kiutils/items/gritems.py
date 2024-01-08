@@ -766,5 +766,5 @@ class GrCurve():
         expression = f'{indents}(gr_curve{locked} (pts\n'
         for point in self.coordinates:
             expression += f'{indents}  (xy {point.X} {point.Y})\n'
-        expression += f'{indents}){layer} (width {self.width}{tstamp}){endline}'
+        expression += f'{indents}){layer} (width {self.width}){tstamp}){endline}'
         return expression

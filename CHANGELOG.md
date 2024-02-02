@@ -1,5 +1,11 @@
 # kiutils - CHANGELOG
 
+## v1.4.8 - 03.02.2024
+
+### Non-breaking changes
+- Fixed: Missing parenthesis for gr_curve items (PR #110)
+- Fixed: Text `knockout` setting not parsed (PR #111)
+
 ## v1.4.7 - 23.10.2023
 
 ### Non-breaking changes

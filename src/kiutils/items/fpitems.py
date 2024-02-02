@@ -48,6 +48,10 @@ class FpText():
     layer: str = "F.Cu"
     """The ``layer`` token defines the canonical layer the text resides on"""
 
+    knockout: bool = False
+    """The ``knockout`` token defines if the text is inverted (means transparent text and colored
+    background insted of colored text and transparent background)"""
+
     hide: bool = False
     """The optional ``hide`` token, defines if the text is hidden"""
 
@@ -91,7 +95,11 @@ class FpText():
                 if item == 'hide': object.hide = True
                 continue
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'layer': object.layer = item[1]
+            if item[0] == 'layer': 
+                object.layer = item[1]
+                if(len(item) > 2):
+                    if(item[2] == "knockout"):
+                        object.knockout = True
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'tstamp': object.tstamp = item[1]
             if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
@@ -113,8 +121,9 @@ class FpText():
         hide = ' hide' if self.hide else ''
         unlocked = ' unlocked' if self.position.unlocked else ''
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
+        ko = ' knockout' if self.knockout else ''
 
-        expression =  f'{indents}(fp_text {self.type} "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}{unlocked}) (layer "{dequote(self.layer)}"){hide}\n'
+        expression =  f'{indents}(fp_text {self.type} "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}{unlocked}) (layer "{dequote(self.layer)}"{ko}){hide}\n'
         expression += f'{indents}  {self.effects.to_sexpr()}'
         if self.tstamp is not None:
             expression += f'{indents}  (tstamp {self.tstamp})\n'

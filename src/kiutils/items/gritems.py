@@ -34,8 +34,13 @@ class GrText():
     text: str = ""
     """The ``text`` attribute is a string that defines the text"""
 
+    knockout: bool = False
+    """The ``knockout`` token defines if the text is inverted (means transparent text and colored
+    background insted of colored text and transparent background)"""
+
     position: Position = field(default_factory=lambda: Position())
-    """The ``position`` defines the X and Y position coordinates and optional orientation angle of the text"""
+    """The ``position`` defines the X and Y position coordinates and optional orientation angle of 
+    the text"""
 
     layer: Optional[str] = None
     """The ``layer`` token defines the canonical layer the text resides on"""
@@ -82,7 +87,11 @@ class GrText():
                 if item == 'locked': object.locked = True
                 continue
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'layer': object.layer = item[1]
+            if item[0] == 'layer': 
+                object.layer = item[1]
+                if(len(item) > 2):
+                    if(item[2] == "knockout"):
+                        object.knockout = True
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'tstamp': object.tstamp = item[1]
             if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
@@ -101,8 +110,9 @@ class GrText():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
+        ko = ' knockout' if self.knockout else ''
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
+        layer =  f' (layer "{dequote(self.layer)}"{ko})' if self.layer is not None else ''
         tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
         locked = f' locked' if self.locked else ''
 

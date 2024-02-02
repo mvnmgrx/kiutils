@@ -175,3 +175,9 @@ class Tests_Footprint_Since_V7(unittest.TestCase):
         footprint = Footprint().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(footprint, self.testData))
 
+    def test_testKnockout(self):
+        """Tests the ``knockout`` token of a footprint text"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(FOOTPRINT_BASE, 'since_v7', 'test_textKnockout')
+        footprint = Footprint().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))

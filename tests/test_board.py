@@ -134,3 +134,10 @@ class Tests_Board_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_textsWithRenderCaches')
         board = Board().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(board, self.testData))
+
+    def test_testKnockout(self):
+        """Tests the ``knockout`` token of a graphical text"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'since_v7', 'test_textKnockout')
+        footprint = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(footprint, self.testData))

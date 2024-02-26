@@ -480,6 +480,82 @@ class Symbol():
         return expression
 
 @dataclass
+class SchematicLibSymbol(Symbol):
+    """The ``symbol`` token defines a symbol or sub-unit of a parent symbol. There can be zero or more
+    ``symbol`` tokens in a symbol library file.
+
+    Documentation:
+        https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_symbols
+    """
+
+    """Each symbol must have """
+    @property
+    def libId(self) -> str:
+        """The ``lib_id`` token defines a unique "LIBRARY_ID" for each top level symbol in the
+        library or a unique "UNIT_ID" for each unit embedded in a parent symbol. Library identifiers
+        are only valid it top level symbols and unit identifiers are on valid as unit symbols inside
+        a parent symbol.
+
+        The following conventions apply:
+            - "LIBRARY_ID" (top-level symbol): ``[<libraryNickname>:]<entryName>`` (the library
+              nickname part is optional here)
+
+        In ``kiutils``, the ``lib_id`` token is a combination of ``libraryNickname``, ``entryName``,
+        ``unitId`` and ``styleId`` tokens. Setting the ``lib_id`` token will update all those tokens
+        accordingly.
+
+        Returns:
+            - If the ``libraryNickname`` is set: ``<libraryNickname>:<entryName>``
+            - If the ``libraryNickname`` is ``None``: ``<entryName>``
+              depending if these tokens are set.
+        """
+        if (self.unitId is not None and self.styleId is not None):
+            unit_style_ids = f"_{self.unitId}_{self.styleId}"
+        else:
+            unit_style_ids = ""
+
+        if self.libraryNickname:
+            return f'{self.libraryNickname}:{self.entryName}'
+        else:
+            return f'{self.entryName}{unit_style_ids}'
+
+    @libId.setter
+    def libId(self, symbol_id: str):
+        """Sets the ``lib_id`` token and parses its contents into the ``libraryNickname``,
+        ``entryName`` and ``styleId`` token.
+
+        See self.libId property description for more information.
+
+        Args:
+            - symbol_id (str): The symbol id in the following format: ``<libraryNickname>:<entryName>``
+              or only ``<entryName>``, depending on if the symbol
+              is a top-level symbol or a child symbol
+
+        Raises:
+            - Exception: If the given ID is neither a top-level nor a child symbol
+        """
+        # Try to parse the given ID
+        parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
+        if parse_symbol_id:
+            # The symbol is a top-level symbol with a library nickname
+            self.libraryNickname = parse_symbol_id.group(1)
+            self.entryName = parse_symbol_id.group(2)
+            self.unitId = None
+            self.styleId = None
+        else:
+            # The symbol is a top-level symbol without a library nickname
+            self.libraryNickname = None
+            self.entryName = symbol_id
+            self.unitId = None
+            self.styleId = None
+
+        # Update units id to match parent id
+        for unit in self.units:
+            unit.entryName = self.entryName
+
+
+
+@dataclass
 class SymbolLib():
     """A symbol library defines the common format of ``.kicad_sym`` files. A symbol library may contain
     zero or more symbols.

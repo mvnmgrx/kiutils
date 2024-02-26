@@ -21,7 +21,7 @@ from os import path
 
 from kiutils.items.common import Image, PageSettings, TitleBlock
 from kiutils.items.schitems import *
-from kiutils.symbol import Symbol
+from kiutils.symbol import Symbol, SchematicLibSymbol
 from kiutils.utils import sexpr
 from kiutils.misc.config import KIUTILS_CREATE_NEW_GENERATOR_STR, KIUTILS_CREATE_NEW_VERSION_STR
 
@@ -48,7 +48,7 @@ class Schematic():
     titleBlock: Optional[TitleBlock] = None
     """The ``titleBlock`` token defines author, date, revision, company and comments of the schematic"""
 
-    libSymbols: List[Symbol] = field(default_factory=list)
+    libSymbols: List[SchematicLibSymbol] = field(default_factory=list)
     """The ``libSymbols`` token defines a list of symbols that are used in the schematic"""
 
     schematicSymbols: List[SchematicSymbol] = field(default_factory=list)
@@ -143,7 +143,7 @@ class Schematic():
             if item[0] == 'title_block': object.titleBlock = TitleBlock().from_sexpr(item)
             if item[0] == 'lib_symbols':
                 for symbol in item[1:]:
-                    object.libSymbols.append(Symbol().from_sexpr(symbol))
+                    object.libSymbols.append(SchematicLibSymbol().from_sexpr(symbol))
             if item[0] == 'junction': object.junctions.append(Junction().from_sexpr(item))
             if item[0] == 'no_connect': object.noConnects.append(NoConnect().from_sexpr(item))
             if item[0] == 'bus_entry': object.busEntries.append(BusEntry().from_sexpr(item))

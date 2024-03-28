@@ -629,7 +629,7 @@ class Zone():
             
         if len(self.layers) == 0:
             raise Exception("Zone: No layers set for this zone")
-        elif len(self.layers) == 1 and self.layers[0] != "F&B.Cu":
+        elif len(self.layers) == 1 and self.layers[0] != "F&B.Cu" and self.layers[0] != "*.Cu":
             layer_token = f' (layer{layers})'
         else:
             layer_token = f' (layers{layers})'

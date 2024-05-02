@@ -177,3 +177,34 @@ class Tests_Schematic_Since_V7(unittest.TestCase):
         self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_sheetProperties')
         schematic = Schematic().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+    def test_specialLibIdWithMultipleUnderscoresAndNumbers(self):
+        """Tests special library IDs with multiple underscores and numbers. Came up in PR #112"""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v7', 'test_specialLibIdWithMultipleUnderscoresAndNumbers')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(schematic.libSymbols[0].entryName == "Filter_EMI_LLL_162534")
+        self.assertTrue(schematic.libSymbols[0].libraryNickname == "Device")
+        self.assertTrue(schematic.libSymbols[0].libId == "Device:Filter_EMI_LLL_162534")
+        self.assertTrue(schematic.libSymbols[0].units[0].entryName == "Filter_EMI_LLL_162534")
+        self.assertTrue(schematic.libSymbols[0].units[0].unitId == 0)
+        self.assertTrue(schematic.libSymbols[0].units[0].styleId == 1)
+        self.assertTrue(schematic.libSymbols[0].units[0].libId == "Filter_EMI_LLL_162534_0_1")
+        self.assertTrue(schematic.libSymbols[0].units[1].entryName == "Filter_EMI_LLL_162534")
+        self.assertTrue(schematic.libSymbols[0].units[1].unitId == 1)
+        self.assertTrue(schematic.libSymbols[0].units[1].styleId == 1)
+        self.assertTrue(schematic.libSymbols[0].units[1].libId == "Filter_EMI_LLL_162534_1_1")
+        
+        self.assertTrue(schematic.libSymbols[1].entryName == "Filter_EMI_LLL_162534_1")
+        self.assertTrue(schematic.libSymbols[1].libraryNickname is None)
+        self.assertTrue(schematic.libSymbols[1].libId == "Filter_EMI_LLL_162534_1")
+        self.assertTrue(schematic.libSymbols[1].units[0].entryName == "Filter_EMI_LLL_162534_1")
+        self.assertTrue(schematic.libSymbols[1].units[0].unitId == 0)
+        self.assertTrue(schematic.libSymbols[1].units[0].styleId == 1)
+        self.assertTrue(schematic.libSymbols[1].units[0].libId == "Filter_EMI_LLL_162534_1_0_1")
+        self.assertTrue(schematic.libSymbols[1].units[1].entryName == "Filter_EMI_LLL_162534_1")
+        self.assertTrue(schematic.libSymbols[1].units[1].unitId == 1)
+        self.assertTrue(schematic.libSymbols[1].units[1].styleId == 1)
+        self.assertTrue(schematic.libSymbols[1].units[1].libId == "Filter_EMI_LLL_162534_1_1_1")
+
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

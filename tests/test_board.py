@@ -100,6 +100,14 @@ class Tests_Board(unittest.TestCase):
         board = Board().from_file(self.testData.pathToTestFile)
         self.assertTrue(to_file_and_compare(board, self.testData))
 
+    def test_zoneOnAllLayersWildcard(self):
+        """Tests the parsing of a zone that is present on all copper layers in this form: "*.Cu" 
+        Regression test for bug in PR #114."""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(BOARD_BASE, 'test_zoneOnAllLayersWildcard')
+        board = Board().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(board, self.testData))
+
 class Tests_Board_Since_V7(unittest.TestCase):
     """Test cases for Boards since KiCad 7"""
 

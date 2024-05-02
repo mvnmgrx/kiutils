@@ -1,0 +1,24 @@
+(kicad_pcb (version 20221018) (generator pcbnew)
+
+  (general
+    (thickness 1.6)
+  )
+
+  (paper "A4")
+  (layers
+    (0 "F.Cu" signal)
+    (31 "B.Cu" signal)
+  )
+
+  (setup
+    (pad_to_mask_clearance 0)
+  )
+
+  (net 0 "")
+
+  (zone (net 0) (net_name "") (layers "*.Cu") (tstamp 3562b45e-4bdd-495d-8608-16ebe61c5885) (hatch edge 0.5)
+    (connect_pads (clearance 0.5))
+    (min_thickness 0.25) (filled_areas_thickness no)
+    (fill yes (thermal_gap 0.5) (thermal_bridge_width 0.5) (island_removal_mode 1) (island_area_min 10))
+  )
+)

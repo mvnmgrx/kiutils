@@ -40,6 +40,13 @@ Graphical items (`kiutils.items.gritems`)
    :members:
    :undoc-members:
    :show-inheritance:
+Netlist items (`kiutils.items.netitems`)
+-----------------------------------------
+
+.. automodule:: kiutils.items.netitems
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Schematic items (`kiutils.items.schitems`)
 ------------------------------------------

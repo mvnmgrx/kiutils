@@ -33,6 +33,14 @@ Library tables (`kiutils.libraries`)
    :undoc-members:
    :show-inheritance:
 
+Netlists (`kiutils.netlist`)
+------------------------------------
+
+.. automodule:: kiutils.netlist
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Schematics (`kiutils.schematic`)
 --------------------------------
 

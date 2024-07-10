@@ -26,7 +26,7 @@ from tests.test_symbol import *
 from tests.test_worksheets import *
 from tests.test_misc import *
 from tests.reporter.runner import HTMLTestRunner
-
+from tests.test_netlist import *
 if __name__ == "__main__":
     unittest.main(testRunner=HTMLTestRunner(
         combine_reports = True,

@@ -58,8 +58,8 @@ class FpText():
     effects: Effects = field(default_factory=lambda: Effects())
     """The ``effects`` token defines how the text is displayed"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the text object"""
+    uuid: Optional[str] = None      # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the text object"""
 
     renderCache: Optional[RenderCache] = None
     """If the ``effects`` token prescribe a TrueType font then the optional ``render_cache`` token 
@@ -101,7 +101,7 @@ class FpText():
                     if(item[2] == "knockout"):
                         object.knockout = True
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
         return object
 
@@ -125,8 +125,8 @@ class FpText():
 
         expression =  f'{indents}(fp_text {self.type} "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}{unlocked}) (layer "{dequote(self.layer)}"{ko}){hide}\n'
         expression += f'{indents}  {self.effects.to_sexpr()}'
-        if self.tstamp is not None:
-            expression += f'{indents}  (tstamp {self.tstamp})\n'
+        if self.uuid is not None:
+            expression += f'{indents}  (uuid {self.uuid})\n'
         if self.renderCache is not None:
             expression += self.renderCache.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
@@ -160,8 +160,8 @@ class FpLine():
     locked: bool = False
     """The optional ``locked`` token defines if the line cannot be edited"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the line object"""
+    uuid: Optional[str] = None      # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the line object"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> FpLine:
@@ -192,7 +192,7 @@ class FpLine():
             if item[0] == 'start': object.start = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
@@ -214,7 +214,7 @@ class FpLine():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         if self.width is not None:
             width = f' (width {self.width})'
         elif self.stroke is not None:
@@ -222,7 +222,7 @@ class FpLine():
         else:
             width = ''
 
-        return f'{indents}(fp_line (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{tstamp}){endline}'
+        return f'{indents}(fp_line (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{uuid}){endline}'
 
 @dataclass
 class FpRect():
@@ -254,8 +254,8 @@ class FpRect():
     locked: bool = False
     """The optional ``locked`` token defines if the rectangle cannot be edited"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the rectangle object"""
+    uuid: Optional[str] = None      # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the rectangle object"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> FpRect:
@@ -286,7 +286,7 @@ class FpRect():
             if item[0] == 'start': object.start = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'fill': object.fill = item[1]
             if item[0] == 'width':
                 object.width = item[1]
@@ -310,7 +310,7 @@ class FpRect():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         locked = ' locked' if self.locked else ''
         fill = f' (fill {self.fill})' if self.fill is not None else ''
 
@@ -321,7 +321,7 @@ class FpRect():
         else:
             width = ''
 
-        return f'{indents}(fp_rect (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{fill}{locked}{tstamp}){endline}'
+        return f'{indents}(fp_rect (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{fill}{locked}{uuid}){endline}'
 
 @dataclass
 class FpTextBox():
@@ -363,8 +363,8 @@ class FpTextBox():
     """The ``layer`` token defines the canonical layer the text box resides on. Defaults to
     ``F.Cu``."""
 
-    tstamp: Optional[str] = None
-    """The optional ``tstamp`` token defines the unique identifier of the text box"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` token defines the unique identifier of the text box"""
 
     effects: Optional[Effects] = None
     """The optional ``effects`` token describes the style of the text in the text box"""
@@ -416,7 +416,7 @@ class FpTextBox():
                     object.pts.append(Position().from_sexpr(point))
             if item[0] == 'angle': object.angle = item[1]
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'effects': object.effects = Effects.from_sexpr(item)
             if item[0] == 'stroke': object.stroke = Stroke.from_sexpr(item)
             if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
@@ -449,7 +449,7 @@ class FpTextBox():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         angle = f'(angle {self.angle}) ' if self.angle is not None else ''
         start = f'(start {self.start.X} {self.start.Y}) ' if self.start is not None else ''
         end = f'(end {self.end.X} {self.end.Y}) ' if self.end is not None else ''
@@ -460,7 +460,7 @@ class FpTextBox():
             expression += f'{indents}  (pts\n'
             expression += f'{indents}    (xy {self.pts[0].X} {self.pts[0].Y})      (xy {self.pts[1].X} {self.pts[1].Y})      (xy {self.pts[2].X} {self.pts[2].Y})      (xy {self.pts[3].X} {self.pts[3].Y})\n'
             expression += f'{indents}  )\n'
-        expression += f'{indents}  {start}{end}{angle}(layer "{dequote(self.layer)}"){tstamp}\n'
+        expression += f'{indents}  {start}{end}{angle}(layer "{dequote(self.layer)}"){uuid}\n'
         if self.effects is not None:
             expression += self.effects.to_sexpr(indent+2)
         if self.stroke is not None:
@@ -500,8 +500,8 @@ class FpCircle():
     locked: bool = False
     """The optional ``locked`` token defines if the circle cannot be edited"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the circle object"""
+    uuid: Optional[str] = None      # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the circle object"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> FpCircle:
@@ -532,7 +532,7 @@ class FpCircle():
             if item[0] == 'center': object.center = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'fill': object.fill = item[1]
             if item[0] == 'width':
                 object.width = item[1]
@@ -556,7 +556,7 @@ class FpCircle():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         locked = ' locked' if self.locked else ''
         fill = f' (fill {self.fill})' if self.fill is not None else ''
 
@@ -567,7 +567,7 @@ class FpCircle():
         else:
             width = ''
 
-        return f'{indents}(fp_circle (center {self.center.X} {self.center.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{fill}{locked}{tstamp}){endline}'
+        return f'{indents}(fp_circle (center {self.center.X} {self.center.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{fill}{locked}{uuid}){endline}'
 
 @dataclass
 class FpArc():
@@ -598,8 +598,8 @@ class FpArc():
     locked: bool = False
     """The optional ``locked`` token defines if the arc cannot be edited"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the arc object"""
+    uuid: Optional[str] = None      # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the arc object"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> FpArc:
@@ -631,7 +631,7 @@ class FpArc():
             if item[0] == 'mid': object.mid = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
@@ -654,7 +654,7 @@ class FpArc():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         locked = ' locked' if self.locked else ''
 
         if self.width is not None:
@@ -664,7 +664,7 @@ class FpArc():
         else:
             width = ''
 
-        return f'{indents}(fp_arc (start {self.start.X} {self.start.Y}) (mid {self.mid.X} {self.mid.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{locked}{tstamp}){endline}'
+        return f'{indents}(fp_arc (start {self.start.X} {self.start.Y}) (mid {self.mid.X} {self.mid.Y}) (end {self.end.X} {self.end.Y}) (layer "{dequote(self.layer)}"){width}{locked}{uuid}){endline}'
 
 @dataclass
 class FpPoly():
@@ -693,8 +693,8 @@ class FpPoly():
     locked: bool = False
     """The optional ``locked`` token defines if the polygon cannot be edited"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the polygon object"""
+    uuid: Optional[str] = None      # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the polygon object"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> FpPoly:
@@ -727,7 +727,7 @@ class FpPoly():
                 for point in item[1:]:
                     object.coordinates.append(Position().from_sexpr(point))
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'fill': object.fill = item[1]
             if item[0] == 'width':
                 object.width = item[1]
@@ -754,7 +754,7 @@ class FpPoly():
         if len(self.coordinates) == 0:
             return f'{indents}{endline}'
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         locked = ' locked' if self.locked else ''
         fill = f' (fill {self.fill})' if self.fill is not None else ''
 
@@ -768,7 +768,7 @@ class FpPoly():
         expression = f'{indents}(fp_poly (pts\n'
         for point in self.coordinates:
             expression += f'{indents}    (xy {point.X} {point.Y})\n'
-        expression += f'{indents}  ) (layer "{dequote(self.layer)}"){width}{fill}{locked}{tstamp}){endline}'
+        expression += f'{indents}  ) (layer "{dequote(self.layer)}"){width}{fill}{locked}{uuid}){endline}'
         return expression
 
 @dataclass
@@ -794,8 +794,8 @@ class FpCurve():
     locked: bool = False
     """The optional ``locked`` token defines if the curve cannot be edited"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the curve object"""
+    uuid: Optional[str] = None      # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the curve object"""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> FpCurve:
@@ -827,7 +827,7 @@ class FpCurve():
                 for point in item[1:]:
                     object.coordinates.append(Position().from_sexpr(point))
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
@@ -853,7 +853,7 @@ class FpCurve():
         if len(self.coordinates) == 0:
             return f'{indents}{endline}'
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         locked = ' locked' if self.locked else ''
 
         if self.width is not None:
@@ -866,5 +866,5 @@ class FpCurve():
         expression = f'{indents}(fp_curve (pts\n'
         for point in self.coordinates:
             expression += f'{indents}  (xy {point.X} {point.Y})\n'
-        expression += f'{indents}) (layer "{dequote(self.layer)}"){width}{locked}{tstamp}){endline}'
+        expression += f'{indents}) (layer "{dequote(self.layer)}"){width}{locked}{uuid}){endline}'
         return expression

@@ -43,7 +43,7 @@
 
   (net 0 "")
 
-  (gr_text "test" (at 168.42 92.81) (layer "F.Cu" knockout) (tstamp 37d6611e-bb8c-49f5-bc61-44562605f28f)
+  (gr_text "test" (at 168.42 92.81) (layer "F.Cu" knockout) (uuid 37d6611e-bb8c-49f5-bc61-44562605f28f)
     (effects (font (size 1.5 1.5) (thickness 0.3) bold) (justify left bottom))
   )
 

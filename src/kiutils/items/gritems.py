@@ -34,13 +34,8 @@ class GrText():
     text: str = ""
     """The ``text`` attribute is a string that defines the text"""
 
-    knockout: bool = False
-    """The ``knockout`` token defines if the text is inverted (means transparent text and colored
-    background insted of colored text and transparent background)"""
-
     position: Position = field(default_factory=lambda: Position())
-    """The ``position`` defines the X and Y position coordinates and optional orientation angle of 
-    the text"""
+    """The ``position`` defines the X and Y position coordinates and optional orientation angle of the text"""
 
     layer: Optional[str] = None
     """The ``layer`` token defines the canonical layer the text resides on"""
@@ -48,8 +43,8 @@ class GrText():
     effects: Effects = field(default_factory=lambda: Effects())
     """The ``effects`` token defines how the text is displayed"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the text object"""
+    uuid: Optional[str] = None      # Used since KiCad 6
+    """The ``uuid`` token defines the unique identifier of the text object"""
 
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
@@ -87,13 +82,9 @@ class GrText():
                 if item == 'locked': object.locked = True
                 continue
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'layer': 
-                object.layer = item[1]
-                if(len(item) > 2):
-                    if(item[2] == "knockout"):
-                        object.knockout = True
+            if item[0] == 'layer': object.layer = item[1]
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
         return object
 
@@ -110,13 +101,12 @@ class GrText():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        ko = ' knockout' if self.knockout else ''
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        layer =  f' (layer "{dequote(self.layer)}"{ko})' if self.layer is not None else ''
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         locked = f' locked' if self.locked else ''
 
-        expression =  f'{indents}(gr_text{locked} "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}){layer}{tstamp}\n'
+        expression =  f'{indents}(gr_text{locked} "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}){layer}{uuid}\n'
         expression += f'{indents}  {self.effects.to_sexpr()}'
         if self.renderCache is not None:
             expression += self.renderCache.to_sexpr(indent+2)
@@ -163,8 +153,8 @@ class GrTextBox():
     """The ``layer`` token defines the canonical layer the text box resides on. Defaults to
     ``F.Cu``."""
 
-    tstamp: Optional[str] = None
-    """The optional ``tstamp`` token defines the unique identifier of the text box"""
+    uuid: Optional[str] = None
+    """The optional ``uuid`` token defines the unique identifier of the text box"""
 
     effects: Optional[Effects] = None
     """The optional ``effects`` token describes the style of the text in the text box"""
@@ -218,7 +208,7 @@ class GrTextBox():
                     object.pts.append(Position().from_sexpr(point))
             if item[0] == 'angle': object.angle = item[1]
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'effects': object.effects = Effects.from_sexpr(item)
             if item[0] == 'stroke': object.stroke = Stroke.from_sexpr(item)
             if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
@@ -251,7 +241,7 @@ class GrTextBox():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         angle = f'(angle {self.angle}) ' if self.angle is not None else ''
         start = f'(start {self.start.X} {self.start.Y}) ' if self.start is not None else ''
         end = f'(end {self.end.X} {self.end.Y}) ' if self.end is not None else ''
@@ -262,7 +252,7 @@ class GrTextBox():
             expression += f'{indents}  (pts\n'
             expression += f'{indents}    (xy {self.pts[0].X} {self.pts[0].Y})        (xy {self.pts[1].X} {self.pts[1].Y})        (xy {self.pts[2].X} {self.pts[2].Y})        (xy {self.pts[3].X} {self.pts[3].Y})\n'
             expression += f'{indents}  )\n'
-        expression += f'{indents}  {start}{end}{angle}(layer "{dequote(self.layer)}"){tstamp}\n'
+        expression += f'{indents}  {start}{end}{angle}(layer "{dequote(self.layer)}"){uuid}\n'
         if self.effects is not None:
             expression += self.effects.to_sexpr(indent+2)
         if self.stroke is not None:
@@ -295,8 +285,8 @@ class GrLine():
     width: Optional[float] = 0.12     # Used for KiCad < 7
     """The ``width`` token defines the line width of the rectangle. (prior to version 7)"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the rectangle object"""
+    uuid: Optional[str] = None      # Used since KiCad 6
+    """The ``uuid`` token defines the unique identifier of the rectangle object"""
 
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
@@ -329,7 +319,7 @@ class GrLine():
             if item[0] == 'start': object.start = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'width': object.width = item[1]
         return object
 
@@ -347,11 +337,11 @@ class GrLine():
         endline = '\n' if newline else ''
         locked = f' locked' if self.locked else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
         angle = f' (angle {self.angle}' if self.angle is not None else ''
 
-        return f'{indents}(gr_line{locked} (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}){angle}{layer} (width {self.width}){tstamp}){endline}'
+        return f'{indents}(gr_line{locked} (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}){angle}{layer} (width {self.width}){uuid}){endline}'
 
 @dataclass
 class GrRect():
@@ -376,8 +366,8 @@ class GrRect():
     fill: Optional[str] = None
     """The optional ``fill`` toke defines how the rectangle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the rectangle object"""
+    uuid: Optional[str] = None      # Used since KiCad 6
+    """The ``uuid`` token defines the unique identifier of the rectangle object"""
 
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
@@ -410,7 +400,7 @@ class GrRect():
             if item[0] == 'start': object.start = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'fill': object.fill = item[1]
             if item[0] == 'width': object.width = item[1]
         return object
@@ -429,11 +419,11 @@ class GrRect():
         endline = '\n' if newline else ''
         locked = f' locked' if self.locked else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
         fill = f' (fill {self.fill})' if self.fill is not None else ''
 
-        return f'{indents}(gr_rect{locked} (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}){layer} (width {self.width}){fill}{tstamp}){endline}'
+        return f'{indents}(gr_rect{locked} (start {self.start.X} {self.start.Y}) (end {self.end.X} {self.end.Y}){layer} (width {self.width}){fill}{uuid}){endline}'
 
 @dataclass
 class GrCircle():
@@ -455,11 +445,14 @@ class GrCircle():
     width: Optional[float] = 0.12     # Used for KiCad < 7
     """The ``width`` token defines the line width of the circle. (prior to version 7)"""
 
+    stroke: Optional[Stroke] = None
+    """The optional ``stroke`` token describes the style of the circle's boundary."""
+
     fill: Optional[str] = None
     """The optional ``fill`` toke defines how the circle is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the circle object"""
+    uuid: Optional[str] = None      # Used since KiCad 6
+    """The ``uuid`` token defines the unique identifier of the circle object"""
 
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
@@ -491,8 +484,9 @@ class GrCircle():
                 continue
             if item[0] == 'center': object.center = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
+            if item[0] == 'stroke': object.stroke = Stroke.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'fill': object.fill = item[1]
             if item[0] == 'width': object.width = item[1]
 
@@ -512,11 +506,12 @@ class GrCircle():
         endline = '\n' if newline else ''
         locked = f' locked' if self.locked else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
+        stroke = self.stroke.to_sexpr() if self.stroke is not None else ''
         layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
         fill = f' (fill {self.fill})' if self.fill is not None else ''
 
-        return f'{indents}(gr_circle{locked} (center {self.center.X} {self.center.Y}) (end {self.end.X} {self.end.Y}){layer} (width {self.width}){fill}{tstamp}){endline}'
+        return f'{indents}(gr_circle{locked} (center {self.center.X} {self.center.Y}) (end {self.end.X} {self.end.Y}){layer}{stroke} (width {self.width}){fill}{uuid}){endline}'
 
 @dataclass
 class GrArc():
@@ -541,8 +536,8 @@ class GrArc():
     width: Optional[float] = 0.12     # Used for KiCad < 7
     """The ``width`` token defines the line width of the arc. (prior to version 7)"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the arc object."""
+    uuid: Optional[str] = None      # Used since KiCad 6
+    """The ``uuid`` token defines the unique identifier of the arc object."""
 
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
@@ -576,7 +571,7 @@ class GrArc():
             if item[0] == 'mid': object.mid = Position.from_sexpr(item)
             if item[0] == 'end': object.end = Position.from_sexpr(item)
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'width': object.width = item[1]
 
         return object
@@ -595,10 +590,10 @@ class GrArc():
         endline = '\n' if newline else ''
         locked = f' locked' if self.locked else ''
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
 
-        return f'{indents}(gr_arc{locked} (start {self.start.X} {self.start.Y}) (mid {self.mid.X} {self.mid.Y}) (end {self.end.X} {self.end.Y}){layer} (width {self.width}){tstamp}){endline}'
+        return f'{indents}(gr_arc{locked} (start {self.start.X} {self.start.Y}) (mid {self.mid.X} {self.mid.Y}) (end {self.end.X} {self.end.Y}){layer} (width {self.width}){uuid}){endline}'
 
 @dataclass
 class GrPoly():
@@ -620,11 +615,14 @@ class GrPoly():
     fill: Optional[str] = None
     """The optional ``fill`` toke defines how the polygon is filled. Valid fill types are solid and none. If not defined, the rectangle is not filled"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the polygon object"""
+    uuid: Optional[str] = None      # Used since KiCad 6
+    """The ``uuid`` token defines the unique identifier of the polygon object"""
 
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
+
+    net: Optional[int] = None
+    """The ``net`` token defines the net identifier associated with the polygon."""
 
     @classmethod
     def from_sexpr(cls, exp: list) -> GrPoly:
@@ -656,9 +654,10 @@ class GrPoly():
                 for point in item[1:]:
                     object.coordinates.append(Position().from_sexpr(point))
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'fill': object.fill = item[1]
             if item[0] == 'width': object.width = item[1]
+            if item[0] == 'net': object.net = int(item[1])
 
         return object
 
@@ -681,10 +680,11 @@ class GrPoly():
         if len(self.coordinates) == 0:
             return f'{indents}{endline}'
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
         fill = f' (fill {self.fill})' if self.fill is not None else ''
         locked = f' locked' if self.locked else ''
+        net = f' (net {self.net})' if self.net is not None else ''
 
         if pts_newline:
             expression =  f'{indents}(gr_poly{locked}\n'
@@ -694,7 +694,7 @@ class GrPoly():
 
         for point in self.coordinates:
             expression += f'{indents}    (xy {point.X} {point.Y})\n'
-        expression += f'{indents}  ){layer} (width {self.width}){fill}{tstamp}){endline}'
+        expression += f'{indents}  ){layer} (width {self.width}){fill}{net}{uuid}){endline}'
         return expression
 
 @dataclass
@@ -713,8 +713,8 @@ class GrCurve():
     width: Optional[float] = 0.12     # Used for KiCad < 7
     """The ``width`` token defines the line width of the curve. (prior to version 7)"""
 
-    tstamp: Optional[str] = None      # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the curve object"""
+    uuid: Optional[str] = None      # Used since KiCad 6
+    """The ``uuid`` token defines the unique identifier of the curve object"""
 
     locked: bool = False
     """The ``locked`` token defines if the object may be moved or not"""
@@ -748,7 +748,7 @@ class GrCurve():
                 for point in item[1:]:
                     object.coordinates.append(Position().from_sexpr(point))
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'width': object.width = item[1]
 
         return object
@@ -769,12 +769,12 @@ class GrCurve():
         if len(self.coordinates) == 0:
             return f'{indents}{endline}'
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         layer =  f' (layer "{dequote(self.layer)}")' if self.layer is not None else ''
         locked = f' locked' if self.locked else ''
 
         expression = f'{indents}(gr_curve{locked} (pts\n'
         for point in self.coordinates:
             expression += f'{indents}  (xy {point.X} {point.Y})\n'
-        expression += f'{indents}){layer} (width {self.width}){tstamp}){endline}'
+        expression += f'{indents}){layer} (width {self.width}{uuid}){endline}'
         return expression

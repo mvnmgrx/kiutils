@@ -415,8 +415,8 @@ class Pad():
     """The optional ``net`` token defines the integer number and name string of the net connection
     for the pad."""
 
-    tstamp: Optional[str] = None           # Used since KiCad 6
-    """The optional ``tstamp`` token defines the unique identifier of the pad object"""
+    uuid: Optional[str] = None           # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The optional ``uuid`` token defines the unique identifier of the pad object"""
 
     pinFunction: Optional[str] = None
     """The optional ``pinFunction`` token attribute defines the associated schematic symbol pin name"""
@@ -521,7 +521,7 @@ class Pad():
                 for chamfer in item[1:]:
                     object.chamfer.append(chamfer)
             if item[0] == 'net': object.net = Net().from_sexpr(item)
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'pinfunction': object.pinFunction = item[1]
             if item[0] == 'pintype': object.pinType = item[1]
             if item[0] == 'die_length': object.dieLength = item[1]
@@ -590,7 +590,7 @@ class Pad():
         if net != '' or pf != '' or pt != '':
             schematicSymbolAssociated = True
 
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
 
         if len(self.chamfer) > 0:
             champferFound = True
@@ -657,7 +657,7 @@ class Pad():
                     expression += f'\n{primitive.to_sexpr(newline=False,indent=indent+4)}'
                 expression += f'\n{indents}  )'
 
-        expression += f'{tstamp}){endline}'
+        expression += f'{uuid}){endline}'
         return expression
 
 @dataclass
@@ -729,8 +729,8 @@ class Footprint():
     tedit: str = remove_prefix(hex(calendar.timegm(datetime.datetime.now().utctimetuple())), '0x')
     """The ``tedit`` token defines a the last time the footprint was edited"""
 
-    tstamp: Optional[str] = None
-    """The ``tstamp`` token defines the unique identifier for the footprint. This only applies
+    uuid: Optional[str] = None
+    """The ``uuid`` token defines the unique identifier for the footprint. This only applies
     to footprints defined in the board file format."""
 
     position: Optional[Position] = None
@@ -869,7 +869,7 @@ class Footprint():
             if item[0] == 'generator': object.generator = item[1]
             if item[0] == 'layer': object.layer = item[1]
             if item[0] == 'tedit': object.tedit = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'descr': object.description = item[1]
             if item[0] == 'tags': object.tags = item[1]
             if item[0] == 'path': object.path = item[1]
@@ -1024,14 +1024,14 @@ class Footprint():
         placed = ' placed' if self.placed else ''
         version = f' (version {self.version})' if self.version is not None else ''
         generator = f' (generator {self.generator})' if self.generator is not None else ''
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
 
         expression =  f'{indents}(footprint "{dequote(self.libId)}"{locked}{placed}{version}{generator}'
         if layerInFirstLine:
             expression += f' (layer "{dequote(self.layer)}")\n'
         else:
             expression += f'\n{indents}  (layer "{dequote(self.layer)}")\n'
-        expression += f'{indents}  (tedit {self.tedit}){tstamp}\n'
+        expression += f'{indents}  (tedit {self.tedit}){uuid}\n'
 
         if self.position is not None:
             angle = f' {self.position.angle}' if self.position.angle is not None else ''

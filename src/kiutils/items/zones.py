@@ -503,8 +503,8 @@ class Zone():
     strings. When the zone only resides on one layer, the output of ``self.to_sexpr()`` will
     change into ``(layer "xyz")`` instead of ``(layers ..)`` automatically."""
 
-    tstamp: Optional[str] = None       # Used since KiCad 6
-    """The ``tstamp`` token defines the unique identifier of the zone object"""
+    uuid: Optional[str] = None       # Used since KiCad 6 and renamed to uuid for kicad 8 
+    """The ``uuid`` token defines the unique identifier of the zone object"""
 
     name: Optional[str] = None
     """The optional ``name`` token attribute defines the name of the zone if one has been assigned"""
@@ -581,7 +581,7 @@ class Zone():
             if item[0] == 'layers' or item[0] == 'layer':
                 for layer in item[1:]:
                     object.layers.append(layer)
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'name': object.name = item[1]
             if item[0] == 'hatch':
                 object.hatch = Hatch(style=item[1], pitch=item[2])
@@ -619,7 +619,7 @@ class Zone():
         endline = '\n' if newline else ''
 
         locked = f' locked' if self.locked else ''
-        tstamp = f' (tstamp {self.tstamp})' if self.tstamp is not None else ''
+        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
         name = f' (name "{dequote(self.name)}")' if self.name is not None else ''
         contype = f' {self.connectPads}' if self.connectPads is not None else ''
         fat = f' (filled_areas_thickness {self.filledAreasThickness})' if self.filledAreasThickness is not None else ''
@@ -634,7 +634,7 @@ class Zone():
         else:
             layer_token = f' (layers{layers})'
 
-        expression =  f'{indents}(zone{locked} (net {self.net}) (net_name "{dequote(self.netName)}"){layer_token}{tstamp}{name} (hatch {self.hatch.style} {self.hatch.pitch})\n'
+        expression =  f'{indents}(zone{locked} (net {self.net}) (net_name "{dequote(self.netName)}"){layer_token}{uuid}{name} (hatch {self.hatch.style} {self.hatch.pitch})\n'
         if self.priority is not None:
             expression += f'{indents}  (priority {self.priority})\n'
         expression += f'{indents}  (connect_pads{contype} (clearance {self.clearance}))\n'

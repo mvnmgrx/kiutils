@@ -1,5 +1,9 @@
 # kiutils - CHANGELOG
 
+## v1.4.9 - 10.09.2024
+- Fixed: support for KiCad 8: Updated handling to accommodate renaming of `tstamp` to `uuid`.
+- Added: Net name association for GrPoly in graphic items on the board.
+
 ## v1.4.8 - 03.02.2024
 
 ### Non-breaking changes
@@ -68,7 +72,7 @@ This release adds initial KiCad v7 support.
 - Changed: Default value of `Stroke.type` from "dash" to "default" - (PR #63)
 - Changed: `Stroke.color` is now optional - (PR #63)
 - Changed: `Stroke.type` is now optional - (PR #82)
-- Changed: `Schematic.uuid` is now optional - (PR #63)
+- Changed: `Schematic.tstamp` is now optional - (PR #63)
 - Changed: `Property.id` is now optional - (PR #78)
 - Changed: `SymbolPin.nameEffects` and `SymbolPin.numberEffects` are now optional - (PR #82)
 - Changed: `PlotSettings.svgUseInch` and `PlotSettings.excludeEdgeLayer` are now optional - (PR #85)
@@ -126,7 +130,7 @@ This release adds initial KiCad v7 support.
 - Changed: Replaced relative imports with absolute imports in the module structure - (PR #24)
 - Changed: Migrated test framework to Python's `unittest` - (PR #21)
 - Changed: `unit` token in class `kiutils.items.schitems.SchematicSymbol()` is now optional - (PR #26)
-- Changed: `uuid` token in class `kiutils.schematic.Schematic()` is now optional - (PR #26)
+- Changed: `tstamp` token in class `kiutils.schematic.Schematic()` is now optional - (PR #26)
 - Changed: Order of how newlines are generated in `kiutils.schematic.Schematic().to_sexpr()` - (PR #26)
 - Fixed: `angle` set to 0.0 (was `None`) when creating a new `kiutils.items.common.Property()` object (PR #27, fixes #19)
 - Fixed: Footprint attributes object (`kiutils.footprint.Attributes()`) missing when certain 

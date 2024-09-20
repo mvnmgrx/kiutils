@@ -231,8 +231,8 @@ class Dimension():
     layer: str = "F.Cu"
     """The ``layer`` token defines the canonical layer the polygon resides on"""
 
-    tstamp: Optional[str] = None
-    """The ``tstamp`` token defines the unique identifier for the footprint. This only applies
+    uuid: Optional[str] = None
+    """The ``uuid`` token defines the unique identifier for the footprint. This only applies
     to footprints defined in the board file format."""
 
     pts: List[Position] = field(default_factory=list)
@@ -286,7 +286,7 @@ class Dimension():
                 continue
             if item[0] == 'type': object.type = item[1]
             if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'height': object.height = item[1]
             if item[0] == 'orientation': object.orientation = item[1]
             if item[0] == 'leader_length': object.leaderLength = item[1]
@@ -321,7 +321,7 @@ class Dimension():
         if len(points) == 0:
             raise Exception("Number of points must not be zero")
 
-        expression =   f'{indents}(dimension (type {self.type}) (layer "{self.layer}") (tstamp {self.tstamp})\n'
+        expression =   f'{indents}(dimension (type {self.type}) (layer "{self.layer}") (uuid {self.uuid})\n'
         expression +=  f'{indents}  (pts{points})\n'
         if self.height is not None:
             expression +=  f'{indents}  (height {self.height})\n'

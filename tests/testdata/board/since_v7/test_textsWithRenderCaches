@@ -15,7 +15,7 @@
 
   (net 0 "")
 
-  (gr_text "cached stuff\n\n" (at 137.16 93.98) (layer "F.Cu") (tstamp 25874870-6d4f-4bc3-8a66-95a041f89adb)
+  (gr_text "cached stuff\n\n" (at 137.16 93.98) (layer "F.Cu") (uuid 25874870-6d4f-4bc3-8a66-95a041f89adb)
     (effects (font (face "Bell MT") (size 1.5 1.5) (thickness 0.3) bold) (justify left bottom))
     (render_cache "cached stuff\n\n" 0
       (polygon
@@ -52,7 +52,7 @@
     )
   )
   (gr_text_box "cached stuff"
-    (start 134.62 93.98) (end 149.86 101.6) (layer "F.Cu") (tstamp b8512651-2382-43ae-b65a-eb7f3bf81913)
+    (start 134.62 93.98) (end 149.86 101.6) (layer "F.Cu") (uuid b8512651-2382-43ae-b65a-eb7f3bf81913)
     (effects (font (face "Baskerville Old Face") (size 1.5 1.5) (thickness 0.3) bold) (justify left top))
     (stroke (width 0.2) (type solid))
     (render_cache "cached stuff" 0

@@ -931,7 +931,7 @@ class Footprint():
         with open(filepath, 'r', encoding=encoding) as infile:
             rawFootprint = infile.read()
 
-            fpData = sexpr.parse_sexp(rawFootprint)
+            fpData = sexpr.parse_sexpr(rawFootprint)
             return cls.from_sexpr(fpData)
 
     @classmethod
@@ -1004,7 +1004,14 @@ class Footprint():
             filepath = self.filePath
 
         with open(filepath, 'w', encoding=encoding) as outfile:
-            outfile.write(self.to_sexpr())
+            pre_formatted_sexpr = self.to_sexpr()
+
+            compact_element_settings = []
+            compact_element_settings.append({"prefix":"pts", "elements per line": 4})
+            post_formatted_sexpr = sexpr.prettify_sexpr(pre_formatted_sexpr, compact_element_settings)
+
+            outfile.write(post_formatted_sexpr)
+
 
     def to_sexpr(self, indent=0, newline=True, layerInFirstLine=False) -> str:
         """Generate the S-Expression representing this object

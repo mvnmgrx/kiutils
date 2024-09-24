@@ -259,7 +259,7 @@ class DesignRules():
             # This dirty fix adds opening and closing brackets `(..)` to the read input to enable
             # the S-Expression parser to work for the DRU-format as well.
             data = f'({infile.read()})'
-            item = cls.from_sexpr(sexpr.parse_sexp(data))
+            item = cls.from_sexpr(sexpr.parse_sexpr(data))
             item.filePath = filepath
             return item
 
@@ -290,7 +290,12 @@ class DesignRules():
             filepath = self.filePath
 
         with open(filepath, 'w', encoding=encoding) as outfile:
-            outfile.write(self.to_sexpr())
+            pre_formatted_sexpr = self.to_sexpr()
+
+            compact_element_settings = []
+            post_formatted_sexpr = sexpr.prettify_sexpr(pre_formatted_sexpr, compact_element_settings)
+
+            outfile.write(post_formatted_sexpr)
 
     def to_sexpr(self, indent=0, newline=False):
         """Generate the S-Expression representing this object

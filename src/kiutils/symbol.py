@@ -520,7 +520,7 @@ class SymbolLib():
             raise Exception("Given path is not a file!")
 
         with open(filepath, 'r', encoding=encoding) as infile:
-            item = cls.from_sexpr(sexpr.parse_sexp(infile.read()))
+            item = cls.from_sexpr(sexpr.parse_sexpr(infile.read()))
             item.filePath = filepath
             return item
 
@@ -570,7 +570,14 @@ class SymbolLib():
             filepath = self.filePath
 
         with open(filepath, 'w', encoding=encoding) as outfile:
-            outfile.write(self.to_sexpr())
+            pre_formatted_sexpr = self.to_sexpr()
+
+            compact_element_settings = []
+            compact_element_settings.append({"prefix":"pts", "elements per line": 6})
+            post_formatted_sexpr = sexpr.prettify_sexpr(pre_formatted_sexpr, compact_element_settings)
+
+            outfile.write(post_formatted_sexpr)
+
 
     def to_sexpr(self, indent: int = 0, newline: bool = True) -> str:
         """Generate the S-Expression representing this object

@@ -93,16 +93,15 @@ class FpText():
         for item in exp[3:]:
             if type(item) != type([]):
                 if item == 'hide': object.hide = True
-                continue
-            if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'layer': 
+            elif item[0] == 'at': object.position = Position().from_sexpr(item)
+            elif item[0] == 'layer':
                 object.layer = item[1]
                 if(len(item) > 2):
                     if(item[2] == "knockout"):
                         object.knockout = True
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
@@ -187,16 +186,14 @@ class FpLine():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                else: continue
-
-            if item[0] == 'start': object.start = Position.from_sexpr(item)
-            if item[0] == 'end': object.end = Position.from_sexpr(item)
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'width':
+            elif item[0] == 'start': object.start = Position.from_sexpr(item)
+            elif item[0] == 'end': object.end = Position.from_sexpr(item)
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
-            if item[0] == 'stroke':
+            elif item[0] == 'stroke':
                 object.stroke = Stroke.from_sexpr(item)
                 object.width = None
 
@@ -281,17 +278,15 @@ class FpRect():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                else: continue
-
-            if item[0] == 'start': object.start = Position.from_sexpr(item)
-            if item[0] == 'end': object.end = Position.from_sexpr(item)
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'fill': object.fill = item[1]
-            if item[0] == 'width':
+            elif item[0] == 'start': object.start = Position.from_sexpr(item)
+            elif item[0] == 'end': object.end = Position.from_sexpr(item)
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'fill': object.fill = item[1]
+            elif item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
-            if item[0] == 'stroke':
+            elif item[0] == 'stroke':
                 object.stroke = Stroke.from_sexpr(item)
                 object.width = None
 
@@ -410,16 +405,16 @@ class FpTextBox():
 
         for item in exp[start_at:]:
             if item[0] == 'start': object.start = Position.from_sexpr(item)
-            if item[0] == 'end': object.end = Position.from_sexpr(item)
-            if item[0] == 'pts':
+            elif item[0] == 'end': object.end = Position.from_sexpr(item)
+            elif item[0] == 'pts':
                 for point in item[1:]:
                     object.pts.append(Position().from_sexpr(point))
-            if item[0] == 'angle': object.angle = item[1]
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'effects': object.effects = Effects.from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke.from_sexpr(item)
-            if item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
+            elif item[0] == 'angle': object.angle = item[1]
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'effects': object.effects = Effects.from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke.from_sexpr(item)
+            elif item[0] == 'render_cache': object.renderCache = RenderCache.from_sexpr(item)
 
         return object
 
@@ -527,17 +522,15 @@ class FpCircle():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                else: continue
-
-            if item[0] == 'center': object.center = Position.from_sexpr(item)
-            if item[0] == 'end': object.end = Position.from_sexpr(item)
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'fill': object.fill = item[1]
-            if item[0] == 'width':
+            elif item[0] == 'center': object.center = Position.from_sexpr(item)
+            elif item[0] == 'end': object.end = Position.from_sexpr(item)
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'fill': object.fill = item[1]
+            elif item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
-            if item[0] == 'stroke':
+            elif item[0] == 'stroke':
                 object.stroke = Stroke.from_sexpr(item)
                 object.width = None
 
@@ -625,17 +618,15 @@ class FpArc():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                else: continue
-
-            if item[0] == 'start': object.start = Position.from_sexpr(item)
-            if item[0] == 'mid': object.mid = Position.from_sexpr(item)
-            if item[0] == 'end': object.end = Position.from_sexpr(item)
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'width':
+            elif item[0] == 'start': object.start = Position.from_sexpr(item)
+            elif item[0] == 'mid': object.mid = Position.from_sexpr(item)
+            elif item[0] == 'end': object.end = Position.from_sexpr(item)
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
-            if item[0] == 'stroke':
+            elif item[0] == 'stroke':
                 object.stroke = Stroke.from_sexpr(item)
                 object.width = None
 
@@ -721,18 +712,16 @@ class FpPoly():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                else: continue
-
-            if item[0] == 'pts':
+            elif item[0] == 'pts':
                 for point in item[1:]:
                     object.coordinates.append(Position().from_sexpr(point))
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'fill': object.fill = item[1]
-            if item[0] == 'width':
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'fill': object.fill = item[1]
+            elif item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
-            if item[0] == 'stroke':
+            elif item[0] == 'stroke':
                 object.stroke = Stroke.from_sexpr(item)
                 object.width = None
 
@@ -821,17 +810,15 @@ class FpCurve():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                else: continue
-
-            if item[0] == 'pts':
+            elif item[0] == 'pts':
                 for point in item[1:]:
                     object.coordinates.append(Position().from_sexpr(point))
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'width':
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'width':
                 object.width = item[1]
                 object.stroke = None
-            if item[0] == 'stroke':
+            elif item[0] == 'stroke':
                 object.stroke = Stroke.from_sexpr(item)
                 object.width = None
 

@@ -116,33 +116,33 @@ class Board():
         object = cls()
         for item in exp:
             if item[0] == 'version': object.version = item[1]
-            if item[0] == 'generator': object.generator = item[1]
-            if item[0] == 'general': object.general = GeneralSettings().from_sexpr(item)
-            if item[0] == 'paper': object.paper = PageSettings().from_sexpr(item)
-            if item[0] == 'title_block': object.titleBlock = TitleBlock().from_sexpr(item)
-            if item[0] == 'layers':
+            elif item[0] == 'generator': object.generator = item[1]
+            elif item[0] == 'general': object.general = GeneralSettings().from_sexpr(item)
+            elif item[0] == 'paper': object.paper = PageSettings().from_sexpr(item)
+            elif item[0] == 'title_block': object.titleBlock = TitleBlock().from_sexpr(item)
+            elif item[0] == 'layers':
                 for layer in item[1:]:
                     object.layers.append(LayerToken().from_sexpr(layer))
-            if item[0] == 'setup': object.setup = SetupData().from_sexpr(item)
-            if item[0] == 'property': object.properties.update({item[1]: item[2]})
-            if item[0] == 'net': object.nets.append(Net().from_sexpr(item))
-            if item[0] == 'footprint': object.footprints.append(Footprint().from_sexpr(item))
-            if item[0] == 'gr_text': object.graphicItems.append(GrText().from_sexpr(item))
-            if item[0] == 'gr_text_box': object.graphicItems.append(GrTextBox().from_sexpr(item))
-            if item[0] == 'gr_line': object.graphicItems.append(GrLine().from_sexpr(item))
-            if item[0] == 'gr_rect': object.graphicItems.append(GrRect().from_sexpr(item))
-            if item[0] == 'gr_circle': object.graphicItems.append(GrCircle().from_sexpr(item))
-            if item[0] == 'gr_arc': object.graphicItems.append(GrArc().from_sexpr(item))
-            if item[0] == 'gr_poly': object.graphicItems.append(GrPoly().from_sexpr(item))
-            if item[0] == 'gr_curve': object.graphicItems.append(GrCurve().from_sexpr(item))
-            if item[0] == 'image': object.graphicItems.append(Image().from_sexpr(item))
-            if item[0] == 'dimension': object.dimensions.append(Dimension().from_sexpr(item))
-            if item[0] == 'target': object.targets.append(Target().from_sexpr(item))
-            if item[0] == 'segment': object.traceItems.append(Segment().from_sexpr(item))
-            if item[0] == 'arc': object.traceItems.append(Arc().from_sexpr(item))
-            if item[0] == 'via': object.traceItems.append(Via().from_sexpr(item))
-            if item[0] == 'zone': object.zones.append(Zone().from_sexpr(item))
-            if item[0] == 'group': object.groups.append(Group().from_sexpr(item))
+            elif item[0] == 'setup': object.setup = SetupData().from_sexpr(item)
+            elif item[0] == 'property': object.properties.update({item[1]: item[2]})
+            elif item[0] == 'net': object.nets.append(Net().from_sexpr(item))
+            elif item[0] == 'footprint': object.footprints.append(Footprint().from_sexpr(item))
+            elif item[0] == 'gr_text': object.graphicItems.append(GrText().from_sexpr(item))
+            elif item[0] == 'gr_text_box': object.graphicItems.append(GrTextBox().from_sexpr(item))
+            elif item[0] == 'gr_line': object.graphicItems.append(GrLine().from_sexpr(item))
+            elif item[0] == 'gr_rect': object.graphicItems.append(GrRect().from_sexpr(item))
+            elif item[0] == 'gr_circle': object.graphicItems.append(GrCircle().from_sexpr(item))
+            elif item[0] == 'gr_arc': object.graphicItems.append(GrArc().from_sexpr(item))
+            elif item[0] == 'gr_poly': object.graphicItems.append(GrPoly().from_sexpr(item))
+            elif item[0] == 'gr_curve': object.graphicItems.append(GrCurve().from_sexpr(item))
+            elif item[0] == 'image': object.graphicItems.append(Image().from_sexpr(item))
+            elif item[0] == 'dimension': object.dimensions.append(Dimension().from_sexpr(item))
+            elif item[0] == 'target': object.targets.append(Target().from_sexpr(item))
+            elif item[0] == 'segment': object.traceItems.append(Segment().from_sexpr(item))
+            elif item[0] == 'arc': object.traceItems.append(Arc().from_sexpr(item))
+            elif item[0] == 'via': object.traceItems.append(Via().from_sexpr(item))
+            elif item[0] == 'zone': object.zones.append(Zone().from_sexpr(item))
+            elif item[0] == 'group': object.groups.append(Group().from_sexpr(item))
 
         return object
 

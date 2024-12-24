@@ -77,12 +77,11 @@ class SyArc():
         for item in exp:
             if isinstance(item, str):
                 if item == 'private': object.private = True
-                continue
-            if item[0] == 'start': object.start = Position().from_sexpr(item)
-            if item[0] == 'mid': object.mid = Position().from_sexpr(item)
-            if item[0] == 'end': object.end = Position().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'start': object.start = Position().from_sexpr(item)
+            elif item[0] == 'mid': object.mid = Position().from_sexpr(item)
+            elif item[0] == 'end': object.end = Position().from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
@@ -160,11 +159,10 @@ class SyCircle():
         for item in exp:
             if isinstance(item, str):
                 if item == 'private': object.private = True
-                continue
-            if item[0] == 'center': object.center = Position().from_sexpr(item)
-            if item[0] == 'radius': object.radius = item[1]
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'center': object.center = Position().from_sexpr(item)
+            elif item[0] == 'radius': object.radius = item[1]
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
@@ -227,8 +225,8 @@ class SyCurve():
         object = cls()
         for item in exp:
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
-            if item[0] == 'pts':
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'pts':
                 for point in item[1:]:
                     object.points.append(Position().from_sexpr(point))
         return object
@@ -296,8 +294,8 @@ class SyPolyLine():
         object = cls()
         for item in exp:
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
-            if item[0] == 'pts':
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'pts':
                 for point in item[1:]:
                     object.points.append(Position().from_sexpr(point))
         return object
@@ -376,11 +374,10 @@ class SyRect():
         for item in exp:
             if isinstance(item, str):
                 if item == 'private': object.private = True
-                continue
-            if item[0] == 'start': object.start = Position().from_sexpr(item)
-            if item[0] == 'end': object.end = Position().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'start': object.start = Position().from_sexpr(item)
+            elif item[0] == 'end': object.end = Position().from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
@@ -444,7 +441,7 @@ class SyText():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 6, newline: bool = True) -> str:
@@ -538,11 +535,11 @@ class SyTextBox():
 
         for item in exp[start_at:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'size': object.size = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'size': object.size = Position().from_sexpr(item)
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:

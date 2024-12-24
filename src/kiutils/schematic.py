@@ -137,36 +137,36 @@ class Schematic():
         object = cls()
         for item in exp:
             if item[0] == 'version': object.version = item[1]
-            if item[0] == 'generator': object.generator = item[1]
-            if item[0] == 'uuid': object.uuid = item[1]
-            if item[0] == 'paper': object.paper = PageSettings().from_sexpr(item)
-            if item[0] == 'title_block': object.titleBlock = TitleBlock().from_sexpr(item)
-            if item[0] == 'lib_symbols':
+            elif item[0] == 'generator': object.generator = item[1]
+            elif item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'paper': object.paper = PageSettings().from_sexpr(item)
+            elif item[0] == 'title_block': object.titleBlock = TitleBlock().from_sexpr(item)
+            elif item[0] == 'lib_symbols':
                 for symbol in item[1:]:
                     object.libSymbols.append(Symbol().from_sexpr(symbol))
-            if item[0] == 'junction': object.junctions.append(Junction().from_sexpr(item))
-            if item[0] == 'no_connect': object.noConnects.append(NoConnect().from_sexpr(item))
-            if item[0] == 'bus_entry': object.busEntries.append(BusEntry().from_sexpr(item))
-            if item[0] == 'bus_alias': object.busAliases.append(BusAlias().from_sexpr(item))
-            if item[0] == 'wire': object.graphicalItems.append(Connection().from_sexpr(item))
-            if item[0] == 'bus': object.graphicalItems.append(Connection().from_sexpr(item))
-            if item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item))
-            if item[0] == 'arc': object.shapes.append(Arc.from_sexpr(item))
-            if item[0] == 'circle': object.shapes.append(Circle.from_sexpr(item))
-            if item[0] == 'rectangle': object.shapes.append(Rectangle.from_sexpr(item))
-            if item[0] == 'image': object.images.append(Image().from_sexpr(item))
-            if item[0] == 'text': object.texts.append(Text().from_sexpr(item))
-            if item[0] == 'text_box': object.textBoxes.append(TextBox().from_sexpr(item))
-            if item[0] == 'label': object.labels.append(LocalLabel().from_sexpr(item))
-            if item[0] == 'global_label': object.globalLabels.append(GlobalLabel().from_sexpr(item))
-            if item[0] == 'hierarchical_label': object.hierarchicalLabels.append(HierarchicalLabel().from_sexpr(item))
-            if item[0] == 'netclass_flag': object.netclassFlags.append(NetclassFlag.from_sexpr(item))
-            if item[0] == 'symbol': object.schematicSymbols.append(SchematicSymbol().from_sexpr(item))
-            if item[0] == 'sheet': object.sheets.append(HierarchicalSheet().from_sexpr(item))
-            if item[0] == 'sheet_instances':
+            elif item[0] == 'junction': object.junctions.append(Junction().from_sexpr(item))
+            elif item[0] == 'no_connect': object.noConnects.append(NoConnect().from_sexpr(item))
+            elif item[0] == 'bus_entry': object.busEntries.append(BusEntry().from_sexpr(item))
+            elif item[0] == 'bus_alias': object.busAliases.append(BusAlias().from_sexpr(item))
+            elif item[0] == 'wire': object.graphicalItems.append(Connection().from_sexpr(item))
+            elif item[0] == 'bus': object.graphicalItems.append(Connection().from_sexpr(item))
+            elif item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item))
+            elif item[0] == 'arc': object.shapes.append(Arc.from_sexpr(item))
+            elif item[0] == 'circle': object.shapes.append(Circle.from_sexpr(item))
+            elif item[0] == 'rectangle': object.shapes.append(Rectangle.from_sexpr(item))
+            elif item[0] == 'image': object.images.append(Image().from_sexpr(item))
+            elif item[0] == 'text': object.texts.append(Text().from_sexpr(item))
+            elif item[0] == 'text_box': object.textBoxes.append(TextBox().from_sexpr(item))
+            elif item[0] == 'label': object.labels.append(LocalLabel().from_sexpr(item))
+            elif item[0] == 'global_label': object.globalLabels.append(GlobalLabel().from_sexpr(item))
+            elif item[0] == 'hierarchical_label': object.hierarchicalLabels.append(HierarchicalLabel().from_sexpr(item))
+            elif item[0] == 'netclass_flag': object.netclassFlags.append(NetclassFlag.from_sexpr(item))
+            elif item[0] == 'symbol': object.schematicSymbols.append(SchematicSymbol().from_sexpr(item))
+            elif item[0] == 'sheet': object.sheets.append(HierarchicalSheet().from_sexpr(item))
+            elif item[0] == 'sheet_instances':
                 for instance in item[1:]:
                     object.sheetInstances.append(HierarchicalSheetInstance().from_sexpr(instance))
-            if item[0] == 'symbol_instances':
+            elif item[0] == 'symbol_instances':
                 for instance in item[1:]:
                     object.symbolInstances.append(SymbolInstance().from_sexpr(instance))
         return object

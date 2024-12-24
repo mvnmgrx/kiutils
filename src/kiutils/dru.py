@@ -93,9 +93,9 @@ class Constraint():
         for item in exp[2:]:
             if type(item) != type([]):
                 object.elements.append(item)
-            if item[0] == 'min': object.min = item[1]
-            if item[0] == 'opt': object.opt = item[1]
-            if item[0] == 'max': object.max = item[1]
+            elif item[0] == 'min': object.min = item[1]
+            elif item[0] == 'opt': object.opt = item[1]
+            elif item[0] == 'max': object.max = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True):
@@ -167,9 +167,9 @@ class Rule():
         object.name = exp[1]
         for item in exp[2:]:
             if item[0] == 'constraint': object.constraints.append(Constraint().from_sexpr(item))
-            if item[0] == 'condition': object.condition = item[1]
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'severity': object.severity = item[1]
+            elif item[0] == 'condition': object.condition = item[1]
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'severity': object.severity = item[1]
         return object
 
     def to_sexpr(self, indent: int = 0):
@@ -234,7 +234,7 @@ class DesignRules():
         object = cls()
         for item in exp:
             if item[0] == 'version': object.version = item[1]
-            if item[0] == 'rule': object.rules.append(Rule().from_sexpr(item))
+            elif item[0] == 'rule': object.rules.append(Rule().from_sexpr(item))
         return object
 
     @classmethod

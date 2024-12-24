@@ -113,10 +113,9 @@ class WksFont():
         for item in exp:
             if type(item) != type([]):
                 if item == 'bold': object.bold = True
-                if item == 'italic': object.italic = True
-                continue
-            if item[0] == 'linewidth': object.linewidth = item[1]
-            if item[0] == 'size': object.size = WksFontSize().from_sexpr(item)
+                elif item == 'italic': object.italic = True
+            elif item[0] == 'linewidth': object.linewidth = item[1]
+            elif item[0] == 'size': object.size = WksFontSize().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent=0, newline=False):
@@ -250,14 +249,14 @@ class Line():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'name': object.name = item[1]
-            if item[0] == 'start': object.start = WksPosition().from_sexpr(item)
-            if item[0] == 'end': object.end = WksPosition().from_sexpr(item)
-            if item[0] == 'option': object.option = item[1]
-            if item[0] == 'linewidth': object.lineWidth = item[1]
-            if item[0] == 'repeat': object.repeat = item[1]
-            if item[0] == 'incrx': object.incrx = item[1]
-            if item[0] == 'incry': object.incry = item[1]
-            if item[0] == 'comment': object.comment = item[1]
+            elif item[0] == 'start': object.start = WksPosition().from_sexpr(item)
+            elif item[0] == 'end': object.end = WksPosition().from_sexpr(item)
+            elif item[0] == 'option': object.option = item[1]
+            elif item[0] == 'linewidth': object.lineWidth = item[1]
+            elif item[0] == 'repeat': object.repeat = item[1]
+            elif item[0] == 'incrx': object.incrx = item[1]
+            elif item[0] == 'incry': object.incry = item[1]
+            elif item[0] == 'comment': object.comment = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True):
@@ -349,14 +348,14 @@ class Rect():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'name': object.name = item[1]
-            if item[0] == 'start': object.start = WksPosition().from_sexpr(item)
-            if item[0] == 'end': object.end = WksPosition().from_sexpr(item)
-            if item[0] == 'option': object.option = item[1]
-            if item[0] == 'linewidth': object.lineWidth = item[1]
-            if item[0] == 'repeat': object.repeat = item[1]
-            if item[0] == 'incrx': object.incrx = item[1]
-            if item[0] == 'incry': object.incry = item[1]
-            if item[0] == 'comment': object.comment = item[1]
+            elif item[0] == 'start': object.start = WksPosition().from_sexpr(item)
+            elif item[0] == 'end': object.end = WksPosition().from_sexpr(item)
+            elif item[0] == 'option': object.option = item[1]
+            elif item[0] == 'linewidth': object.lineWidth = item[1]
+            elif item[0] == 'repeat': object.repeat = item[1]
+            elif item[0] == 'incrx': object.incrx = item[1]
+            elif item[0] == 'incry': object.incry = item[1]
+            elif item[0] == 'comment': object.comment = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True):
@@ -527,14 +526,14 @@ class Bitmap():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'name': object.name = item[1]
-            if item[0] == 'pos': object.position = WksPosition().from_sexpr(item)
-            if item[0] == 'option': object.option = item[1]
-            if item[0] == 'scale': object.scale = item[1]
-            if item[0] == 'repeat': object.repeat = item[1]
-            if item[0] == 'incrx': object.incrx = item[1]
-            if item[0] == 'incry': object.incry = item[1]
-            if item[0] == 'comment': object.comment = item[1]
-            if item[0] == 'pngdata':
+            elif item[0] == 'pos': object.position = WksPosition().from_sexpr(item)
+            elif item[0] == 'option': object.option = item[1]
+            elif item[0] == 'scale': object.scale = item[1]
+            elif item[0] == 'repeat': object.repeat = item[1]
+            elif item[0] == 'incrx': object.incrx = item[1]
+            elif item[0] == 'incry': object.incry = item[1]
+            elif item[0] == 'comment': object.comment = item[1]
+            elif item[0] == 'pngdata':
                 if len(item) < 2: continue
                 for data in item[1:]:
                     if data[0] != 'data': continue
@@ -652,18 +651,18 @@ class TbText():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'name': object.name = item[1]
-            if item[0] == 'pos': object.position = WksPosition().from_sexpr(item)
-            if item[0] == 'option': object.option = item[1]
-            if item[0] == 'rotate': object.rotate = item[1]
-            if item[0] == 'font': object.font = WksFont().from_sexpr(item)
-            if item[0] == 'justify': object.justify = Justify().from_sexpr(item)
-            if item[0] == 'maxlen': object.maxlen = item[1]
-            if item[0] == 'maxheight': object.maxheight = item[1]
-            if item[0] == 'repeat': object.repeat = item[1]
-            if item[0] == 'incrx': object.incrx = item[1]
-            if item[0] == 'incry': object.incry = item[1]
-            if item[0] == 'incrlabel': object.incrlabel = item[1]
-            if item[0] == 'comment': object.comment = item[1]
+            elif item[0] == 'pos': object.position = WksPosition().from_sexpr(item)
+            elif item[0] == 'option': object.option = item[1]
+            elif item[0] == 'rotate': object.rotate = item[1]
+            elif item[0] == 'font': object.font = WksFont().from_sexpr(item)
+            elif item[0] == 'justify': object.justify = Justify().from_sexpr(item)
+            elif item[0] == 'maxlen': object.maxlen = item[1]
+            elif item[0] == 'maxheight': object.maxheight = item[1]
+            elif item[0] == 'repeat': object.repeat = item[1]
+            elif item[0] == 'incrx': object.incrx = item[1]
+            elif item[0] == 'incry': object.incry = item[1]
+            elif item[0] == 'incrlabel': object.incrlabel = item[1]
+            elif item[0] == 'comment': object.comment = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True):
@@ -801,12 +800,12 @@ class Setup():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'textsize': object.textSize = TextSize().from_sexpr(item)
-            if item[0] == 'linewidth': object.lineWidth = item[1]
-            if item[0] == 'textlinewidth': object.textLineWidth = item[1]
-            if item[0] == 'left_margin': object.leftMargin = item[1]
-            if item[0] == 'right_margin': object.rightMargin = item[1]
-            if item[0] == 'top_margin': object.topMargin = item[1]
-            if item[0] == 'bottom_margin': object.bottomMargin = item[1]
+            elif item[0] == 'linewidth': object.lineWidth = item[1]
+            elif item[0] == 'textlinewidth': object.textLineWidth = item[1]
+            elif item[0] == 'left_margin': object.leftMargin = item[1]
+            elif item[0] == 'right_margin': object.rightMargin = item[1]
+            elif item[0] == 'top_margin': object.topMargin = item[1]
+            elif item[0] == 'bottom_margin': object.bottomMargin = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True):
@@ -877,13 +876,13 @@ class WorkSheet():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'version': object.version = item[1]
-            if item[0] == 'generator': object.generator = item[1]
-            if item[0] == 'setup': object.setup = Setup().from_sexpr(item)
-            if item[0] == 'rect': object.drawingObjects.append(Rect().from_sexpr(item))
-            if item[0] == 'line': object.drawingObjects.append(Line().from_sexpr(item))
-            if item[0] == 'polygon': object.drawingObjects.append(Polygon().from_sexpr(item))
-            if item[0] == 'tbtext': object.drawingObjects.append(TbText().from_sexpr(item))
-            if item[0] == 'bitmap': object.drawingObjects.append(Bitmap().from_sexpr(item))
+            elif item[0] == 'generator': object.generator = item[1]
+            elif item[0] == 'setup': object.setup = Setup().from_sexpr(item)
+            elif item[0] == 'rect': object.drawingObjects.append(Rect().from_sexpr(item))
+            elif item[0] == 'line': object.drawingObjects.append(Line().from_sexpr(item))
+            elif item[0] == 'polygon': object.drawingObjects.append(Polygon().from_sexpr(item))
+            elif item[0] == 'tbtext': object.drawingObjects.append(TbText().from_sexpr(item))
+            elif item[0] == 'bitmap': object.drawingObjects.append(Bitmap().from_sexpr(item))
         return object
 
     @classmethod

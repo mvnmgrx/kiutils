@@ -67,9 +67,9 @@ class Junction():
         object = cls()
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'color': object.color = ColorRGBA().from_sexpr(item)
-            if item[0] == 'diameter': object.color = item[1]
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'color': object.color = ColorRGBA().from_sexpr(item)
+            elif item[0] == 'diameter': object.color = item[1]
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -125,7 +125,7 @@ class NoConnect():
         object = cls()
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -188,9 +188,9 @@ class BusEntry():
         object = cls()
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'size': object.size = Position().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'size': object.size = Position().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -325,8 +325,8 @@ class Connection():
             if item[0] == 'pts':
                 for point in item[1:]:
                     object.points.append(Position().from_sexpr(point))
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -396,8 +396,8 @@ class PolyLine():
             if item[0] == 'pts':
                 for point in item[1:]:
                     object.points.append(Position().from_sexpr(point))
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -468,8 +468,8 @@ class Text():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -555,11 +555,11 @@ class TextBox():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'size': object.size = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'size': object.size = Position().from_sexpr(item)
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -635,9 +635,9 @@ class LocalLabel():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
-            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -719,11 +719,11 @@ class GlobalLabel():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
-            if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
-            if item[0] == 'shape': object.shape = item[1]
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'at': object.position = Position().from_sexpr(item)
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'property': object.properties.append(Property().from_sexpr(item))
+            elif item[0] == 'shape': object.shape = item[1]
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -804,10 +804,10 @@ class HierarchicalLabel():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'shape': object.shape = item[1]
-            if item[0] == 'uuid': object.uuid = item[1]
-            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'shape': object.shape = item[1]
+            elif item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -879,7 +879,7 @@ class SymbolProjectPath():
         object.sheetInstancePath = exp[1]
         for item in exp[2:]:
             if item[0] == 'reference': object.reference = item[1]
-            if item[0] == 'unit': object.unit = item[1]
+            elif item[0] == 'unit': object.unit = item[1]
         return object
 
     def to_sexpr(self, indent=4, newline=True) -> str:
@@ -1082,18 +1082,18 @@ class SchematicSymbol():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
-            if item[0] == 'lib_id': object.libId = item[1]
-            if item[0] == 'lib_name': object.libName = item[1]
-            if item[0] == 'uuid': object.uuid = item[1]
-            if item[0] == 'unit': object.unit = item[1]
-            if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
-            if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
-            if item[0] == 'dnp': object.dnp = True if item[1] == 'yes' else False
-            if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
-            if item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
-            if item[0] == 'mirror': object.mirror = item[1]
-            if item[0] == 'instances':
+            elif item[0] == 'lib_id': object.libId = item[1]
+            elif item[0] == 'lib_name': object.libName = item[1]
+            elif item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'unit': object.unit = item[1]
+            elif item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
+            elif item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
+            elif item[0] == 'dnp': object.dnp = True if item[1] == 'yes' else False
+            elif item[0] == 'at': object.position = Position().from_sexpr(item)
+            elif item[0] == 'property': object.properties.append(Property().from_sexpr(item))
+            elif item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
+            elif item[0] == 'mirror': object.mirror = item[1]
+            elif item[0] == 'instances':
                 for instance in item[1:]:
                     object.instances.append(SymbolProjectInstance.from_sexpr(instance))
         
@@ -1191,8 +1191,8 @@ class HierarchicalPin():
         object.connectionType = exp[2]
         for item in exp[3:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent=4, newline=True) -> str:
@@ -1410,22 +1410,22 @@ class HierarchicalSheet():
         object = cls()
         for item in exp[1:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
-            if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'size':
+            elif item[0] == 'at': object.position = Position().from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'size':
                 object.width = item[1]
                 object.height = item[2]
-            if item[0] == 'fill':
+            elif item[0] == 'fill':
                 object.fill = ColorRGBA().from_sexpr(item[1])
                 object.fill.precision = 4
-            if item[0] == 'uuid': object.uuid = item[1]
-            if item[0] == 'property':
+            elif item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'property':
                 p = Property().from_sexpr(item)
                 if item[1] == 'Sheet name' or item[1] == 'Sheetname': object.sheetName = p
                 elif item[1] == 'Sheet file' or item[1] == 'Sheetfile': object.fileName = p
                 else: object.properties.append(p)
-            if item[0] == 'pin': object.pins.append(HierarchicalPin().from_sexpr(item))
-            if item[0] == 'instances':
+            elif item[0] == 'pin': object.pins.append(HierarchicalPin().from_sexpr(item))
+            elif item[0] == 'instances':
                 for instance in item[1:]:
                     object.instances.append(HierarchicalSheetProjectInstance.from_sexpr(instance))
         return object
@@ -1570,9 +1570,9 @@ class SymbolInstance():
         object.path = exp[1]
         for item in exp[2:]:
             if item[0] == 'reference': object.reference = item[1]
-            if item[0] == 'unit': object.unit = item[1]
-            if item[0] == 'value': object.value = item[1]
-            if item[0] == 'footprint': object.footprint = item[1]
+            elif item[0] == 'unit': object.unit = item[1]
+            elif item[0] == 'value': object.value = item[1]
+            elif item[0] == 'footprint': object.footprint = item[1]
         return object
 
     def to_sexpr(self, indent=4, newline=True) -> str:
@@ -1642,10 +1642,10 @@ class Rectangle():
 
         for item in exp:
             if item[0] == 'start': object.start = Position().from_sexpr(item)
-            if item[0] == 'end': object.end = Position().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'end': object.end = Position().from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
@@ -1721,11 +1721,11 @@ class Arc():
 
         for item in exp:
             if item[0] == 'start': object.start = Position().from_sexpr(item)
-            if item[0] == 'mid': object.mid = Position().from_sexpr(item)
-            if item[0] == 'end': object.end = Position().from_sexpr(item)
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'mid': object.mid = Position().from_sexpr(item)
+            elif item[0] == 'end': object.end = Position().from_sexpr(item)
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
@@ -1798,10 +1798,10 @@ class Circle():
 
         for item in exp:
             if item[0] == 'center': object.center = Position().from_sexpr(item)
-            if item[0] == 'radius': object.radius = item[1]
-            if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
-            if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'radius': object.radius = item[1]
+            elif item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
+            elif item[0] == 'fill': object.fill = Fill().from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
@@ -1885,12 +1885,12 @@ class NetclassFlag():
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'length': object.length = item[1]
-            if item[0] == 'shape': object.shape = item[1]
-            if item[0] == 'at': object.position = Position.from_sexpr(item)
-            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
-            if item[0] == 'effects': object.effects = Effects.from_sexpr(item)
-            if item[0] == 'uuid': object.uuid = item[1]
-            if item[0] == 'property': object.properties.append(Property.from_sexpr(item))
+            elif item[0] == 'shape': object.shape = item[1]
+            elif item[0] == 'at': object.position = Position.from_sexpr(item)
+            elif item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
+            elif item[0] == 'effects': object.effects = Effects.from_sexpr(item)
+            elif item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'property': object.properties.append(Property.from_sexpr(item))
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:

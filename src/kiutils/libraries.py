@@ -65,11 +65,11 @@ class Library():
         object = cls()
         for item in exp:
             if item[0] == 'name': object.name = item[1]
-            if item[0] == 'type': object.type = item[1]
-            if item[0] == 'uri': object.uri = item[1]
-            if item[0] == 'options': object.options = item[1]
-            if item[0] == 'descr': object.description = item[1]
-            if item[0] == 'disabled': object.active = False
+            elif item[0] == 'type': object.type = item[1]
+            elif item[0] == 'uri': object.uri = item[1]
+            elif item[0] == 'options': object.options = item[1]
+            elif item[0] == 'descr': object.description = item[1]
+            elif item[0] == 'disabled': object.active = False
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:

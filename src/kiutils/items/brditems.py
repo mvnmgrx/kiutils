@@ -270,18 +270,18 @@ class StackupLayer():
             # Parse the tokens of StackupSubLayer for the current sublayer
             if parsingSublayer:
                 if item[0] == 'thickness': tempSublayer.thickness = item[1]
-                if item[0] == 'material': tempSublayer.material = item[1]
-                if item[0] == 'epsilon_r': tempSublayer.epsilonR = item[1]
-                if item[0] == 'loss_tangent': tempSublayer.lossTangent = item[1]
+                elif item[0] == 'material': tempSublayer.material = item[1]
+                elif item[0] == 'epsilon_r': tempSublayer.epsilonR = item[1]
+                elif item[0] == 'loss_tangent': tempSublayer.lossTangent = item[1]
                 continue
 
             # Parse the normal tokens of StackupLayer token
             if item[0] == 'type': object.type = item[1]
-            if item[0] == 'thickness': object.thickness = item[1]
-            if item[0] == 'material': object.material = item[1]
-            if item[0] == 'epsilon_r': object.epsilonR = item[1]
-            if item[0] == 'loss_tangent': object.lossTangent = item[1]
-            if item[0] == 'color': object.color = item[1]
+            elif item[0] == 'thickness': object.thickness = item[1]
+            elif item[0] == 'material': object.material = item[1]
+            elif item[0] == 'epsilon_r': object.epsilonR = item[1]
+            elif item[0] == 'loss_tangent': object.lossTangent = item[1]
+            elif item[0] == 'color': object.color = item[1]
 
         # Add the last parsed sublayer to the list, if any
         if parsingSublayer:
@@ -370,11 +370,11 @@ class Stackup():
         object = cls()
         for item in exp:
             if item[0] == 'layer': object.layers.append(StackupLayer().from_sexpr(item))
-            if item[0] == 'copper_finish': object.copperFinish = item[1]
-            if item[0] == 'dielectric_constraints': object.dielectricContraints = item[1]
-            if item[0] == 'edge_connector': object.edgeConnector = item[1]
-            if item[0] == 'castellated_pads': object.castellatedPads = True
-            if item[0] == 'edge_plating': object.edgePlating = True
+            elif item[0] == 'copper_finish': object.copperFinish = item[1]
+            elif item[0] == 'dielectric_constraints': object.dielectricContraints = item[1]
+            elif item[0] == 'edge_connector': object.edgeConnector = item[1]
+            elif item[0] == 'castellated_pads': object.castellatedPads = True
+            elif item[0] == 'edge_plating': object.edgePlating = True
         return object
 
     def to_sexpr(self, indent=4, newline=True) -> str:
@@ -562,39 +562,39 @@ class PlotSettings():
         object = cls()
         for item in exp:
             if item[0] == 'layerselection': object.layerSelection = item[1]
-            if item[0] == 'plot_on_all_layers_selection': object.plotOnAllLayersSelection = item[1]
-            if item[0] == 'disableapertmacros': object.disableApertMacros = True if item[1] == 'true' else False
-            if item[0] == 'usegerberextensions' : object.useGerberExtensions = True if item[1] == 'true' else False
-            if item[0] == 'usegerberattributes' : object.useGerberAttributes = True if item[1] == 'true' else False
-            if item[0] == 'usegerberadvancedattributes' : object.useGerberAdvancedAttributes = True if item[1] == 'true' else False
-            if item[0] == 'creategerberjobfile' : object.createGerberJobFile = True if item[1] == 'true' else False
-            if item[0] == 'dashed_line_dash_ratio': object.dashedLineDashRatio = item[1]
-            if item[0] == 'dashed_line_gap_ratio': object.dashedLineGapRatio = item[1]
-            if item[0] == 'svguseinch' : object.svgUseInch = True if item[1] == 'true' else False
-            if item[0] == 'svgprecision' : object.svgPrecision = item[1]
-            if item[0] == 'excludeedgelayer' : object.excludeEdgeLayer = True if item[1] == 'true' else False
-            if item[0] == 'plotframeref' : object.plotFameRef = True if item[1] == 'true' else False
-            if item[0] == 'viasonmask' : object.viasOnMask = True if item[1] == 'true' else False
-            if item[0] == 'mode' : object.mode = item[1]
-            if item[0] == 'useauxorigin' : object.useAuxOrigin = True if item[1] == 'true' else False
-            if item[0] == 'hpglpennumber' : object.hpglPenNumber = item[1]
-            if item[0] == 'hpglpenspeed' : object.hpglPenSpeed = item[1]
-            if item[0] == 'hpglpendiameter' : object.hpglPenDiameter = item[1]
-            if item[0] == 'dxfpolygonmode' : object.dxfPolygonMode = True if item[1] == 'true' else False
-            if item[0] == 'dxfimperialunits' : object.dxfImperialUnits = True if item[1] == 'true' else False
-            if item[0] == 'dxfusepcbnewfont' : object.dxfUsePcbnewFont = True if item[1] == 'true' else False
-            if item[0] == 'psnegative' : object.psNegative = True if item[1] == 'true' else False
-            if item[0] == 'psa4output' : object.psA4Output = True if item[1] == 'true' else False
-            if item[0] == 'plotreference' : object.plotReference = True if item[1] == 'true' else False
-            if item[0] == 'plotvalue' : object.plotValue = True if item[1] == 'true' else False
-            if item[0] == 'plotinvisibletext' : object.plotInvisibleText = True if item[1] == 'true' else False
-            if item[0] == 'sketchpadsonfab' : object.sketchPadsOnFab = True if item[1] == 'true' else False
-            if item[0] == 'subtractmaskfromsilk' : object.subtractMaskFromSilk = True if item[1] == 'true' else False
-            if item[0] == 'outputformat' : object.outputFormat = item[1]
-            if item[0] == 'mirror' : object.mirror = True if item[1] == 'true' else False
-            if item[0] == 'drillshape' : object.drillShape = item[1]
-            if item[0] == 'scaleselection' : object.scaleSelection = item[1]
-            if item[0] == 'outputdirectory' : object.outputDirectory = item[1]
+            elif item[0] == 'plot_on_all_layers_selection': object.plotOnAllLayersSelection = item[1]
+            elif item[0] == 'disableapertmacros': object.disableApertMacros = True if item[1] == 'true' else False
+            elif item[0] == 'usegerberextensions' : object.useGerberExtensions = True if item[1] == 'true' else False
+            elif item[0] == 'usegerberattributes' : object.useGerberAttributes = True if item[1] == 'true' else False
+            elif item[0] == 'usegerberadvancedattributes' : object.useGerberAdvancedAttributes = True if item[1] == 'true' else False
+            elif item[0] == 'creategerberjobfile' : object.createGerberJobFile = True if item[1] == 'true' else False
+            elif item[0] == 'dashed_line_dash_ratio': object.dashedLineDashRatio = item[1]
+            elif item[0] == 'dashed_line_gap_ratio': object.dashedLineGapRatio = item[1]
+            elif item[0] == 'svguseinch' : object.svgUseInch = True if item[1] == 'true' else False
+            elif item[0] == 'svgprecision' : object.svgPrecision = item[1]
+            elif item[0] == 'excludeedgelayer' : object.excludeEdgeLayer = True if item[1] == 'true' else False
+            elif item[0] == 'plotframeref' : object.plotFameRef = True if item[1] == 'true' else False
+            elif item[0] == 'viasonmask' : object.viasOnMask = True if item[1] == 'true' else False
+            elif item[0] == 'mode' : object.mode = item[1]
+            elif item[0] == 'useauxorigin' : object.useAuxOrigin = True if item[1] == 'true' else False
+            elif item[0] == 'hpglpennumber' : object.hpglPenNumber = item[1]
+            elif item[0] == 'hpglpenspeed' : object.hpglPenSpeed = item[1]
+            elif item[0] == 'hpglpendiameter' : object.hpglPenDiameter = item[1]
+            elif item[0] == 'dxfpolygonmode' : object.dxfPolygonMode = True if item[1] == 'true' else False
+            elif item[0] == 'dxfimperialunits' : object.dxfImperialUnits = True if item[1] == 'true' else False
+            elif item[0] == 'dxfusepcbnewfont' : object.dxfUsePcbnewFont = True if item[1] == 'true' else False
+            elif item[0] == 'psnegative' : object.psNegative = True if item[1] == 'true' else False
+            elif item[0] == 'psa4output' : object.psA4Output = True if item[1] == 'true' else False
+            elif item[0] == 'plotreference' : object.plotReference = True if item[1] == 'true' else False
+            elif item[0] == 'plotvalue' : object.plotValue = True if item[1] == 'true' else False
+            elif item[0] == 'plotinvisibletext' : object.plotInvisibleText = True if item[1] == 'true' else False
+            elif item[0] == 'sketchpadsonfab' : object.sketchPadsOnFab = True if item[1] == 'true' else False
+            elif item[0] == 'subtractmaskfromsilk' : object.subtractMaskFromSilk = True if item[1] == 'true' else False
+            elif item[0] == 'outputformat' : object.outputFormat = item[1]
+            elif item[0] == 'mirror' : object.mirror = True if item[1] == 'true' else False
+            elif item[0] == 'drillshape' : object.drillShape = item[1]
+            elif item[0] == 'scaleselection' : object.scaleSelection = item[1]
+            elif item[0] == 'outputdirectory' : object.outputDirectory = item[1]
         return object
 
     def to_sexpr(self, indent=4, newline=True) -> str:
@@ -717,14 +717,14 @@ class SetupData():
         object = cls()
         for item in exp:
             if item[0] == 'stackup': object.stackup = Stackup().from_sexpr(item)
-            if item[0] == 'pcbplotparams': object.plotSettings = PlotSettings().from_sexpr(item)
-            if item[0] == 'pad_to_mask_clearance': object.packToMaskClearance = item[1]
-            if item[0] == 'solder_mask_min_width': object.solderMaskMinWidth = item[1]
-            if item[0] == 'pad_to_paste_clearance': object.padToPasteClearance = item[1]
-            if item[0] == 'pad_to_paste_clearance_ratio': object.padToPasteClearanceRatio = item[1]
-            if item[0] == 'aux_axis_origin': object.auxAxisOrigin = Position().from_sexpr(item)
-            if item[0] == 'grid_origin': object.gridOrigin = Position().from_sexpr(item)
-            if item[0] == 'pcbplotparams': object.plotSettings = PlotSettings().from_sexpr(item)
+            elif item[0] == 'pcbplotparams': object.plotSettings = PlotSettings().from_sexpr(item)
+            elif item[0] == 'pad_to_mask_clearance': object.packToMaskClearance = item[1]
+            elif item[0] == 'solder_mask_min_width': object.solderMaskMinWidth = item[1]
+            elif item[0] == 'pad_to_paste_clearance': object.padToPasteClearance = item[1]
+            elif item[0] == 'pad_to_paste_clearance_ratio': object.padToPasteClearanceRatio = item[1]
+            elif item[0] == 'aux_axis_origin': object.auxAxisOrigin = Position().from_sexpr(item)
+            elif item[0] == 'grid_origin': object.gridOrigin = Position().from_sexpr(item)
+            elif item[0] == 'pcbplotparams': object.plotSettings = PlotSettings().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -807,13 +807,12 @@ class Segment():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                continue
-            if item[0] == 'start': object.start = Position().from_sexpr(item)
-            if item[0] == 'end': object.end = Position().from_sexpr(item)
-            if item[0] == 'width': object.width = item[1]
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'net': object.net = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'start': object.start = Position().from_sexpr(item)
+            elif item[0] == 'end': object.end = Position().from_sexpr(item)
+            elif item[0] == 'width': object.width = item[1]
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'net': object.net = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -900,19 +899,18 @@ class Via():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                if item == 'micro' or item == 'blind': object.type = item
-                continue
-            if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'size': object.size = item[1]
-            if item[0] == 'drill': object.drill = item[1]
-            if item[0] == 'layers':
+                elif item == 'micro' or item == 'blind': object.type = item
+            elif item[0] == 'at': object.position = Position().from_sexpr(item)
+            elif item[0] == 'size': object.size = item[1]
+            elif item[0] == 'drill': object.drill = item[1]
+            elif item[0] == 'layers':
                 for layer in item[1:]:
                     object.layers.append(layer)
-            if item[0] == 'remove_unused_layers': object.removeUnusedLayers = True
-            if item[0] == 'keep_end_layers': object.keepEndLayers = True
-            if item[0] == 'free': object.free = True
-            if item[0] == 'net': object.net = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'remove_unused_layers': object.removeUnusedLayers = True
+            elif item[0] == 'keep_end_layers': object.keepEndLayers = True
+            elif item[0] == 'free': object.free = True
+            elif item[0] == 'net': object.net = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -999,8 +997,7 @@ class Arc():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                continue
-            if item[0] == 'start': object.start = Position().from_sexpr(item)
+            elif item[0] == 'start': object.start = Position().from_sexpr(item)
             elif item[0] == 'mid': object.mid = Position().from_sexpr(item)
             elif item[0] == 'end': object.end = Position().from_sexpr(item)
             elif item[0] == 'width': object.width = item[1]
@@ -1082,10 +1079,10 @@ class Target():
         object.type = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'size': object.size = item[1]
-            if item[0] == 'width': object.width = item[1]
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'size': object.size = item[1]
+            elif item[0] == 'width': object.width = item[1]
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:

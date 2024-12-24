@@ -75,12 +75,11 @@ class KeepoutSettings():
         for item in exp:
             if type(item) != type([]):
                 continue
-
-            if item[0] == 'tracks': object.tracks = item[1]
-            if item[0] == 'vias': object.vias = item[1]
-            if item[0] == 'pads': object.pads = item[1]
-            if item[0] == 'copperpour': object.copperpour = item[1]
-            if item[0] == 'footprints': object.footprints = item[1]
+            elif item[0] == 'tracks': object.tracks = item[1]
+            elif item[0] == 'vias': object.vias = item[1]
+            elif item[0] == 'pads': object.pads = item[1]
+            elif item[0] == 'copperpour': object.copperpour = item[1]
+            elif item[0] == 'footprints': object.footprints = item[1]
 
         return object
 
@@ -202,22 +201,20 @@ class FillSettings():
         for item in exp:
             if type(item) != type([]):
                 if item == 'yes': object.yes = True
-                else: continue
-
-            if item[0] == 'mode': object.mode = item[1]
-            if item[0] == 'thermal_gap': object.thermalGap = item[1]
-            if item[0] == 'thermal_bridge_width': object.thermalBridgeWidth = item[1]
-            if item[0] == 'smoothing': object.smoothingStyle = item[1]
-            if item[0] == 'radius': object.smoothingRadius = item[1]
-            if item[0] == 'island_removal_mode': object.islandRemovalMode = item[1]
-            if item[0] == 'island_area_min': object.islandAreaMin = item[1]
-            if item[0] == 'hatch_thickness': object.hatchThickness = item[1]
-            if item[0] == 'hatch_gap': object.hatchGap = item[1]
-            if item[0] == 'hatch_orientation': object.hatchOrientation = item[1]
-            if item[0] == 'hatch_smoothing_level': object.hatchSmoothingLevel = item[1]
-            if item[0] == 'hatch_smoothing_value': object.hatchSmoothingValue = item[1]
-            if item[0] == 'hatch_border_algorithm': object.hatchBorderAlgorithm = item[1]
-            if item[0] == 'hatch_min_hole_area': object.hatchMinHoleArea = item[1]
+            elif item[0] == 'mode': object.mode = item[1]
+            elif item[0] == 'thermal_gap': object.thermalGap = item[1]
+            elif item[0] == 'thermal_bridge_width': object.thermalBridgeWidth = item[1]
+            elif item[0] == 'smoothing': object.smoothingStyle = item[1]
+            elif item[0] == 'radius': object.smoothingRadius = item[1]
+            elif item[0] == 'island_removal_mode': object.islandRemovalMode = item[1]
+            elif item[0] == 'island_area_min': object.islandAreaMin = item[1]
+            elif item[0] == 'hatch_thickness': object.hatchThickness = item[1]
+            elif item[0] == 'hatch_gap': object.hatchGap = item[1]
+            elif item[0] == 'hatch_orientation': object.hatchOrientation = item[1]
+            elif item[0] == 'hatch_smoothing_level': object.hatchSmoothingLevel = item[1]
+            elif item[0] == 'hatch_smoothing_value': object.hatchSmoothingValue = item[1]
+            elif item[0] == 'hatch_border_algorithm': object.hatchBorderAlgorithm = item[1]
+            elif item[0] == 'hatch_min_hole_area': object.hatchMinHoleArea = item[1]
 
         return object
 
@@ -282,7 +279,7 @@ class ZonePolygon():
         for item in exp:
             if type(item) != type([]):
                 continue
-            if item[0] == 'pts':
+            elif item[0] == 'pts':
                 for position in item[1:]:
                     object.coordinates.append(Position().from_sexpr(position))
 
@@ -355,10 +352,9 @@ class FilledPolygon():
         for item in exp:
             if type(item) != type([]):
                 continue
-
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'island': object.island = True
-            if item[0] == 'pts':
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'island': object.island = True
+            elif item[0] == 'pts':
                 for position in item[1:]:
                     object.coordinates.append(Position().from_sexpr(position))
 
@@ -432,9 +428,8 @@ class FillSegments():
         for item in exp:
             if type(item) != type([]):
                 continue
-
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'pts':
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'pts':
                 for position in item[1:]:
                     object.coordinates.append(Position().from_sexpr(position))
 
@@ -574,31 +569,29 @@ class Zone():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                else: continue
-
-            if item[0] == 'net': object.net = item[1]
-            if item[0] == 'net_name': object.netName = item[1]
-            if item[0] == 'layers' or item[0] == 'layer':
+            elif item[0] == 'net': object.net = item[1]
+            elif item[0] == 'net_name': object.netName = item[1]
+            elif item[0] == 'layers' or item[0] == 'layer':
                 for layer in item[1:]:
                     object.layers.append(layer)
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'name': object.name = item[1]
-            if item[0] == 'hatch':
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'name': object.name = item[1]
+            elif item[0] == 'hatch':
                 object.hatch = Hatch(style=item[1], pitch=item[2])
-            if item[0] == 'priority': object.priority = item[1]
-            if item[0] == 'connect_pads':
+            elif item[0] == 'priority': object.priority = item[1]
+            elif item[0] == 'connect_pads':
                 if len(item) == 2:
                     object.clearance = item[1][1]
                 else:
                     object.connectPads = item[1]
                     object.clearance = item[2][1]
-            if item[0] == 'min_thickness': object.minThickness = item[1]
-            if item[0] == 'filled_areas_thickness': object.filledAreasThickness = item[1]
-            if item[0] == 'keepout': object.keepoutSettings = KeepoutSettings().from_sexpr(item)
-            if item[0] == 'fill': object.fillSettings = FillSettings().from_sexpr(item)
-            if item[0] == 'polygon': object.polygons.append(ZonePolygon().from_sexpr(item))
-            if item[0] == 'filled_polygon': object.filledPolygons.append(FilledPolygon().from_sexpr(item))
-            if item[0] == 'fill_segments': object.fillSegments = FillSegments().from_sexpr(item)
+            elif item[0] == 'min_thickness': object.minThickness = item[1]
+            elif item[0] == 'filled_areas_thickness': object.filledAreasThickness = item[1]
+            elif item[0] == 'keepout': object.keepoutSettings = KeepoutSettings().from_sexpr(item)
+            elif item[0] == 'fill': object.fillSettings = FillSettings().from_sexpr(item)
+            elif item[0] == 'polygon': object.polygons.append(ZonePolygon().from_sexpr(item))
+            elif item[0] == 'filled_polygon': object.filledPolygons.append(FilledPolygon().from_sexpr(item))
+            elif item[0] == 'fill_segments': object.fillSegments = FillSegments().from_sexpr(item)
 
         return object
 

@@ -246,9 +246,9 @@ class Stroke():
         for item in exp:
             if type(item) != type([]):
                 continue
-            if item[0] == 'width': object.width = item[1]
-            if item[0] == 'type':  object.type = item[1]
-            if item[0] == 'color': object.color = ColorRGBA.from_sexpr(item)
+            elif item[0] == 'width': object.width = item[1]
+            elif item[0] == 'type':  object.type = item[1]
+            elif item[0] == 'color': object.color = ColorRGBA.from_sexpr(item)
         return object
 
     def to_sexpr(self, indent=2, newline=True) -> str:
@@ -328,15 +328,14 @@ class Font():
         for item in exp:
             if type(item) != type([]):
                 if item == 'bold': object.bold = True
-                if item == 'italic': object.italic = True
-                continue
-            if item[0] == 'face': object.face = item[1]
-            if item[0] == 'size':
+                elif item == 'italic': object.italic = True
+            elif item[0] == 'face': object.face = item[1]
+            elif item[0] == 'size':
                 object.height = item[1]
                 object.width = item[2]
-            if item[0] == 'thickness': object.thickness = item[1]
-            if item[0] == 'line_spacing': object.lineSpacing = item[1]
-            if item[0] == 'color': object.color = ColorRGBA.from_sexpr(item)
+            elif item[0] == 'thickness': object.thickness = item[1]
+            elif item[0] == 'line_spacing': object.lineSpacing = item[1]
+            elif item[0] == 'color': object.color = ColorRGBA.from_sexpr(item)
         return object
 
     def to_sexpr(self, indent=0, newline=False) -> str:
@@ -404,8 +403,8 @@ class Justify():
         for item in exp:
             # 'center' is the standard on vertical but not on horizontal in work sheets
             if item == 'left' or item == 'right' or item == 'center': object.horizontally = item
-            if item == 'top' or item == 'bottom': object.vertically = item
-            if item == 'mirror': object.mirror = True
+            elif item == 'top' or item == 'bottom': object.vertically = item
+            elif item == 'mirror': object.mirror = True
         return object
 
     def to_sexpr(self, indent=0, newline=False) -> str:
@@ -481,10 +480,9 @@ class Effects():
         for item in exp:
             if type(item) != type([]):
                 if item == 'hide': object.hide = True
-                else: continue
-            if item[0] == 'font': object.font = Font().from_sexpr(item)
-            if item[0] == 'justify': object.justify = Justify().from_sexpr(item)
-            if item[0] == 'href': object.href = item[1]
+            elif item[0] == 'font': object.font = Font().from_sexpr(item)
+            elif item[0] == 'justify': object.justify = Justify().from_sexpr(item)
+            elif item[0] == 'href': object.href = item[1]
         return object
 
     def to_sexpr(self, indent=0, newline=True) -> str:
@@ -603,9 +601,8 @@ class Group():
         for item in exp:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                continue
-            if item[0] == 'id': object.id = item[1]
-            if item[0] == 'members':
+            elif item[0] == 'id': object.id = item[1]
+            elif item[0] == 'members':
                 for member in item[1:]:
                     object.members.append(member)
         return object
@@ -686,7 +683,6 @@ class PageSettings():
         for item in exp:
             if type(item) != type([]):
                 if item == 'portrait': object.portrait = True
-                continue
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
@@ -761,10 +757,10 @@ class TitleBlock():
         object = cls()
         for item in exp:
             if item[0] == 'title': object.title = item[1]
-            if item[0] == 'date': object.date = item[1]
-            if item[0] == 'rev': object.revision = item[1]
-            if item[0] == 'company': object.company = item[1]
-            if item[0] == 'comment': object.comments.update({item[1]: item[2]})
+            elif item[0] == 'date': object.date = item[1]
+            elif item[0] == 'rev': object.revision = item[1]
+            elif item[0] == 'company': object.company = item[1]
+            elif item[0] == 'comment': object.comments.update({item[1]: item[2]})
         return object
 
     def to_sexpr(self, indent: int = 2, newline: bool = True) -> str:
@@ -855,9 +851,9 @@ class Property():
         object.value = exp[2]
         for item in exp[3:]:
             if item[0] == 'id': object.id = item[1]
-            if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'show_name': object.showName = True
+            elif item[0] == 'at': object.position = Position().from_sexpr(item)
+            elif item[0] == 'effects': object.effects = Effects().from_sexpr(item)
+            elif item[0] == 'show_name': object.showName = True
         return object
 
     def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:
@@ -1058,7 +1054,7 @@ class Fill():
         object = cls()
         for item in exp:
             if item[0] == 'type': object.type = item[1]
-            if item[0] == 'color': object.color = ColorRGBA().from_sexpr(item)
+            elif item[0] == 'color': object.color = ColorRGBA().from_sexpr(item)
         return object
 
     def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:
@@ -1126,10 +1122,10 @@ class Image():
         object = cls()
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'scale': object.scale = item[1]
-            if item[0] == 'uuid': object.uuid = item[1]
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'data':
+            elif item[0] == 'scale': object.scale = item[1]
+            elif item[0] == 'uuid': object.uuid = item[1]
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'data':
                 for b64part in item[1:]:
                     object.data.append(b64part)
         return object

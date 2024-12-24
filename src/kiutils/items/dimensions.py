@@ -86,13 +86,12 @@ class DimensionFormat():
         for item in exp[1:]:
             if type(item) != type([]):
                 if item == 'suppress_zeroes': object.suppressZeroes = True
-                continue
-            if item[0] == 'prefix': object.prefix = item[1]
-            if item[0] == 'suffix': object.suffix = item[1]
-            if item[0] == 'units': object.units = item[1]
-            if item[0] == 'units_format': object.unitsFormat = item[1]
-            if item[0] == 'precision': object.precision = item[1]
-            if item[0] == 'override_value': object.overrideValue = item[1]
+            elif item[0] == 'prefix': object.prefix = item[1]
+            elif item[0] == 'suffix': object.suffix = item[1]
+            elif item[0] == 'units': object.units = item[1]
+            elif item[0] == 'units_format': object.unitsFormat = item[1]
+            elif item[0] == 'precision': object.precision = item[1]
+            elif item[0] == 'override_value': object.overrideValue = item[1]
             pass
         return object
 
@@ -183,13 +182,12 @@ class DimensionStyle():
         for item in exp[1:]:
             if type(item) != type([]):
                 if item == 'keep_text_aligned': object.keepTextAligned = True
-                continue
-            if item[0] == 'thickness': object.thickness = item[1]
-            if item[0] == 'arrow_length': object.arrowLength = item[1]
-            if item[0] == 'text_position_mode': object.textPositionMode = item[1]
-            if item[0] == 'extension_height': object.extensionHeight = item[1]
-            if item[0] == 'text_frame': object.textFrame = item[1]
-            if item[0] == 'extension_offset': object.extensionOffset = item[1]
+            elif item[0] == 'thickness': object.thickness = item[1]
+            elif item[0] == 'arrow_length': object.arrowLength = item[1]
+            elif item[0] == 'text_position_mode': object.textPositionMode = item[1]
+            elif item[0] == 'extension_height': object.extensionHeight = item[1]
+            elif item[0] == 'text_frame': object.textFrame = item[1]
+            elif item[0] == 'extension_offset': object.extensionOffset = item[1]
         return object
 
     def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:
@@ -283,17 +281,16 @@ class Dimension():
         for item in exp[1:]:
             if type(item) != type([]):
                 if item == 'locked': object.locked = True
-                continue
-            if item[0] == 'type': object.type = item[1]
-            if item[0] == 'layer': object.layer = item[1]
-            if item[0] == 'tstamp': object.tstamp = item[1]
-            if item[0] == 'height': object.height = item[1]
-            if item[0] == 'orientation': object.orientation = item[1]
-            if item[0] == 'leader_length': object.leaderLength = item[1]
-            if item[0] == 'gr_text': object.grText = GrText().from_sexpr(item)
-            if item[0] == 'format': object.format = DimensionFormat().from_sexpr(item)
-            if item[0] == 'style': object.style = DimensionStyle().from_sexpr(item)
-            if item[0] == 'pts':
+            elif item[0] == 'type': object.type = item[1]
+            elif item[0] == 'layer': object.layer = item[1]
+            elif item[0] == 'tstamp': object.tstamp = item[1]
+            elif item[0] == 'height': object.height = item[1]
+            elif item[0] == 'orientation': object.orientation = item[1]
+            elif item[0] == 'leader_length': object.leaderLength = item[1]
+            elif item[0] == 'gr_text': object.grText = GrText().from_sexpr(item)
+            elif item[0] == 'format': object.format = DimensionFormat().from_sexpr(item)
+            elif item[0] == 'style': object.style = DimensionStyle().from_sexpr(item)
+            elif item[0] == 'pts':
                 for point in item[1:]:
                     object.pts.append(Position().from_sexpr(point))
 

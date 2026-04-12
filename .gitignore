@@ -19,6 +19,7 @@ htmlcov/*
 # Other stuff
 *.log
 .vscode/*
+tmp/
 
 # Releases and build stuff
 output/*

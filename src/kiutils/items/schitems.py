@@ -519,11 +519,21 @@ class TextBox():
     text: str = ""
     """The ``text`` token defines the text string"""
 
+    excludeFromSim: Optional[bool] = None
+    """The optional ``exclude_from_sim`` token defines if the text box is excluded from simulation.
+
+    Available since KiCad v8"""
+
     position: Position = field(default_factory=lambda: Position())
     """The ``position`` token defines the X and Y coordinates and rotation angle of the text"""
 
     size: Position = field(default_factory=lambda: Position())
     """The ``size`` token defines the size in X and Y direction. Angle is not used."""
+
+    margins: Optional[List[float]] = None
+    """The optional ``margins`` token defines the text box margins [top, right, bottom, left].
+
+    Available since KiCad v9"""
 
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` token defines the look of the outline of the text box"""
@@ -560,8 +570,10 @@ class TextBox():
         object = cls()
         object.text = exp[1]
         for item in exp[2:]:
+            if item[0] == 'exclude_from_sim': object.excludeFromSim = True if item[1] == 'yes' else False
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'size': object.size = Position().from_sexpr(item)
+            if item[0] == 'margins': object.margins = [float(v) for v in item[1:]]
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
             if item[0] == 'fill': object.fill = Fill().from_sexpr(item)
@@ -584,7 +596,13 @@ class TextBox():
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
 
         expression =  f'{indents}(text_box "{dequote(self.text)}"\n'
+        if self.excludeFromSim is not None:
+            efs = 'yes' if self.excludeFromSim else 'no'
+            expression += f'{indents}  (exclude_from_sim {efs})\n'
         expression += f'{indents}  (at {self.position.X} {self.position.Y}{posA}) (size {self.size.X} {self.size.Y})\n'
+        if self.margins is not None:
+            mvals = ' '.join(str(v) for v in self.margins)
+            expression += f'{indents}  (margins {mvals})\n'
         expression += self.stroke.to_sexpr(indent+2)
         expression += self.fill.to_sexpr(indent+2)
         expression += self.effects.to_sexpr(indent+2)
@@ -660,7 +678,7 @@ class LocalLabel():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        fieldsAutoplaced = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
+        fieldsAutoplaced = ' (fields_autoplaced yes)' if self.fieldsAutoplaced else ''
 
         expression =  f'{indents}(label "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
@@ -746,7 +764,7 @@ class GlobalLabel():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        fa = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
+        fa = ' (fields_autoplaced yes)' if self.fieldsAutoplaced else ''
 
         expression =  f'{indents}(global_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fa}\n'
         expression += self.effects.to_sexpr(indent+2)
@@ -830,7 +848,7 @@ class HierarchicalLabel():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        fieldsAutoplaced = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
+        fieldsAutoplaced = ' (fields_autoplaced yes)' if self.fieldsAutoplaced else ''
 
         expression =  f'{indents}(hierarchical_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
@@ -1125,7 +1143,7 @@ class SchematicSymbol():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        fa = f' (fields_autoplaced)' if self.fieldsAutoplaced else ''
+        fa = f' (fields_autoplaced yes)' if self.fieldsAutoplaced else ''
         inBom = 'yes' if self.inBom else 'no'
         onBoard = 'yes' if self.onBoard else 'no'
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
@@ -1228,9 +1246,9 @@ class HierarchicalPin():
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
 
         expression =  f'{indents}(pin "{dequote(self.name)}" {self.connectionType} (at {self.position.X} {self.position.Y}{posA})\n'
-        expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
             expression += f'{indents}  (uuid {self.uuid})\n'
+        expression += self.effects.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
         return expression
 
@@ -1484,7 +1502,7 @@ class HierarchicalSheet():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        fa = ' (fields_autoplaced)' if self.fieldsAutoplaced else ''
+        fa = ' (fields_autoplaced yes)' if self.fieldsAutoplaced else ''
 
         expression =  f'{indents}(sheet (at {self.position.X} {self.position.Y}) (size {self.width} {self.height})'
         if self.excludeFromSim is not None:
@@ -1961,7 +1979,7 @@ class NetclassFlag():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        fa = f' (fields_autoplaced)' if self.fieldsAutoplaced else ''
+        fa = f' (fields_autoplaced yes)' if self.fieldsAutoplaced else ''
 
         expression =  f'{indents}(netclass_flag "{dequote(self.text)}" (length {self.length}) (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fa}\n'
         expression += self.effects.to_sexpr(indent+2)

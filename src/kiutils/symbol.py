@@ -151,6 +151,7 @@ class SymbolPin():
                 else: continue
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'length': object.length = item[1]
+            if item[0] == 'hide': object.hide = True if item[1] == 'yes' else False
             if item[0] == 'name':
                 object.name = item[1]
                 if len(item) > 2:
@@ -176,7 +177,7 @@ class SymbolPin():
         endline = '\n' if newline else ''
         newLineAdded = False
 
-        hide = ' hide' if self.hide else ''
+        hide = ' (hide yes)' if self.hide else ''
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
         nameEffects = f' {self.nameEffects.to_sexpr(newline=False)}' if self.nameEffects is not None else ''
         numberEffects = f' {self.numberEffects.to_sexpr(newline=False)}' if self.numberEffects is not None else ''
@@ -330,6 +331,11 @@ class Symbol():
     """The optional ``pinNamesOffset`` token defines the pin name offset for all pin names of the
     symbol. If not defined, the pin name offset is 0.508mm (0.020")"""
 
+    embeddedFonts: Optional[bool] = None
+    """The optional ``embedded_fonts`` token defines if fonts are embedded in the symbol.
+
+    Available since KiCad v8"""
+
     excludeFromSim: Optional[bool] = None
     """The optional ``exclude_from_sim`` token defines if a symbol is excluded from simulation.
 
@@ -400,8 +406,10 @@ class Symbol():
                 for property in item[1:]:
                     if type(property) == type([]):
                         if property[0] == 'offset': object.pinNamesOffset = property[1]
+                        if property[0] == 'hide': object.pinNamesHide = True if property[1] == 'yes' else False
                     else:
                         if property == 'hide': object.pinNamesHide = True
+            if item[0] == 'embedded_fonts': object.embeddedFonts = True if item[1] == 'yes' else False
             if item[0] == 'exclude_from_sim': object.excludeFromSim = True if item[1] == 'yes' else False
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
@@ -475,9 +483,12 @@ class Symbol():
             obtext = 'yes' if self.onBoard else 'no'
         onboard = f' (on_board {obtext})' if self.onBoard is not None else ''
         power = f' (power)' if self.isPower else ''
-        pnhide = f' hide' if self.pinNamesHide else ''
-        pnoffset = f' (offset {self.pinNamesOffset})' if self.pinNamesOffset is not None else ''
-        pinnames = f' (pin_names{pnoffset}{pnhide})' if self.pinNames else ''
+        if self.pinNames:
+            pnoffset = f'\n{indents}    (offset {self.pinNamesOffset})' if self.pinNamesOffset is not None else ''
+            pnhide = f'\n{indents}    (hide yes)' if self.pinNamesHide else ''
+            pinnames = f'\n{indents}  (pin_names{pnoffset}{pnhide}\n{indents}  )'
+        else:
+            pinnames = ''
         if self.hasPinNumbers or self.hidePinNumbers:
             hpn = 'yes' if self.hidePinNumbers else 'no'
             pinnumbers = f'\n{indents}  (pin_numbers\n{indents}    (hide {hpn})\n{indents}  )'
@@ -499,6 +510,9 @@ class Symbol():
             expression += item.to_sexpr(indent+2)
         for item in self.units:
             expression += item.to_sexpr(indent+2)
+        if self.embeddedFonts is not None:
+            ef = 'yes' if self.embeddedFonts else 'no'
+            expression += f'{indents}  (embedded_fonts {ef})\n'
         expression += f'{indents}){endline}'
         return expression
 

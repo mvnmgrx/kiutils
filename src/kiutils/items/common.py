@@ -335,6 +335,8 @@ class Font():
                 object.height = item[1]
                 object.width = item[2]
             if item[0] == 'thickness': object.thickness = item[1]
+            if item[0] == 'bold': object.bold = True if item[1] == 'yes' else False
+            if item[0] == 'italic': object.italic = True if item[1] == 'yes' else False
             if item[0] == 'line_spacing': object.lineSpacing = item[1]
             if item[0] == 'color': object.color = ColorRGBA.from_sexpr(item)
         return object
@@ -355,8 +357,8 @@ class Font():
 
         if self.face is not None:        face_name = f'(face "{dequote(self.face)}") '
         if self.thickness is not None:   thickness = f' (thickness {self.thickness})'
-        if self.bold == True:            bold = ' bold'
-        if self.italic == True:          italic = ' italic'
+        if self.bold == True:            bold = ' (bold yes)'
+        if self.italic == True:          italic = ' (italic yes)'
         if self.lineSpacing is not None: linespacing = f' (line_spacing {self.lineSpacing})'
         if self.color is not None:       color = f' {self.color.to_sexpr()}'
 

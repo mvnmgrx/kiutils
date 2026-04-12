@@ -539,6 +539,42 @@ class PlotSettings():
     """The ``drillShape`` token defines the path relative to the current project path
     where the plot files will be saved"""
 
+    pdfFrontFpPropertyPopups: Optional[bool] = None
+    """The ``pdf_front_fp_property_popups`` token defines if front footprint property popups
+    are shown in PDF plots. Available since KiCad v8"""
+
+    pdfBackFpPropertyPopups: Optional[bool] = None
+    """The ``pdf_back_fp_property_popups`` token defines if back footprint property popups
+    are shown in PDF plots. Available since KiCad v8"""
+
+    pdfMetadata: Optional[bool] = None
+    """The ``pdf_metadata`` token defines if metadata is included in PDF plots.
+    Available since KiCad v8"""
+
+    pdfSingleDocument: Optional[bool] = None
+    """The ``pdf_single_document`` token defines if PDF plots are in a single document.
+    Available since KiCad v8"""
+
+    plotBlackAndWhite: Optional[bool] = None
+    """The ``plot_black_and_white`` token defines if plots are in black and white.
+    Available since KiCad v8"""
+
+    plotPadNumbers: Optional[bool] = None
+    """The ``plotpadnumbers`` token defines if pad numbers are plotted.
+    Available since KiCad v8"""
+
+    hideDnpOnFab: Optional[bool] = None
+    """The ``hidednponfab`` token defines if DNP markers are hidden on fab layers.
+    Available since KiCad v8"""
+
+    sketchDnpOnFab: Optional[bool] = None
+    """The ``sketchdnponfab`` token defines if DNP markers are sketched on fab layers.
+    Available since KiCad v8"""
+
+    crossoutDnpOnFab: Optional[bool] = None
+    """The ``crossoutdnponfab`` token defines if DNP markers are crossed out on fab layers.
+    Available since KiCad v8"""
+
     @classmethod
     def from_sexpr(cls, exp: list) -> PlotSettings:
         """Convert the given S-Expresstion into a PlotSettings object
@@ -560,41 +596,51 @@ class PlotSettings():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        _b = lambda v: v in ('true', 'yes')
         for item in exp:
             if item[0] == 'layerselection': object.layerSelection = item[1]
             if item[0] == 'plot_on_all_layers_selection': object.plotOnAllLayersSelection = item[1]
-            if item[0] == 'disableapertmacros': object.disableApertMacros = True if item[1] == 'true' else False
-            if item[0] == 'usegerberextensions' : object.useGerberExtensions = True if item[1] == 'true' else False
-            if item[0] == 'usegerberattributes' : object.useGerberAttributes = True if item[1] == 'true' else False
-            if item[0] == 'usegerberadvancedattributes' : object.useGerberAdvancedAttributes = True if item[1] == 'true' else False
-            if item[0] == 'creategerberjobfile' : object.createGerberJobFile = True if item[1] == 'true' else False
+            if item[0] == 'disableapertmacros': object.disableApertMacros = _b(item[1])
+            if item[0] == 'usegerberextensions' : object.useGerberExtensions = _b(item[1])
+            if item[0] == 'usegerberattributes' : object.useGerberAttributes = _b(item[1])
+            if item[0] == 'usegerberadvancedattributes' : object.useGerberAdvancedAttributes = _b(item[1])
+            if item[0] == 'creategerberjobfile' : object.createGerberJobFile = _b(item[1])
             if item[0] == 'dashed_line_dash_ratio': object.dashedLineDashRatio = item[1]
             if item[0] == 'dashed_line_gap_ratio': object.dashedLineGapRatio = item[1]
-            if item[0] == 'svguseinch' : object.svgUseInch = True if item[1] == 'true' else False
+            if item[0] == 'svguseinch' : object.svgUseInch = _b(item[1])
             if item[0] == 'svgprecision' : object.svgPrecision = item[1]
-            if item[0] == 'excludeedgelayer' : object.excludeEdgeLayer = True if item[1] == 'true' else False
-            if item[0] == 'plotframeref' : object.plotFameRef = True if item[1] == 'true' else False
-            if item[0] == 'viasonmask' : object.viasOnMask = True if item[1] == 'true' else False
+            if item[0] == 'excludeedgelayer' : object.excludeEdgeLayer = _b(item[1])
+            if item[0] == 'plotframeref' : object.plotFameRef = _b(item[1])
+            if item[0] == 'viasonmask' : object.viasOnMask = _b(item[1])
             if item[0] == 'mode' : object.mode = item[1]
-            if item[0] == 'useauxorigin' : object.useAuxOrigin = True if item[1] == 'true' else False
+            if item[0] == 'useauxorigin' : object.useAuxOrigin = _b(item[1])
             if item[0] == 'hpglpennumber' : object.hpglPenNumber = item[1]
             if item[0] == 'hpglpenspeed' : object.hpglPenSpeed = item[1]
             if item[0] == 'hpglpendiameter' : object.hpglPenDiameter = item[1]
-            if item[0] == 'dxfpolygonmode' : object.dxfPolygonMode = True if item[1] == 'true' else False
-            if item[0] == 'dxfimperialunits' : object.dxfImperialUnits = True if item[1] == 'true' else False
-            if item[0] == 'dxfusepcbnewfont' : object.dxfUsePcbnewFont = True if item[1] == 'true' else False
-            if item[0] == 'psnegative' : object.psNegative = True if item[1] == 'true' else False
-            if item[0] == 'psa4output' : object.psA4Output = True if item[1] == 'true' else False
-            if item[0] == 'plotreference' : object.plotReference = True if item[1] == 'true' else False
-            if item[0] == 'plotvalue' : object.plotValue = True if item[1] == 'true' else False
-            if item[0] == 'plotinvisibletext' : object.plotInvisibleText = True if item[1] == 'true' else False
-            if item[0] == 'sketchpadsonfab' : object.sketchPadsOnFab = True if item[1] == 'true' else False
-            if item[0] == 'subtractmaskfromsilk' : object.subtractMaskFromSilk = True if item[1] == 'true' else False
+            if item[0] == 'dxfpolygonmode' : object.dxfPolygonMode = _b(item[1])
+            if item[0] == 'dxfimperialunits' : object.dxfImperialUnits = _b(item[1])
+            if item[0] == 'dxfusepcbnewfont' : object.dxfUsePcbnewFont = _b(item[1])
+            if item[0] == 'psnegative' : object.psNegative = _b(item[1])
+            if item[0] == 'psa4output' : object.psA4Output = _b(item[1])
+            if item[0] == 'plotreference' : object.plotReference = _b(item[1])
+            if item[0] == 'plotvalue' : object.plotValue = _b(item[1])
+            if item[0] == 'plotinvisibletext' : object.plotInvisibleText = _b(item[1])
+            if item[0] == 'sketchpadsonfab' : object.sketchPadsOnFab = _b(item[1])
+            if item[0] == 'subtractmaskfromsilk' : object.subtractMaskFromSilk = _b(item[1])
             if item[0] == 'outputformat' : object.outputFormat = item[1]
-            if item[0] == 'mirror' : object.mirror = True if item[1] == 'true' else False
+            if item[0] == 'mirror' : object.mirror = _b(item[1])
             if item[0] == 'drillshape' : object.drillShape = item[1]
             if item[0] == 'scaleselection' : object.scaleSelection = item[1]
             if item[0] == 'outputdirectory' : object.outputDirectory = item[1]
+            if item[0] == 'pdf_front_fp_property_popups' : object.pdfFrontFpPropertyPopups = _b(item[1])
+            if item[0] == 'pdf_back_fp_property_popups' : object.pdfBackFpPropertyPopups = _b(item[1])
+            if item[0] == 'pdf_metadata' : object.pdfMetadata = _b(item[1])
+            if item[0] == 'pdf_single_document' : object.pdfSingleDocument = _b(item[1])
+            if item[0] == 'plot_black_and_white' : object.plotBlackAndWhite = _b(item[1])
+            if item[0] == 'plotpadnumbers' : object.plotPadNumbers = _b(item[1])
+            if item[0] == 'hidednponfab' : object.hideDnpOnFab = _b(item[1])
+            if item[0] == 'sketchdnponfab' : object.sketchDnpOnFab = _b(item[1])
+            if item[0] == 'crossoutdnponfab' : object.crossoutDnpOnFab = _b(item[1])
         return object
 
     def to_sexpr(self, indent=4, newline=True) -> str:
@@ -610,43 +656,63 @@ class PlotSettings():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
+        _yn = lambda v: 'yes' if v else 'no'
+
         expression =  f'{indents}(pcbplotparams\n'
         expression += f'{indents}  (layerselection {self.layerSelection})\n'
         if self.plotOnAllLayersSelection is not None:
             expression += f'{indents}  (plot_on_all_layers_selection {self.plotOnAllLayersSelection})\n'
-        expression += f'{indents}  (disableapertmacros {str(self.disableApertMacros).lower()})\n'
-        expression += f'{indents}  (usegerberextensions {str(self.useGerberExtensions).lower()})\n'
-        expression += f'{indents}  (usegerberattributes {str(self.useGerberAttributes).lower()})\n'
-        expression += f'{indents}  (usegerberadvancedattributes {str(self.useGerberAdvancedAttributes).lower()})\n'
-        expression += f'{indents}  (creategerberjobfile {str(self.createGerberJobFile).lower()})\n'
+        expression += f'{indents}  (disableapertmacros {_yn(self.disableApertMacros)})\n'
+        expression += f'{indents}  (usegerberextensions {_yn(self.useGerberExtensions)})\n'
+        expression += f'{indents}  (usegerberattributes {_yn(self.useGerberAttributes)})\n'
+        expression += f'{indents}  (usegerberadvancedattributes {_yn(self.useGerberAdvancedAttributes)})\n'
+        expression += f'{indents}  (creategerberjobfile {_yn(self.createGerberJobFile)})\n'
         if self.dashedLineDashRatio is not None:
             expression += f'{indents}  (dashed_line_dash_ratio {float(self.dashedLineDashRatio):.6f})\n'
         if self.dashedLineGapRatio is not None:
             expression += f'{indents}  (dashed_line_gap_ratio {float(self.dashedLineGapRatio):.6f})\n'
         if self.svgUseInch is not None:
-            expression += f'{indents}  (svguseinch {str(self.svgUseInch).lower()})\n'
+            expression += f'{indents}  (svguseinch {_yn(self.svgUseInch)})\n'
         expression += f'{indents}  (svgprecision {self.svgPrecision})\n'
         if self.excludeEdgeLayer is not None:
-            expression += f'{indents}  (excludeedgelayer {str(self.excludeEdgeLayer).lower()})\n'
-        expression += f'{indents}  (plotframeref {str(self.plotFameRef).lower()})\n'
-        expression += f'{indents}  (viasonmask {str(self.viasOnMask).lower()})\n'
+            expression += f'{indents}  (excludeedgelayer {_yn(self.excludeEdgeLayer)})\n'
+        expression += f'{indents}  (plotframeref {_yn(self.plotFameRef)})\n'
+        expression += f'{indents}  (viasonmask {_yn(self.viasOnMask)})\n'
         expression += f'{indents}  (mode {self.mode})\n'
-        expression += f'{indents}  (useauxorigin false)\n'
+        expression += f'{indents}  (useauxorigin {_yn(self.useAuxOrigin)})\n'
+        if self.pdfFrontFpPropertyPopups is not None:
+            expression += f'{indents}  (pdf_front_fp_property_popups {_yn(self.pdfFrontFpPropertyPopups)})\n'
+        if self.pdfBackFpPropertyPopups is not None:
+            expression += f'{indents}  (pdf_back_fp_property_popups {_yn(self.pdfBackFpPropertyPopups)})\n'
+        if self.pdfMetadata is not None:
+            expression += f'{indents}  (pdf_metadata {_yn(self.pdfMetadata)})\n'
+        if self.pdfSingleDocument is not None:
+            expression += f'{indents}  (pdf_single_document {_yn(self.pdfSingleDocument)})\n'
         expression += f'{indents}  (hpglpennumber {self.hpglPenNumber})\n'
         expression += f'{indents}  (hpglpenspeed {self.hpglPenSpeed})\n'
         expression += f'{indents}  (hpglpendiameter {float(self.hpglPenDiameter):.6f})\n'
-        expression += f'{indents}  (dxfpolygonmode {str(self.dxfPolygonMode).lower()})\n'
-        expression += f'{indents}  (dxfimperialunits {str(self.dxfImperialUnits).lower()})\n'
-        expression += f'{indents}  (dxfusepcbnewfont {str(self.dxfUsePcbnewFont).lower()})\n'
-        expression += f'{indents}  (psnegative {str(self.psNegative).lower()})\n'
-        expression += f'{indents}  (psa4output {str(self.psA4Output).lower()})\n'
-        expression += f'{indents}  (plotreference {str(self.plotReference).lower()})\n'
-        expression += f'{indents}  (plotvalue {str(self.plotValue).lower()})\n'
-        expression += f'{indents}  (plotinvisibletext {str(self.plotInvisibleText).lower()})\n'
-        expression += f'{indents}  (sketchpadsonfab {str(self.sketchPadsOnFab).lower()})\n'
-        expression += f'{indents}  (subtractmaskfromsilk {str(self.subtractMaskFromSilk).lower()})\n'
+        expression += f'{indents}  (dxfpolygonmode {_yn(self.dxfPolygonMode)})\n'
+        expression += f'{indents}  (dxfimperialunits {_yn(self.dxfImperialUnits)})\n'
+        expression += f'{indents}  (dxfusepcbnewfont {_yn(self.dxfUsePcbnewFont)})\n'
+        expression += f'{indents}  (psnegative {_yn(self.psNegative)})\n'
+        expression += f'{indents}  (psa4output {_yn(self.psA4Output)})\n'
+        if self.plotBlackAndWhite is not None:
+            expression += f'{indents}  (plot_black_and_white {_yn(self.plotBlackAndWhite)})\n'
+        expression += f'{indents}  (plotreference {_yn(self.plotReference)})\n'
+        expression += f'{indents}  (plotvalue {_yn(self.plotValue)})\n'
+        expression += f'{indents}  (plotinvisibletext {_yn(self.plotInvisibleText)})\n'
+        expression += f'{indents}  (sketchpadsonfab {_yn(self.sketchPadsOnFab)})\n'
+        if self.plotPadNumbers is not None:
+            expression += f'{indents}  (plotpadnumbers {_yn(self.plotPadNumbers)})\n'
+        if self.hideDnpOnFab is not None:
+            expression += f'{indents}  (hidednponfab {_yn(self.hideDnpOnFab)})\n'
+        if self.sketchDnpOnFab is not None:
+            expression += f'{indents}  (sketchdnponfab {_yn(self.sketchDnpOnFab)})\n'
+        if self.crossoutDnpOnFab is not None:
+            expression += f'{indents}  (crossoutdnponfab {_yn(self.crossoutDnpOnFab)})\n'
+        expression += f'{indents}  (subtractmaskfromsilk {_yn(self.subtractMaskFromSilk)})\n'
         expression += f'{indents}  (outputformat {self.outputFormat})\n'
-        expression += f'{indents}  (mirror {str(self.mirror).lower()})\n'
+        expression += f'{indents}  (mirror {_yn(self.mirror)})\n'
         expression += f'{indents}  (drillshape {self.drillShape})\n'
         expression += f'{indents}  (scaleselection {self.scaleSelection})\n'
         expression += f'{indents}  (outputdirectory "{dequote(self.outputDirectory)}")\n'
@@ -690,6 +756,33 @@ class SetupData():
     gridOrigin: Optional[Position] = None
     """The optional ``gridOrigin`` defines the grid original if it is set to anything other
     than (0,0)."""
+
+    allowSoldermaskBridgesInFootprints: Optional[bool] = None
+    """The optional ``allow_soldermask_bridges_in_footprints`` token. Available since KiCad v8"""
+
+    tentingFront: Optional[bool] = None
+    """The ``tenting front`` option. Available since KiCad v8"""
+
+    tentingBack: Optional[bool] = None
+    """The ``tenting back`` option. Available since KiCad v8"""
+
+    coveringFront: Optional[bool] = None
+    """The ``covering front`` option. Available since KiCad v8"""
+
+    coveringBack: Optional[bool] = None
+    """The ``covering back`` option. Available since KiCad v8"""
+
+    pluggingFront: Optional[bool] = None
+    """The ``plugging front`` option. Available since KiCad v8"""
+
+    pluggingBack: Optional[bool] = None
+    """The ``plugging back`` option. Available since KiCad v8"""
+
+    capping: Optional[bool] = None
+    """The ``capping`` option. Available since KiCad v8"""
+
+    filling: Optional[bool] = None
+    """The ``filling`` option. Available since KiCad v8"""
 
     plotSettings: Optional[PlotSettings] = None
     """The optional ``plotSettings`` define how the board was last plotted."""

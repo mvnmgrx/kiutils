@@ -39,6 +39,11 @@ class Schematic():
     generator: str = KIUTILS_CREATE_NEW_GENERATOR_STR
     """The ``generator`` token attribute defines the program used to write the file"""
 
+    generatorVersion: Optional[str] = None
+    """The optional ``generator_version`` token attribute defines the version of the generator.
+
+    Available since KiCad v8"""
+
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
@@ -110,6 +115,11 @@ class Schematic():
     """The ``symbolInstances`` token defines a list of instances of symbols from ``libSymbols`` token
     used in the schematic"""
 
+    embeddedFonts: Optional[bool] = None
+    """The optional ``embedded_fonts`` token defines if fonts are embedded in the schematic.
+
+    Available since KiCad v8"""
+
     filePath: Optional[str] = None
     """The ``filePath`` token defines the path-like string to the schematic file. Automatically set when
     ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
@@ -138,6 +148,8 @@ class Schematic():
         for item in exp:
             if item[0] == 'version': object.version = item[1]
             if item[0] == 'generator': object.generator = item[1]
+            if item[0] == 'generator_version': object.generatorVersion = item[1]
+            if item[0] == 'embedded_fonts': object.embeddedFonts = True if item[1] == 'yes' else False
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'paper': object.paper = PageSettings().from_sexpr(item)
             if item[0] == 'title_block': object.titleBlock = TitleBlock().from_sexpr(item)
@@ -243,6 +255,8 @@ class Schematic():
         endline = '\n' if newline else ''
 
         expression =  f'{indents}(kicad_sch (version {self.version}) (generator {self.generator})\n'
+        if self.generatorVersion is not None:
+            expression += f'{indents}  (generator_version "{self.generatorVersion}")\n'
         if self.uuid is not None:
             expression += f'\n{indents}  (uuid {self.uuid})\n\n'
         expression += f'{self.paper.to_sexpr(indent+2)}'
@@ -346,6 +360,10 @@ class Schematic():
             for item in self.symbolInstances:
                 expression += item.to_sexpr(indent+4)
             expression += '  )\n'
+
+        if self.embeddedFonts is not None:
+            ef = 'yes' if self.embeddedFonts else 'no'
+            expression += f'{indents}  (embedded_fonts {ef})\n'
 
         expression += f'{indents}){endline}'
         return expression

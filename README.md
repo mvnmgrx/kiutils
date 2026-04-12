@@ -45,6 +45,10 @@ pip install --no-cache-dir --upgrade kiutils
 Visit the [kiutils documentation](https://kiutils.readthedocs.io/) for more information on how to 
 install, use and develop `kiutils`, as well as examples and general module documentation.
 
+## Known Limitations
+- `embedded_files` sections (e.g. embedded worksheets in `.kicad_sch`) are not yet parsed and will be dropped during roundtrip read/write.
+- KiCad v8 bare-token format (e.g. `(pin_numbers hide)`) is normalized to the v9 sub-expression format (`(pin_numbers (hide yes))`) on output. Both formats are semantically equivalent and accepted by KiCad.
+
 ## Donate
 If you found this module helpful for your project consider donating via
 [PayPal](https://paypal.me/mrvnmgr). Thanks!

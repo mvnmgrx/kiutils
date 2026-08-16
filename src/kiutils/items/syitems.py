@@ -23,6 +23,8 @@ from typing import List, Optional
 from kiutils.items.common import Fill, Position, Stroke, Effects, Fill
 from kiutils.utils.strings import dequote
 
+from kiutils.misc.kicad_release_dates import KICAD_8_VERSION_NUMBER
+
 @dataclass
 class SyArc():
     """The ``arc`` token defines a graphical arc in a symbol definition.
@@ -505,8 +507,11 @@ class SyTextBox():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicad_version: str = None
+    """The ``kicad_version`` contains the version number of the schematic. Used to control how schematics are read and written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> SyTextBox:
+    def from_sexpr(cls, exp: list, kicad_version = None) -> SyTextBox:
         """Convert the given S-Expresstion into a SyTextBox object
 
         Args:
@@ -526,6 +531,7 @@ class SyTextBox():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicad_version = kicad_version
 
         # Extract "private" token, if any is present
         if exp[1] == "private" and not isinstance(exp[2], list):
@@ -567,6 +573,9 @@ class SyTextBox():
         expression += self.fill.to_sexpr(indent+2)
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicad_version is not None and int(self.kicad_version) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression

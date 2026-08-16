@@ -112,10 +112,19 @@ class Board():
 
         if exp[0] != 'kicad_pcb':
             raise Exception("Expression does not have the correct type")
+        
+        kicad_version = None
+        for item in exp:
+            if item[0] == 'version':
+                kicad_version = item[1]
+                break
+
+        if kicad_version == None:
+            raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.version = kicad_version
         for item in exp:
-            if item[0] == 'version': object.version = item[1]
             if item[0] == 'generator': object.generator = item[1]
             if item[0] == 'general': object.general = GeneralSettings().from_sexpr(item)
             if item[0] == 'paper': object.paper = PageSettings().from_sexpr(item)

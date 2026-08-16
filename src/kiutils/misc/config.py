@@ -15,3 +15,6 @@ KIUTILS_CREATE_NEW_VERSION_STR = '20211014'
 
 KIUTILS_CREATE_NEW_GENERATOR_STR = 'kiutils'
 """Generator string used in ``create_new()`` class functions"""
+
+KIUTILS_CREATE_NEW_GENERATOR_VERSION_STR = 'v1.4.9'
+"""Generator string used in ``create_new()`` class functions"""

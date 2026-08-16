@@ -23,7 +23,8 @@ from kiutils.items.common import Image, PageSettings, TitleBlock
 from kiutils.items.schitems import *
 from kiutils.symbol import Symbol
 from kiutils.utils import sexpr
-from kiutils.misc.config import KIUTILS_CREATE_NEW_GENERATOR_STR, KIUTILS_CREATE_NEW_VERSION_STR
+from kiutils.misc.config import KIUTILS_CREATE_NEW_GENERATOR_STR, KIUTILS_CREATE_NEW_VERSION_STR, KIUTILS_CREATE_NEW_GENERATOR_VERSION_STR
+from kiutils.misc.kicad_release_dates import KICAD_8_VERSION_NUMBER
 
 @dataclass
 class Schematic():
@@ -38,6 +39,9 @@ class Schematic():
 
     generator: str = KIUTILS_CREATE_NEW_GENERATOR_STR
     """The ``generator`` token attribute defines the program used to write the file"""
+    
+    generator_version: str = KIUTILS_CREATE_NEW_GENERATOR_VERSION_STR
+    """The ``generator_version`` token attribute defines the version of the program used to write the file"""
 
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
@@ -114,6 +118,9 @@ class Schematic():
     """The ``filePath`` token defines the path-like string to the schematic file. Automatically set when
     ``self.from_file()`` is used. Allows the use of ``self.to_file()`` without parameters."""
 
+    embeddedFonts: Optional[bool] = None
+    """The ``embeddedFonts`` token [TODO: Describe this token] """
+
     @classmethod
     def from_sexpr(cls, exp: list) -> Schematic:
         """Convert the given S-Expresstion into a Schematic object
@@ -133,36 +140,47 @@ class Schematic():
 
         if exp[0] != 'kicad_sch':
             raise Exception("Expression does not have the correct type")
+        
+        kicadVersion = None
+        for item in exp:
+            if item[0] == 'version':
+                kicadVersion = item[1]
+                break
+
+        if kicadVersion == None:
+            raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.version = kicadVersion
         for item in exp:
-            if item[0] == 'version': object.version = item[1]
             if item[0] == 'generator': object.generator = item[1]
+            if item[0] == 'generator_version': object.generator_version = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
+            if item[0] == 'embedded_fonts': object.embeddedFonts = True if item[1] == 'yes' else False
             if item[0] == 'paper': object.paper = PageSettings().from_sexpr(item)
             if item[0] == 'title_block': object.titleBlock = TitleBlock().from_sexpr(item)
             if item[0] == 'lib_symbols':
                 for symbol in item[1:]:
-                    object.libSymbols.append(Symbol().from_sexpr(symbol))
-            if item[0] == 'junction': object.junctions.append(Junction().from_sexpr(item))
-            if item[0] == 'no_connect': object.noConnects.append(NoConnect().from_sexpr(item))
-            if item[0] == 'bus_entry': object.busEntries.append(BusEntry().from_sexpr(item))
+                    object.libSymbols.append(Symbol().from_sexpr(symbol,kicadVersion))
+            if item[0] == 'junction': object.junctions.append(Junction().from_sexpr(item,kicadVersion))
+            if item[0] == 'no_connect': object.noConnects.append(NoConnect().from_sexpr(item,kicadVersion))
+            if item[0] == 'bus_entry': object.busEntries.append(BusEntry().from_sexpr(item,kicadVersion))
             if item[0] == 'bus_alias': object.busAliases.append(BusAlias().from_sexpr(item))
-            if item[0] == 'wire': object.graphicalItems.append(Connection().from_sexpr(item))
-            if item[0] == 'bus': object.graphicalItems.append(Connection().from_sexpr(item))
-            if item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item))
-            if item[0] == 'arc': object.shapes.append(Arc.from_sexpr(item))
-            if item[0] == 'circle': object.shapes.append(Circle.from_sexpr(item))
-            if item[0] == 'rectangle': object.shapes.append(Rectangle.from_sexpr(item))
-            if item[0] == 'image': object.images.append(Image().from_sexpr(item))
-            if item[0] == 'text': object.texts.append(Text().from_sexpr(item))
-            if item[0] == 'text_box': object.textBoxes.append(TextBox().from_sexpr(item))
-            if item[0] == 'label': object.labels.append(LocalLabel().from_sexpr(item))
-            if item[0] == 'global_label': object.globalLabels.append(GlobalLabel().from_sexpr(item))
+            if item[0] == 'wire': object.graphicalItems.append(Connection().from_sexpr(item,kicadVersion))
+            if item[0] == 'bus': object.graphicalItems.append(Connection().from_sexpr(item,kicadVersion))
+            if item[0] == 'polyline': object.graphicalItems.append(PolyLine().from_sexpr(item,kicadVersion))
+            if item[0] == 'arc': object.shapes.append(Arc.from_sexpr(item,kicadVersion))
+            if item[0] == 'circle': object.shapes.append(Circle.from_sexpr(item,kicadVersion))
+            if item[0] == 'rectangle': object.shapes.append(Rectangle.from_sexpr(item,kicadVersion))
+            if item[0] == 'image': object.images.append(Image().from_sexpr(item,kicadVersion))
+            if item[0] == 'text': object.texts.append(Text().from_sexpr(item,kicadVersion))
+            if item[0] == 'text_box': object.textBoxes.append(TextBox().from_sexpr(item,kicadVersion))
+            if item[0] == 'label': object.labels.append(LocalLabel().from_sexpr(item,kicadVersion))
+            if item[0] == 'global_label': object.globalLabels.append(GlobalLabel().from_sexpr(item,kicadVersion))
             if item[0] == 'hierarchical_label': object.hierarchicalLabels.append(HierarchicalLabel().from_sexpr(item))
-            if item[0] == 'netclass_flag': object.netclassFlags.append(NetclassFlag.from_sexpr(item))
-            if item[0] == 'symbol': object.schematicSymbols.append(SchematicSymbol().from_sexpr(item))
-            if item[0] == 'sheet': object.sheets.append(HierarchicalSheet().from_sexpr(item))
+            if item[0] == 'netclass_flag': object.netclassFlags.append(NetclassFlag.from_sexpr(item,kicadVersion))
+            if item[0] == 'symbol': object.schematicSymbols.append(SchematicSymbol().from_sexpr(item,kicadVersion))
+            if item[0] == 'sheet': object.sheets.append(HierarchicalSheet().from_sexpr(item,kicadVersion))
             if item[0] == 'sheet_instances':
                 for instance in item[1:]:
                     object.sheetInstances.append(HierarchicalSheetInstance().from_sexpr(instance))
@@ -204,7 +222,8 @@ class Schematic():
         """
         schematic = cls(
             version = KIUTILS_CREATE_NEW_VERSION_STR,
-            generator = KIUTILS_CREATE_NEW_GENERATOR_STR
+            generator = KIUTILS_CREATE_NEW_GENERATOR_STR,
+            generator_version = KIUTILS_CREATE_NEW_GENERATOR_VERSION_STR
         )
         schematic.sheetInstances.append(HierarchicalSheetInstance(instancePath='/', page='1'))
         return schematic
@@ -242,9 +261,17 @@ class Schematic():
         indents = ' '*indent
         endline = '\n' if newline else ''
 
-        expression =  f'{indents}(kicad_sch (version {self.version}) (generator {self.generator})\n'
+        if int(self.version) > KICAD_8_VERSION_NUMBER:
+            expression =  f'(kicad_sch (version {self.version}) (generator "{self.generator}") (generator_version "{self.generator_version}")\n'
+        else:
+            expression =  f'{indents}(kicad_sch (version {self.version}) (generator {self.generator})\n'
+        
         if self.uuid is not None:
-            expression += f'\n{indents}  (uuid {self.uuid})\n\n'
+            if int(self.version) > KICAD_8_VERSION_NUMBER:
+                expression += f'\n{indents}  (uuid "{self.uuid}")\n\n'
+            else:
+                expression += f'\n{indents}  (uuid {self.uuid})\n\n'
+
         expression += f'{self.paper.to_sexpr(indent+2)}'
         if self.titleBlock is not None:
             expression += f'\n{self.titleBlock.to_sexpr(indent+2)}'
@@ -346,6 +373,10 @@ class Schematic():
             for item in self.symbolInstances:
                 expression += item.to_sexpr(indent+4)
             expression += '  )\n'
+
+        if self.embeddedFonts is not None:
+            expression += '\n'
+            expression += f'{indents}  (embedded_fonts {"yes" if self.embeddedFonts else "no"})\n'
 
         expression += f'{indents}){endline}'
         return expression

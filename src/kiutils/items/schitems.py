@@ -21,6 +21,7 @@ from typing import Optional, List, Dict
 
 from kiutils.items.common import Fill, Position, ColorRGBA, ProjectInstance, Stroke, Effects, Property
 from kiutils.utils.strings import dequote
+from kiutils.misc.kicad_release_dates import KICAD_8_VERSION_NUMBER
 
 @dataclass
 class Junction():
@@ -44,8 +45,11 @@ class Junction():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Junction:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Junction:
         """Convert the given S-Expresstion into a Junction object
 
         Args:
@@ -65,6 +69,7 @@ class Junction():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'color': object.color = ColorRGBA().from_sexpr(item)
@@ -84,7 +89,12 @@ class Junction():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        uuid = f'\n{indents}  (uuid {self.uuid})\n' if self.uuid is not None else ''
+        uuid = f'\n{indents}  '
+        if self.uuid is not None:
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                uuid += f'(uuid "{self.uuid}")\n'
+            else:
+                uuid += f'(uuid {self.uuid})\n'
         expression =  f'{indents}(junction (at {self.position.X} {self.position.Y}) (diameter {self.diameter}) {self.color.to_sexpr()}{uuid}{indents}){endline}'
         return expression
 
@@ -102,8 +112,11 @@ class NoConnect():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> NoConnect:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> NoConnect:
         """Convert the given S-Expresstion into a NoConnect object
 
         Args:
@@ -140,7 +153,12 @@ class NoConnect():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        uuid = f' (uuid {self.uuid})' if self.uuid is not None else ''
+        uuid = ''
+        if self.uuid is not None:
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                uuid = f' (uuid "{self.uuid}")'
+            else:
+                uuid = f' (uuid {self.uuid})'
 
         return f'{indents}(no_connect (at {self.position.X} {self.position.Y}){uuid}){endline}'
 
@@ -165,8 +183,11 @@ class BusEntry():
     stroke: Stroke = field(default_factory=lambda: Stroke())
     """The ``stroke`` defines how the bus entry is drawn"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> BusEntry:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> BusEntry:
         """Convert the given S-Expresstion into a BusEntry object
 
         Args:
@@ -186,6 +207,7 @@ class BusEntry():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'stroke': object.stroke = Stroke().from_sexpr(item)
@@ -209,7 +231,10 @@ class BusEntry():
         expression =  f'{indents}(bus_entry (at {self.position.X} {self.position.Y}) (size {self.size.X} {self.size.Y})\n'
         expression += self.stroke.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -299,8 +324,11 @@ class Connection():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Connection:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Connection:
         """Convert the given S-Expresstion into a Connection object
 
         Args:
@@ -320,6 +348,7 @@ class Connection():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         object.type = exp[0]
         for item in exp:
             if item[0] == 'pts':
@@ -349,7 +378,10 @@ class Connection():
         expression =  f'{indents}({self.type} (pts{points})\n'
         expression += self.stroke.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -371,8 +403,11 @@ class PolyLine():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> PolyLine:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> PolyLine:
         """Convert the given S-Expresstion into a PolyLine object
 
         Args:
@@ -392,6 +427,7 @@ class PolyLine():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         for item in exp:
             if item[0] == 'pts':
                 for point in item[1:]:
@@ -420,7 +456,10 @@ class PolyLine():
         expression =  f'{indents}(polyline (pts{points})\n'
         expression += self.stroke.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -444,8 +483,11 @@ class Text():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Text:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Text:
         """Convert the given S-Expresstion into a Text object
 
         Args:
@@ -465,6 +507,7 @@ class Text():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
@@ -497,7 +540,10 @@ class Text():
         expression += f'(at {self.position.X} {self.position.Y}{posA})\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -531,8 +577,11 @@ class TextBox():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> TextBox:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> TextBox:
         """Convert the given S-Expresstion into a TextBox object
 
         Args:
@@ -552,6 +601,7 @@ class TextBox():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
@@ -583,7 +633,10 @@ class TextBox():
         expression += self.fill.to_sexpr(indent+2)
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -611,8 +664,11 @@ class LocalLabel():
     """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
     with the global label have been place automatically"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> LocalLabel:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> LocalLabel:
         """Convert the given S-Expresstion into a LocalLabel object
 
         Args:
@@ -632,6 +688,7 @@ class LocalLabel():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
@@ -659,7 +716,10 @@ class LocalLabel():
         expression =  f'{indents}(label "{dequote(self.text)}" (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -695,8 +755,11 @@ class GlobalLabel():
     """	The ``properties`` token defines a list of properties of the global label. Currently, the
     only supported property is the inter-sheet reference"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> GlobalLabel:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> GlobalLabel:
         """Convert the given S-Expresstion into a GlobalLabel object
 
         Args:
@@ -716,12 +779,13 @@ class GlobalLabel():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
+            if item[0] == 'property': object.properties.append(Property().from_sexpr(item,kicadVersion))
             if item[0] == 'shape': object.shape = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
         return object
@@ -745,7 +809,10 @@ class GlobalLabel():
         expression =  f'{indents}(global_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fa}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:
             expression += property.to_sexpr(indent+2)
         expression += f'{indents}){endline}'
@@ -780,8 +847,11 @@ class HierarchicalLabel():
     """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
     with the global label have been place automatically"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> HierarchicalLabel:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> HierarchicalLabel:
         """Convert the given S-Expresstion into a HierarchicalLabel object
 
         Args:
@@ -801,6 +871,7 @@ class HierarchicalLabel():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         object.text = exp[1]
         for item in exp[2:]:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
@@ -829,7 +900,10 @@ class HierarchicalLabel():
         expression =  f'{indents}(hierarchical_label "{dequote(self.text)}" (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fieldsAutoplaced}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -1059,8 +1133,20 @@ class SchematicSymbol():
     
     Available since KiCad v7."""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
+    excludeFromSim: Optional[bool] = None
+    """The ``excludeFromSim`` token [TODO: Describe this token] """
+
+    bodyStyle: Optional[str] = None
+    """The ``bodyStyle`` token [TODO: Describe this token] """
+
+    inPosFiles: Optional[bool] = None
+    """The ``inPosFiles`` token [TODO: Describe this token] """
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> SchematicSymbol:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> SchematicSymbol:
         """Convert the given S-Expresstion into a SchematicSymbol object
 
         Args:
@@ -1080,17 +1166,21 @@ class SchematicSymbol():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         for item in exp[1:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
+            if item[0] == 'exclude_from_sim': object.excludeFromSim = True if item[1] == 'yes' else False
+            if item[0] == 'in_pos_files': object.inPosFiles = True if item[1] == 'yes' else False
             if item[0] == 'lib_id': object.libId = item[1]
             if item[0] == 'lib_name': object.libName = item[1]
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'unit': object.unit = item[1]
+            if item[0] == 'body_style': object.bodyStyle = item[1]
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
             if item[0] == 'dnp': object.dnp = True if item[1] == 'yes' else False
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
+            if item[0] == 'property': object.properties.append(Property().from_sexpr(item,kicadVersion))
             if item[0] == 'pin': object.pins.update({item[1]: item[2][1]})
             if item[0] == 'mirror': object.mirror = item[1]
             if item[0] == 'instances':
@@ -1113,11 +1203,26 @@ class SchematicSymbol():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        fa = f' (fields_autoplaced)' if self.fieldsAutoplaced else ''
-        inBom = 'yes' if self.inBom else 'no'
-        onBoard = 'yes' if self.onBoard else 'no'
+
+        fatext = ''
+        if self.kicadVersion is not None and self.kicadVersion > KICAD_8_VERSION_NUMBER:
+            fatext = (' yes' if self.fieldsAutoplaced else ' no')
+        fieldsautoplaced = f' (fields_autoplaced{fatext})' if self.fieldsAutoplaced else ''
+
+        inBom = f' (in_bom {"yes" if self.inBom else "no"})'
+
+        bodystyle = f' (body_style {self.bodyStyle})' if self.bodyStyle is not None else ''
+
+        onBoard = f' (on_board {"yes" if self.onBoard else "no"})'
+
         mirror = f' (mirror {self.mirror})' if self.mirror is not None else ''
+
         unit = f' (unit {self.unit})' if self.unit is not None else ''
+
+        excludefromsim = f' (exclude_from_sim {"yes" if self.excludeFromSim else "no"})' if self.excludeFromSim is not None else ''
+
+        inposfiles = f' (in_pos_files {"yes" if self.inPosFiles else "no"})' if self.inPosFiles is not None else ''
+
         lib_name = f' (lib_name "{dequote(self.libName)}")' if self.libName is not None else ''
         if self.dnp is not None:
             dnp = ' (dnp yes)' if self.dnp else ' (dnp no)'
@@ -1125,13 +1230,23 @@ class SchematicSymbol():
             dnp = ''
 
         expression =  f'{indents}(symbol{lib_name} (lib_id "{dequote(self.libId)}") (at {self.position.X} {self.position.Y}{posA}){mirror}{unit}\n'
-        expression += f'{indents}  (in_bom {inBom}) (on_board {onBoard}){dnp}{fa}\n'
+        expression += f'{indents} {inBom}{onBoard}{dnp}{fieldsautoplaced}{bodystyle}{excludefromsim}{inposfiles}\n'
+        
         if self.uuid:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'   
+        
         for property in self.properties:
             expression += property.to_sexpr(indent+2)
+
         for number, uuid in self.pins.items():
-            expression += f'{indents}  (pin "{dequote(number)}" (uuid {uuid}))\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (pin "{dequote(number)}" (uuid "{uuid}"))\n'
+            else:
+                expression += f'{indents}  (pin "{dequote(number)}" (uuid {uuid}))\n'
+            
         if len(self.instances) != 0:
             expression += f'{indents}  (instances\n'
             for instance in self.instances:
@@ -1166,8 +1281,11 @@ class HierarchicalPin():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> HierarchicalPin:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> HierarchicalPin:
         """Convert the given S-Expresstion into a HierarchicalPin object
 
         Args:
@@ -1187,6 +1305,7 @@ class HierarchicalPin():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         object.name = exp[1]
         object.connectionType = exp[2]
         for item in exp[3:]:
@@ -1213,7 +1332,10 @@ class HierarchicalPin():
         expression =  f'{indents}(pin "{dequote(self.name)}" {self.connectionType} (at {self.position.X} {self.position.Y}{posA})\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -1387,8 +1509,11 @@ class HierarchicalSheet():
     
     Available since KiCad v7."""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> HierarchicalSheet:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> HierarchicalSheet:
         """Convert the given S-Expresstion into a HierarchicalSheet object
 
         Args:
@@ -1408,6 +1533,7 @@ class HierarchicalSheet():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         for item in exp[1:]:
             if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True
             if item[0] == 'at': object.position = Position().from_sexpr(item)
@@ -1420,7 +1546,7 @@ class HierarchicalSheet():
                 object.fill.precision = 4
             if item[0] == 'uuid': object.uuid = item[1]
             if item[0] == 'property':
-                p = Property().from_sexpr(item)
+                p = Property().from_sexpr(item,kicadVersion)
                 if item[1] == 'Sheet name' or item[1] == 'Sheetname': object.sheetName = p
                 elif item[1] == 'Sheet file' or item[1] == 'Sheetfile': object.fileName = p
                 else: object.properties.append(p)
@@ -1449,7 +1575,10 @@ class HierarchicalSheet():
         expression += self.stroke.to_sexpr(indent+2)
         expression += f'{indents}  (fill {self.fill.to_sexpr()})\n'
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += self.sheetName.to_sexpr(indent+2)
         expression += self.fileName.to_sexpr(indent+2)
         for p in self.properties:
@@ -1618,8 +1747,11 @@ class Rectangle():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Rectangle:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Rectangle:
         """Convert the given S-Expresstion into a Rectangle object
 
         Args:
@@ -1639,6 +1771,7 @@ class Rectangle():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
 
         for item in exp:
             if item[0] == 'start': object.start = Position().from_sexpr(item)
@@ -1665,7 +1798,10 @@ class Rectangle():
         expression += self.stroke.to_sexpr(indent+2)
         expression += self.fill.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -1697,8 +1833,11 @@ class Arc():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Arc:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Arc:
         """Convert the given S-Expresstion into a Arc object
 
         Args:
@@ -1718,6 +1857,7 @@ class Arc():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
 
         for item in exp:
             if item[0] == 'start': object.start = Position().from_sexpr(item)
@@ -1745,7 +1885,10 @@ class Arc():
         expression += self.stroke.to_sexpr(indent+2)
         expression += self.fill.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
 
@@ -1774,8 +1917,11 @@ class Circle():
     uuid: Optional[str] = None
     """The optional ``uuid`` defines the universally unique identifier. Defaults to ``None.``"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Circle:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Circle:
         """Convert the given S-Expresstion into a Circle object
 
         Args:
@@ -1795,6 +1941,7 @@ class Circle():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
 
         for item in exp:
             if item[0] == 'center': object.center = Position().from_sexpr(item)
@@ -1821,7 +1968,10 @@ class Circle():
         expression += self.stroke.to_sexpr(indent+2)
         expression += self.fill.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         expression += f'{indents}){endline}'
         return expression
     
@@ -1861,8 +2011,11 @@ class NetclassFlag():
     """The ``fields_autoplaced`` is a flag that indicates that any PROPERTIES associated
     with the netclas flag have been place automatically"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> NetclassFlag:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> NetclassFlag:
         """Convert the given S-Expresstion into a Circle object
 
         Args:
@@ -1912,7 +2065,10 @@ class NetclassFlag():
         expression =  f'{indents}(netclass_flag "{dequote(self.text)}" (length {self.length}) (shape {self.shape}) (at {self.position.X} {self.position.Y}{posA}){fa}\n'
         expression += self.effects.to_sexpr(indent+2)
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
         for property in self.properties:
             expression += property.to_sexpr(indent+2)
         expression += f'{indents}){endline}'

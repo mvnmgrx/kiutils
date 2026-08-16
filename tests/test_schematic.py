@@ -208,3 +208,18 @@ class Tests_Schematic_Since_V7(unittest.TestCase):
         self.assertTrue(schematic.libSymbols[1].units[1].libId == "Filter_EMI_LLL_162534_1_1_1")
 
         self.assertTrue(to_file_and_compare(schematic, self.testData))
+
+class Tests_Schematic_Since_V8(unittest.TestCase):
+    """Schematic related test cases since KiCad 8"""
+
+    def setUp(self) -> None:
+        prepare_test(self)
+        return super().setUp()
+    
+    def test_conditionalHideAndUUIDWrite(self):
+        """Tests hide and UUID tags being written properly for KiCAD v8 and over"""
+        """Simply loads the Schematic and then re-saves it. Doing so should not mess up the 'hide' tags."""
+        self.testData.compareToTestFile = True
+        self.testData.pathToTestFile = path.join(SCHEMATIC_BASE, 'since_v8', 'test_conditionalHideAndUUIDWrite')
+        schematic = Schematic().from_file(self.testData.pathToTestFile)
+        self.assertTrue(to_file_and_compare(schematic, self.testData))

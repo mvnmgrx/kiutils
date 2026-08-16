@@ -9,6 +9,9 @@ License identifier:
 
 Major changes:
     02.02.2022 - created
+    
+Minor changes:
+    19APR2026 - Added support for hide, show_name and do_not_autoplace field in object properties
 
 Documentation taken from:
     https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html#_common_syntax
@@ -21,6 +24,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
 from kiutils.utils.strings import dequote
+from kiutils.misc.kicad_release_dates import KICAD_8_VERSION_NUMBER
 
 @dataclass
 class Position():
@@ -457,8 +461,11 @@ class Effects():
 
     Available since KiCad v7"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Effects:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Effects:
         """Convert the given S-Expresstion into a Effects object
 
         Args:
@@ -478,6 +485,7 @@ class Effects():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         for item in exp:
             if type(item) != type([]):
                 if item == 'hide': object.hide = True
@@ -501,7 +509,11 @@ class Effects():
         endline = '\n' if newline else ''
 
         justify = f' {self.justify.to_sexpr()}' if self.justify.to_sexpr() != '' else ''
-        hide = f' hide' if self.hide else ''
+        
+        hide = ''
+        if self.kicadVersion is None or int(self.kicadVersion) <= KICAD_8_VERSION_NUMBER:
+            hide = f' hide' if self.hide else ''
+        
         href = f' (href "{dequote(self.href)}")' if self.href is not None else ''
 
         expression =  f'{indents}(effects {self.font.to_sexpr()}{justify}{href}{hide}){endline}'
@@ -824,14 +836,20 @@ class Property():
     effects: Optional[Effects] = None
     """The optional ``effects`` section defines how the text is displayed"""
 
-    showName: bool = False
-    """The ``show_name`` token defines if the property name is visibly shown. Used for netclass
-    labels.
+    showName: Optional[bool] = None
+    """The ``show_name`` token defines if the property name is visibly shown. Used for netclass labels."""
 
-    Available since KiCad v7"""
+    doNotAutoplace: Optional[bool] = None
+    """The ``doNotAutoplace`` token [TODO: Describe this token] """
+    
+    hide: Optional[bool] = False
+    """The ``hide`` token defines if the property value is visibly shown. Used for component values, manufacturer names, etc."""
+
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are read and written"""
 
     @classmethod
-    def from_sexpr(cls, exp: list) -> Property:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Property:
         """Convert the given S-Expresstion into a Property object
 
         Args:
@@ -853,11 +871,18 @@ class Property():
         object = cls()
         object.key = exp[1]
         object.value = exp[2]
+        object.kicadVersion = kicadVersion
         for item in exp[3:]:
             if item[0] == 'id': object.id = item[1]
             if item[0] == 'at': object.position = Position().from_sexpr(item)
-            if item[0] == 'effects': object.effects = Effects().from_sexpr(item)
-            if item[0] == 'show_name': object.showName = True
+            if item[0] == 'effects': object.effects = Effects().from_sexpr(item,kicadVersion)
+            if item[0] == 'show_name':
+                if kicadVersion is not None and int(kicadVersion) > KICAD_8_VERSION_NUMBER:
+                    object.showName = True if item[1] == 'yes' else False
+                else:
+                    object.showName = True
+            if item[0] == 'hide': object.hide = True if item[1] == 'yes' else False
+            if item[0] == 'do_not_autoplace': object.doNotAutoplace = True if item[1] == 'yes' else False
         return object
 
     def to_sexpr(self, indent: int = 4, newline: bool = True) -> str:
@@ -874,10 +899,22 @@ class Property():
         endline = '\n' if newline else ''
 
         posA = f' {self.position.angle}' if self.position.angle is not None else ''
-        id = f' (id {self.id})' if self.id is not None else ''
-        sn = ' (show_name)' if self.showName else ''
+        id   = f' (id {self.id})' if self.id is not None else ''
+        
+        if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+            sn = f' (show_name {"yes" if self.showName else "no"})' if self.showName is not None else ''
+        else:
+            sn = ' (show_name)' if self.showName else ''
+        
+        dnatext = ("yes" if self.doNotAutoplace else "no") if self.doNotAutoplace is not None else ''
+        dna = f' (do_not_autoplace {dnatext})' if self.doNotAutoplace is not None else ''
 
-        expression =  f'{indents}(property "{dequote(self.key)}" "{dequote(self.value)}"{id} (at {self.position.X} {self.position.Y}{posA}){sn}'
+        hide = ''
+        if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+            hide = f' (hide yes)' if self.hide is not None and self.hide else ''
+
+        expression =  f'{indents}(property "{dequote(self.key)}" "{dequote(self.value)}"{id} (at {self.position.X} {self.position.Y}{posA}){hide}{sn}{dna}'
+        
         if self.effects is not None:
             expression += f'\n{self.effects.to_sexpr(indent+2)}'
             expression += f'{indents}){endline}'
@@ -1103,8 +1140,11 @@ class Image():
     """The optional ``layer`` token defines the canonical layer name when the image is used inside
     a footprint or PCB. When used inside a schematic, this token is required to be ``None``."""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are read and written"""
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Image:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Image:
         """Convert the given S-Expresstion into a Image object
 
         Args:
@@ -1124,6 +1164,7 @@ class Image():
             raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.kicadVersion = kicadVersion
         for item in exp:
             if item[0] == 'at': object.position = Position().from_sexpr(item)
             if item[0] == 'scale': object.scale = item[1]
@@ -1152,7 +1193,11 @@ class Image():
 
         expression =  f'{indents}(image (at {self.position.X} {self.position.Y}){layer}{scale}\n'
         if self.uuid is not None:
-            expression += f'{indents}  (uuid {self.uuid})\n'
+            if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+                expression += f'{indents}  (uuid "{self.uuid}")\n'
+            else:
+                expression += f'{indents}  (uuid {self.uuid})\n'
+
         expression += f'{indents}  (data\n'
         for b64part in self.data:
             expression += f'{indents}    {b64part}\n'

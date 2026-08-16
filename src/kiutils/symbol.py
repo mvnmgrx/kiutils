@@ -263,6 +263,7 @@ class Symbol():
         Raises:
             - Exception: If the given ID is neither a top-level nor a child symbol
         """
+
         # Try to parse the given ID
         parse_symbol_id = re.match(r"^(.+?):(.+?)$", symbol_id)
         if parse_symbol_id:
@@ -272,7 +273,10 @@ class Symbol():
             self.unitId = None
             self.styleId = None
         else:
-            parse_symbol_id = re.match(r"^(.+?)_(\d+?)_(\d+?)$", symbol_id)
+            # The prior RegEx expression: ^(.+)_(\d+)_(\d+)$ matched Filter_EMI_LLL_162534_1 into the groups: Filter_EMI_LLL, 1, 162534
+            # This tweak now only matches [NAME]_[Double digit number]_[Double digit number]. "Filter_EMI_LLL_16_1" will break this expression but
+            # then I also don't think a human could tell whether this is a name or a symbol with unitID 16.
+            parse_symbol_id = re.match(r"^(.+?)_(\d{1,2})_(\d{1,2})$", symbol_id)
             if parse_symbol_id:
                 # The symbol is a child symbol
                 self.libraryNickname = None
@@ -355,8 +359,27 @@ class Symbol():
     units: List[Symbol] = field(default_factory=list)
     """The ``units`` can be one or more child symbol tokens embedded in a parent symbol"""
 
+    kicadVersion: str = None
+    """The ``kicadVersion`` contains the version number of the schematic. Used to control how schematics are written"""
+
+    excludeFromSim: Optional[bool] = None
+    """Added in KiCAD v8, this optional flag, allows the designer to exclude this component from circuit simulation"""
+    
+    inPosFiles: Optional[bool] = None
+    """The ``inPosFiles`` token [TODO: Describe this token] """
+    
+    duplicatePinNumbersAreJumpers: Optional[bool] = None
+    """The ``duplicatePinNumbersAreJumpers`` token [TODO: Describe this token] """
+    
+    fieldsAutoplaced: Optional[bool] = None
+    """The ``fieldsAutoplaced`` token [TODO: Describe this token] """
+    
+    embeddedFonts: Optional[bool] = None
+    """The ``embeddedFonts`` token [TODO: Describe this token] """
+    
+
     @classmethod
-    def from_sexpr(cls, exp: list) -> Symbol:
+    def from_sexpr(cls, exp: list, kicadVersion = None) -> Symbol:
         """Convert the given S-Expression into a Symbol object
 
         Args:
@@ -377,11 +400,20 @@ class Symbol():
 
         object = cls()
         object.libId = exp[1]
+        object.kicadVersion = kicadVersion
         for item in exp[2:]:
             if item[0] == 'extends': object.extends = item[1]
             if item[0] == 'pin_numbers':
-                if item[1] == 'hide':
-                    object.hidePinNumbers = True
+                # First check which method we need to apply to process this property
+                if kicadVersion is not None and kicadVersion > KICAD_8_VERSION_NUMBER:
+                    # In KiCAD 8 and above, the hidePinNumbers is turned from (pin_numbers hide) to (pin_numbers (hide yes)), requiring more unwrapping
+                    # The approach below was adapted from the object.pinNamesOffset approach below
+                    for property in item[1:]:
+                        if type(property) == type([]):
+                            if property[0] == 'hide': object.hidePinNumbers = True if property[1] == 'yes' else False
+                else:
+                    if item[1] == 'hide':
+                        object.hidePinNumbers = True
             if item[0] == 'pin_names':
                 object.pinNames = True
                 for property in item[1:]:
@@ -389,13 +421,17 @@ class Symbol():
                         if property[0] == 'offset': object.pinNamesOffset = property[1]
                     else:
                         if property == 'hide': object.pinNamesHide = True
+            if item[0] == 'exclude_from_sim': object.excludeFromSim = True if item[1] == 'yes' else False
+            if item[0] == 'embedded_fonts': object.embeddedFonts = True if item[1] == 'yes' else False
             if item[0] == 'in_bom': object.inBom = True if item[1] == 'yes' else False
             if item[0] == 'on_board': object.onBoard = True if item[1] == 'yes' else False
+            if item[0] == 'in_pos_files': object.inPosFiles = True if item[1] == 'yes' else False
+            if item[0] == 'duplicate_pin_numbers_are_jumpers': object.duplicatePinNumbersAreJumpers = True if item[1] == 'yes' else False
+            if item[0] == 'fields_autoplaced': object.fieldsAutoplaced = True if item[1] == 'yes' else False
             if item[0] == 'power': object.isPower = True
-
-            if item[0] == 'symbol': object.units.append(Symbol().from_sexpr(item))
-            if item[0] == 'property': object.properties.append(Property().from_sexpr(item))
-
+            if item[0] == 'body_style': object.bodyStyle = item[1]
+            if item[0] == 'symbol': object.units.append(Symbol().from_sexpr(item,kicadVersion))
+            if item[0] == 'property': object.properties.append(Property().from_sexpr(item,kicadVersion))
             if item[0] == 'pin': object.pins.append(SymbolPin().from_sexpr(item))
             if item[0] == 'arc': object.graphicItems.append(SyArc().from_sexpr(item))
             if item[0] == 'circle': object.graphicItems.append(SyCircle().from_sexpr(item))
@@ -404,12 +440,12 @@ class Symbol():
             if item[0] == 'rectangle': object.graphicItems.append(SyRect().from_sexpr(item))
             if item[0] == 'text': object.graphicItems.append(SyText().from_sexpr(item))
             if item[0] == 'text_box': object.graphicItems.append(SyTextBox().from_sexpr(item))
-
+ 
         return object
 
     @classmethod
     def create_new(cls, id: str, reference: str, value: str,
-                        footprint: str = "", datasheet: str = "") -> Symbol:
+                        footprint: str = "", datasheet: str = "", version: str = None) -> Symbol:
         """Creates a new empty symbol as KiCad would create it
 
         Args:
@@ -426,6 +462,7 @@ class Symbol():
         symbol.inBom = True
         symbol.onBoard = True
         symbol.libId = id
+        symbol.kicadVersion = version
         symbol.properties.extend(
             [
                 Property(key = "Reference", value = reference, id = 0,
@@ -452,22 +489,40 @@ class Symbol():
         """
         indents = ' '*indent
         endline = '\n' if newline else ''
-        obtext, ibtext = '', ''
 
-        if self.inBom is not None:
-            ibtext = 'yes' if self.inBom else 'no'
-        inbom = f' (in_bom {ibtext})' if self.inBom is not None else ''
-        if self.onBoard is not None:
-            obtext = 'yes' if self.onBoard else 'no'
-        onboard = f' (on_board {obtext})' if self.onBoard is not None else ''
         power = f' (power)' if self.isPower else ''
-        pnhide = f' hide' if self.pinNamesHide else ''
-        pnoffset = f' (offset {self.pinNamesOffset})' if self.pinNamesOffset is not None else ''
-        pinnames = f' (pin_names{pnoffset}{pnhide})' if self.pinNames else ''
-        pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
-        extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
 
-        expression =  f'{indents}(symbol "{dequote(self.libId)}"{extends}{power}{pinnumbers}{pinnames}{inbom}{onboard}\n'
+        pnoffset = f' (offset {self.pinNamesOffset})' if self.pinNamesOffset is not None else ''
+
+        if self.kicadVersion is not None and int(self.kicadVersion) > KICAD_8_VERSION_NUMBER:
+            pinnumbers = f' (pin_numbers (hide yes))' if self.hidePinNumbers else ''
+            pnatext = f' (hide yes)' if self.pinNamesHide else ''
+        else:
+            pinnumbers = f' (pin_numbers hide)' if self.hidePinNumbers else ''
+            pnatext = f' hide' if self.pinNamesHide else ''
+
+        pinnames = f' (pin_names{pnoffset}{pnatext})' if self.pinNames else ''
+
+        fatext = ('yes' if self.fieldsAutoplaced else 'no') if self.fieldsAutoplaced is not None else ''
+        fieldsautoplaced = f' (fields_autoplaced {fatext})' if self.fieldsAutoplaced is not None else ''
+
+        efstext = ('yes' if self.excludeFromSim else 'no') if self.excludeFromSim is not None else ''
+        excludefromsim = f' (exclude_from_sim {efstext})' if self.excludeFromSim is not None else ''
+
+        ibtext = ('yes' if self.inBom else 'no') if self.inBom is not None else ''
+        inbom = f' (in_bom {ibtext})' if self.inBom is not None else ''
+
+        obtext = ('yes' if self.onBoard else 'no') if self.onBoard is not None else ''
+        onboard = f' (on_board {obtext})' if self.onBoard is not None else ''
+
+        inposfiles = f' (in_pos_files yes)' if self.inPosFiles else ''
+
+        dpnajtext = ('yes' if self.duplicatePinNumbersAreJumpers else 'no') if self.duplicatePinNumbersAreJumpers is not None else ''
+        duplicatepinnumbersarejumpers = f' (duplicate_pin_numbers_are_jumpers {dpnajtext})' if self.duplicatePinNumbersAreJumpers is not None else ''
+
+        extends = f' (extends "{dequote(self.extends)}")' if self.extends is not None else ''
+        expression =  f'{indents}(symbol "{dequote(self.libId)}"{extends}{power}{pinnumbers}{pinnames}{fieldsautoplaced}{excludefromsim}{inbom}{onboard}{inposfiles}{duplicatepinnumbersarejumpers}\n'
+        
         for item in self.properties:
             expression += item.to_sexpr(indent+2)
         for item in self.graphicItems:
@@ -476,6 +531,11 @@ class Symbol():
             expression += item.to_sexpr(indent+2)
         for item in self.units:
             expression += item.to_sexpr(indent+2)
+
+        eftext = ("yes" if self.embeddedFonts else "no") if self.embeddedFonts is not None else ''
+        embeddedfonts = f'{indents}  (embedded_fonts {eftext})\n' if self.embeddedFonts is not None else ''
+        expression += f'{embeddedfonts}'
+        
         expression += f'{indents}){endline}'
         return expression
 
@@ -543,13 +603,22 @@ class SymbolLib():
 
         if exp[0] != 'kicad_symbol_lib':
             raise Exception("Expression does not have the correct type")
+        
+        kicadVersion = None
+        for item in exp:
+            if item[0] == 'version':
+                kicadVersion = item[1]
+                break
+
+        if kicadVersion == None:
+            raise Exception("Expression does not have the correct type")
 
         object = cls()
+        object.version = kicadVersion  
 
         for item in exp[1:]:
-            if item[0] == 'version': object.version = item[1]
             if item[0] == 'generator': object.generator = item[1]
-            if item[0] == 'symbol': object.symbols.append(Symbol().from_sexpr(item))
+            if item[0] == 'symbol': object.symbols.append(Symbol().from_sexpr(item,kicadVersion))
         return object
 
     def to_file(self, filepath = None, encoding: Optional[str] = None):
